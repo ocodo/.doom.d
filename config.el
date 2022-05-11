@@ -33,6 +33,9 @@
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-henna)
 
+;; Use flex completion style (fuzzy match)
+(add-to-list 'completion-styles 'flex)
+
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
