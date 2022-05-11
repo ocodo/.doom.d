@@ -3,7 +3,6 @@
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
 
-
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets. It is optional.
 (setq user-full-name "Jason M23"
@@ -73,3 +72,29 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
+
+(bind-key "M-s-g g" 'google-this)
+(bind-key "M-s-g n" 'google-this-noconfirm)
+
+(bind-key "C-x x ." 'er/expand-region)
+
+(bind-key "C-x f" 'rgrep)
+
+(bind-key "s-'" 'other-window)
+(bind-key "s-0" 'delete-window)
+(bind-key "s-1" 'delete-other-windows)
+(bind-key "s-2" 'split-window-below)
+(bind-key "s-3" 'split-window-right)
+
+(bind-key "s-`" 'other-frame)
+(bind-key "s-w" 'delete-frame)
+
+(bind-key "s-b" 'ido-switch-buffer)
+(bind-key "s-o" 'find-file)
+(bind-key "s-s" 'save-buffer)
+(bind-key "s-k" 'kill-buffer)
+(bind-key "s-q" 'kill-emacs)
+
+(bind-key "s-T" 'treemacs)
+
+(bind-key "C-x /" 'align-regexp)
