@@ -128,3 +128,15 @@
       (goto-char (+ origin (* (length region) arg) arg)))))
 
 (bind-key "s-<down>" 'duplicate-current-line-or-region)
+
+(defun shell-command-on-region-replace (start end command)
+  "Run `shell-command-on-region' replacing the selected region.  START END COMMAND."
+  (interactive (let (string)
+                 (unless (mark)
+                   (error "The mark is not set now, so there is no region"))
+                 (setq string (read-from-minibuffer "Shell region | replace: "
+                                                    nil nil nil
+                                                    'shell-command-history))
+                 (list (region-beginning) (region-end)
+                       string)))
+  (shell-command-on-region start end command t t))
