@@ -140,3 +140,5 @@
                  (list (region-beginning) (region-end)
                        string)))
   (shell-command-on-region start end command t t))
+
+(bind-key "s-|" 'shell-command-on-region-replace)
