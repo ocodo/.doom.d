@@ -92,7 +92,13 @@
 (bind-key "s-`" 'other-frame)
 (bind-key "s-w" 'delete-frame)
 
+
+
 (bind-key "s-b" 'ido-switch-buffer)
+
+(bind-key "s-<right>" 'next-buffer)
+(bind-key "s-<left>" 'previous-buffer)
+
 (bind-key "s-o" 'find-file)
 (bind-key "s-s" 'save-buffer)
 (bind-key "s-k" 'kill-buffer)
@@ -101,3 +107,24 @@
 (bind-key "s-T" 'treemacs)
 
 (bind-key "C-x /" 'align-regexp)
+
+;; Originally swiped from rejeep's emacs.d rejeep-defuns.el.
+(defun duplicate-current-line-or-region (arg)
+  "Duplicates the current line or region ARG times."
+  (interactive "p")
+  (let (beg end (origin (point)))
+    (if (and (region-active-p) (> (point) (mark)))
+        (exchange-point-and-mark))
+    (setq beg (line-beginning-position))
+    (if (region-active-p)
+        (exchange-point-and-mark))
+    (setq end (line-end-position))
+    (let ((region (buffer-substring-no-properties beg end)))
+      (dotimes (i arg)
+        (goto-char end)
+        (newline)
+        (insert region)
+        (setq end (point)))
+      (goto-char (+ origin (* (length region) arg) arg)))))
+
+(bind-key "s-<down>" 'duplicate-current-line-or-region)
