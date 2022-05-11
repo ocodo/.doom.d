@@ -101,7 +101,7 @@
 
 (bind-key "s-o" 'find-file)
 (bind-key "s-s" 'save-buffer)
-(bind-key "s-k" 'kill-buffer)
+(bind-key "s-k" 'kill-this-buffer)
 (bind-key "s-q" 'kill-emacs)
 
 (bind-key "s-T" 'treemacs)
