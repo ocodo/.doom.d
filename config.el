@@ -118,3 +118,7 @@
 (bind-key "C-c x" 'decrement-number-at-point)
 
 (bind-key "M-o" 'dired-osx-open-this-file dired-mode-map)
+
+(bind-key "C-c ;" 'iedit-mode)
+
+(bind-key "M-`" 'magit)
