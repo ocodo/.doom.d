@@ -77,7 +77,7 @@
 ;; they are implemented.
 ;;
 
-(require 'ocodo/handy-functions)
+(load-file "~/.doom.d/ocodo-handy-functions.el")
 
 (bind-key "M-s-g g" 'google-this)
 (bind-key "M-s-g n" 'google-this-noconfirm)
