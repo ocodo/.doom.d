@@ -75,6 +75,9 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
+;;
+
+(require 'ocodo/handy-functions)
 
 (bind-key "M-s-g g" 'google-this)
 (bind-key "M-s-g n" 'google-this-noconfirm)
@@ -92,8 +95,6 @@
 (bind-key "s-`" 'other-frame)
 (bind-key "s-w" 'delete-frame)
 
-
-
 (bind-key "s-b" 'ido-switch-buffer)
 
 (bind-key "s-<right>" 'next-buffer)
@@ -108,37 +109,9 @@
 
 (bind-key "C-x /" 'align-regexp)
 
-;; Originally swiped from rejeep's emacs.d rejeep-defuns.el.
-(defun duplicate-current-line-or-region (arg)
-  "Duplicates the current line or region ARG times."
-  (interactive "p")
-  (let (beg end (origin (point)))
-    (if (and (region-active-p) (> (point) (mark)))
-        (exchange-point-and-mark))
-    (setq beg (line-beginning-position))
-    (if (region-active-p)
-        (exchange-point-and-mark))
-    (setq end (line-end-position))
-    (let ((region (buffer-substring-no-properties beg end)))
-      (dotimes (i arg)
-        (goto-char end)
-        (newline)
-        (insert region)
-        (setq end (point)))
-      (goto-char (+ origin (* (length region) arg) arg)))))
-
 (bind-key "s-<down>" 'duplicate-current-line-or-region)
 
-(defun shell-command-on-region-replace (start end command)
-  "Run `shell-command-on-region' replacing the selected region.  START END COMMAND."
-  (interactive (let (string)
-                 (unless (mark)
-                   (error "The mark is not set now, so there is no region"))
-                 (setq string (read-from-minibuffer "Shell region | replace: "
-                                                    nil nil nil
-                                                    'shell-command-history))
-                 (list (region-beginning) (region-end)
-                       string)))
-  (shell-command-on-region start end command t t))
-
 (bind-key "s-|" 'shell-command-on-region-replace)
+
+(bind-key "C-c a" 'increment-number-at-point)
+(bind-key "C-c x" 'decrement-number-at-point)
