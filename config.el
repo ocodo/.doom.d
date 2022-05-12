@@ -109,9 +109,12 @@
 
 (bind-key "C-x /" 'align-regexp)
 
+(bind-key "s-<up>" 'duplicate-current-line-or-region-up)
 (bind-key "s-<down>" 'duplicate-current-line-or-region)
 
 (bind-key "s-|" 'shell-command-on-region-replace)
 
 (bind-key "C-c a" 'increment-number-at-point)
 (bind-key "C-c x" 'decrement-number-at-point)
+
+(bind-key "M-o" 'dired-osx-open-this-file dired-mode-map)
