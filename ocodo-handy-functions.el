@@ -15,12 +15,9 @@
 (require 'cl)
 (require 'dash)
 (require 'find-func)
-(require 'popup)
 (require 'kurecolor)
 (require 'cua-base)
 (require 'magit)
-(require 'pos-tip)
-(require 'popup)
 
 (defmacro *-and-replace (function-name evaluator)
   "Build FUNCTION-NAME to use EVALUATOR on the current region, and replace it with the result."
@@ -163,36 +160,7 @@ When there is only one frame, kill the buffer."
         (kill-buffer buffer)
         (message "Deleted '%s'" filename)))))
 
-(defun describe-at-cursor-position-in-popup ()
-  "Open a popup containing detailed info about the current cursor position."
-  (interactive)
-  (pos-tip-show (replace-regexp-in-string
-                 "\\[BACK\\]" ""
-                 (save-window-excursion
-                   (what-cursor-position t)
-                   (switch-to-buffer "*Help*")
-                   (buffer-string)))
-                'popup-tip-face nil nil -1))
-
-(defun describe-function-in-popup ()
-  (interactive)
-  (describe-in-popup 'describe-function))
-
-(defun describe-in-popup (fn)
-  "Open a postip containing the help text of `symbol-at-point' using FN.
-
-FN should be either `describe-variable' or `describe-function'."
-  (let* ((thing (symbol-at-point))
-         (description
-          (replace-regexp-in-string
-           "\\[BACK\\]" ""
-           (save-window-excursion
-             (funcall fn thing)
-             (switch-to-buffer "*Help*")
-             (buffer-string)))))
-    (pos-tip-show description 'popup-tip-face nil nil -1)))
-
-;; Quick helpers to describe function or variable at point in help or popup
+;; Quick helpers to describe function or variable at point in help
 (defun describe-thing-at-point ()
   (interactive)
   (let* ((thing (symbol-at-point)))
@@ -200,18 +168,7 @@ FN should be either `describe-variable' or `describe-function'."
      ((fboundp thing) (describe-function thing))
      ((boundp thing) (describe-variable thing)))))
 
-(defun describe-thing-in-popup ()
-  (interactive)
-  (let* ((thing (symbol-at-point)))
-    (cond
-     ((fboundp thing) (describe-in-popup 'describe-function))
-     ((boundp thing) (describe-in-popup 'describe-variable)))))
-
-(defun describe-variable-in-popup ()
-  (interactive)
-  (describe-in-popup 'describe-variable))
-
-(defun directory-of-library (libraryname)
+(defun dired-visit-library (libraryname)
   "Open directory with dired which contain the given LIBRARYNAME."
   (interactive "M")
   (dired (file-name-as-directory
