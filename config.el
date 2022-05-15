@@ -150,3 +150,5 @@
             (interactive)
             (which-key-show-keymap 'cua--rectangle-keymap))
           cua--rectangle-keymap)
+
+(defalias 'yes-or-no-p 'y-or-n-p)
