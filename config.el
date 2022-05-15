@@ -138,5 +138,15 @@
    [C-S-return] nil
 )
 
+;; turn paging back on in which-key
+(setq which-key-use-C-h-commands t)
+
 ;; bind C-enter to CUA Rectangle mode
-(bind-key "C-<return>" 'cua-rectangle-mark-mode)
+(bind-key "C-<return>" #'cua-rectangle-mark-mode)
+
+;; Better help for CUA Rectangle mode via which-key
+(bind-key "C-?"
+          #'(lambda ()
+            (interactive)
+            (which-key-show-keymap 'cua--rectangle-keymap))
+          cua--rectangle-keymap)
