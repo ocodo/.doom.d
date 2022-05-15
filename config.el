@@ -127,3 +127,16 @@
 (bind-key "C-c ;" 'iedit-mode)
 
 (bind-key "M-`" 'magit)
+
+(bind-key "M-z" 'zap-up-to-char)
+
+;; Unbind C-RET on global key map
+(map!
+   "C-RET"      nil
+   [C-return]   nil
+   "C-S-RET"    nil
+   [C-S-return] nil
+)
+
+;; bind C-enter to CUA Rectangle mode
+(bind-key "C-<return>" 'cua-rectangle-mark-mode)
