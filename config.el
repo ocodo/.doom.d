@@ -8,6 +8,19 @@
 (setq user-full-name "Jason M23"
       user-mail-address "jasonm23@gmail.com")
 
+;; Ensure SSH_AUTH_SOCK is set correctly
+;; check that only one ssh-agent is running first.
+(if
+    (=
+     (string-to-number
+      (shell-command-to-string "pgrep ssh-agent | wc -l")) 1)
+    (setenv
+     "SSH_AUTH_SOCK"
+     (shell-command-to-string "lsof | grep ssh-agent | grep /agent. | awk '{printf($8)}'"))
+  (message "There are more than 1 ssh-agents running...:
+
+%s" (shell-command-to-string "pgrep -l ssh-agent")))
+
 ;; Doom exposes five (optional) variables for controlling fonts in Doom:
 ;;
 ;; - `doom-font' -- the primary font to use
