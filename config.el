@@ -14,7 +14,14 @@
   "Ensure ssh_auth_sock is set correctly in the environment."
   (interactive)
   (if (= (string-to-number (shell-command-to-string "pgrep ssh-agent | wc -l")) 1)
-      (setenv "SSH_AUTH_SOCK" (shell-command-to-string "lsof | grep ssh-agent | grep /agent. | awk '{printf($8)}'"))
+      (let ((private-sock (shell-command-to-string "lsof | grep ssh-agent | grep /private"))
+           (agent-sock (shell-command-to-string "lsof | grep ssh-agent | grep /agent")))
+        (unless (string= private-sock "")
+          (setenv "SSH_AUTH_SOCK" (shell-command-to-string "lsof | grep ssh-agent | grep /private | awk '{printf($8)}'")))
+
+        (unless (string= agent-sock "")
+          (setenv "SSH_AUTH_SOCK" (shell-command-to-string "lsof | grep ssh-agent | grep /agent | awk '{printf($8)}'"))))
+
     (message "There are more than 1 ssh-agents running...:\n %s" (shell-command-to-string "pgrep -l ssh-agent"))))
 
 (ssh-agent-env-fix)
