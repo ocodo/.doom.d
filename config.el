@@ -165,3 +165,6 @@
           cua--rectangle-keymap)
 
 (defalias 'yes-or-no-p 'y-or-n-p)
+
+(after! edit-server
+  (edit-server-start))
