@@ -118,7 +118,7 @@
 (bind-key "s-`" 'other-frame)
 (bind-key "s-w" 'delete-frame)
 
-(bind-key "s-b" 'ido-switch-buffer)
+(bind-key "s-b" 'switch-to-buffer)
 
 (bind-key "s-<right>" 'next-buffer)
 (bind-key "s-<left>" 'previous-buffer)
