@@ -570,6 +570,18 @@ If your're in the minibuffer it will use the other buffer file name."
 ;; ;; 250°    260°    270°    280°    290°    300°    310°    320°    330°    340°    350°    360°
 ;; ;; #00030B #3905A3 #5405A3 #6E05A3 #8805A3 #A305A3 #A30588 #A3056E #A30554 #A30539 #A3051F #A30505
 
+(defun video-time-to-seconds-calc (video-time)
+  "Convert a VIDEO-TIME formar hh:mm:ss into seconds."
+  (cl-destructuring-bind (hh mm ss)
+      (mapcar 'string-to-number
+              (cdr (car
+                    (s-match-strings-all
+                     "\\([0-9][0-9]\\):\\([0-9][0-9]\\):\\([0-9][0-9]\\)"
+                     video-time))))
+    (+ (* 3600 hh) (* 60 mm) ss)))
+
+(*-and-replace video-time-to-seconds #'video-time-to-seconds-calc)
+
 (defun my-isearch-buffers ()
   "Incremental search through open buffers."
   (interactive)
