@@ -13,6 +13,18 @@
 (package! creamsody-theme)
 (package! autothemer)
 (package! edit-server)
+(package! ag)
+(package! embrace)
+(package! swiper)
+(package! try)
+(package! free-keys)
+
+(unpin! kurecolor)
+(package! kurecolor :recipe
+  (:host github :repo "emacsfodder/kurecolor"))
+
+(package! text-transformers :recipe
+  (:host github :repo "jasonm23/emacs-text-transformers"))
 
 ;; To install a package directly from a remote git repo, you must specify a
 ;; `:recipe'. You'll find documentation on what `:recipe' accepts here:

@@ -562,6 +562,14 @@ If your're in the minibuffer it will use the other buffer file name."
                 (insert (format " %s" (kurecolor-hex-set-hue color (/ (* i 10) 360.0)))))
           (newline-and-indent))))
 
+;; Generated from: #A30905 (use Rainbow-mode for niceness)
+;; ;; 10°     20°     30°     40°     50°     60°     70°     80°     90°     100°    110°    120°
+;; ;; #A31F05 #A33905 #A35405 #A36E05 #A38805 #A3A305 #88A305 #6EA305 #54A305 #39A305 #1FA305 #05A305
+;; ;; 130°    140°    150°    160°    170°    180°    190°    200°    210°    220°    230°    240°
+;; ;; #05A31F #05A339 #05A354 #05A36E #05A388 #05A3A3 #0588A3 #056EA3 #0554A3 #0539A3 #051FA3 #0505A3
+;; ;; 250°    260°    270°    280°    290°    300°    310°    320°    330°    340°    350°    360°
+;; ;; #00030B #3905A3 #5405A3 #6E05A3 #8805A3 #A305A3 #A30588 #A3056E #A30554 #A30539 #A3051F #A30505
+
 (defun my-isearch-buffers ()
   "Incremental search through open buffers."
   (interactive)
@@ -974,6 +982,50 @@ Comments stay with the code below."
   (interactive "*p")
   (dotimes (string-to-int arg) (yank)))
 
+(defun get-defun-info (buffer)
+  "Get information about all `defun' top-level sexps in a buffer
+BUFFER. Returns a list with elements of the form (symbol args docstring)."
+  (with-current-buffer buffer
+    (save-excursion
+      (save-restriction
+        (widen)
+        (goto-char (point-min))
+        (let (result)
+          ;; keep going while reading succeeds
+          (while (condition-case nil
+                     (progn
+                       (read (current-buffer))
+                       (forward-sexp -1)
+                       t)
+                   (error nil))
+            (let ((form (read (current-buffer))))
+              (cond
+               ((not (listp form))      ; if it's not a list, skip it
+                nil)
+               ((eq (nth 0 form) 'defun) ; if it's a defun, collect info
+                (let ((sym (nth 1 form))
+                      (args (nth 2 form))
+                      (doc (when (stringp (nth 3 form)) (nth 3 form))))
+                  (push (list sym args doc) result))))))
+          result)))))
+
+(defun buffer-defuns-to-markdown ()
+  "Format all defuns in the current buffer as markdown text."
+  (interactive)
+  (get-defun-info (buffer-name)))
+
+;; (mapcar (lambda (entry)
+;; (cl-destructuring-bind (name args docstring)
+;;     entry
+;; ;  (format "# %s\n\n`%s`\n\n%s"
+;; ;          name
+;; ;          (if (string= args "nil")
+;; ;              name
+;; ;            (format "%s %s" name args)) docstring))
+
+;;   (format "# %s" (name)))
+;; (get-defun-info (buffer-name)))
+
 (provide 'ocodo/handy-functions)
 
-;;; handy-functions.el ends here
+;;; ocodo/handy-functions.el ends here

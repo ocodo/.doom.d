@@ -107,7 +107,11 @@
 
 (bind-key "C-x x ." 'er/expand-region)
 
-(bind-key "C-x f" 'rgrep)
+(bind-key "C-x f" 'ag)
+
+(bind-key "C-c ]" 'embrace-commander)
+
+(bind-key "C-x r <left>" 'sp-slurp-hybrid-sexp)
 
 (bind-key "s-'" 'other-window)
 (bind-key "s-0" 'delete-window)
@@ -126,6 +130,7 @@
 (bind-key "s-o" 'find-file)
 (bind-key "s-s" 'save-buffer)
 (bind-key "s-k" 'kill-this-buffer)
+(bind-key "s-t" 'projectile-find-file-dwim)
 (bind-key "s-q" 'kill-emacs)
 
 (bind-key "s-T" 'treemacs)
