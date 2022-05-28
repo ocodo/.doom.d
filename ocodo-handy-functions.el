@@ -562,6 +562,25 @@ If your're in the minibuffer it will use the other buffer file name."
                 (insert (format " %s" (kurecolor-hex-set-hue color (/ (* i 10) 360.0)))))
           (newline-and-indent))))
 
+(defun make-kurecolor-24bit-hue-table (color)
+  "Make a 24bit color table using Kurecolor."
+  (interactive)
+  (cl-loop for
+           (a b) in
+
+           (cl-loop
+            for i from 1 to 30
+            for a = (- (* i 12) 11)
+            for b = (* i 12)
+            collect (list a b))
+
+           do
+
+           (cl-loop for i from a upto b
+                    do
+                    (insert (format "%s:" (kurecolor-hex-set-hue color (/ i 360.0)))))
+           (newline-and-indent)))
+
 ;; Generated from: #A30905 (use Rainbow-mode for niceness)
 ;; ;; 10°     20°     30°     40°     50°     60°     70°     80°     90°     100°    110°    120°
 ;; ;; #A31F05 #A33905 #A35405 #A36E05 #A38805 #A3A305 #88A305 #6EA305 #54A305 #39A305 #1FA305 #05A305
