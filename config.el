@@ -176,5 +176,17 @@
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
+(hl-line-mode -1)
+
+;; (bind-key "C-c H" #') - available global binding for...
+
 (after! edit-server
   (edit-server-start))
+
+(setq smie-config
+'((sh-mode
+  (2 :after "then" 2)
+  (0 :before "then" 0)
+  (2 :after "{" 2)
+  (2 :after "do" 2)
+  (2 :after "else" 2))))
