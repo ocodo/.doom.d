@@ -8,6 +8,15 @@
 (setq user-full-name "Jason M23"
       user-mail-address "jasonm23@gmail.com")
 
+;; Markdown settings
+(setq markdown-css-paths
+             '("https://unpkg.com/@primer/css@^19.0.0/dist/primer.css"
+               "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/github.min.css"))
+
+;; Disable hl-mode
+(add-hook! 'rainbow-mode-hook
+  (hl-line-mode (if rainbow-mode -1 +1)))
+
 ;; Ensure SSH_AUTH_SOCK is set correctly
 ;; check that only one ssh-agent is running first.
 (defun ssh-agent-env-fix ()
@@ -142,10 +151,13 @@
 
 (bind-key "s-|" 'shell-command-on-region-replace)
 
-(bind-key "C-c a" 'increment-number-at-point)
-(bind-key "C-c x" 'decrement-number-at-point)
+(bind-key "C-)" 'increment-number-at-point)
+(bind-key "C-(" 'decrement-number-at-point)
+
+(bind-key "C-c l h" 'hl-line-mode)
 
 (bind-key "M-o" 'dired-osx-open-this-file dired-mode-map)
+(bind-key "M-O" '+macos/open-in-default-program)
 
 (bind-key "C-c ;" 'iedit-mode)
 
@@ -159,7 +171,7 @@
    [C-return]   nil
    "C-S-RET"    nil
    [C-S-return] nil
-)
+)                          
 
 ;; turn paging back on in which-key
 (setq which-key-use-C-h-commands t)
@@ -176,17 +188,78 @@
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-(hl-line-mode -1)
+(bind-key "C-c H" #'hippie-expand)
 
-;; (bind-key "C-c H" #') - available global binding for...
+(bind-key "C-c f w" #'write-region)
 
-(after! edit-server
-  (edit-server-start))
+(bind-key "C-c s-e" #'eval-and-replace)
 
-(setq smie-config
-'((sh-mode
-  (2 :after "then" 2)
-  (0 :before "then" 0)
-  (2 :after "{" 2)
-  (2 :after "do" 2)
-  (2 :after "else" 2))))
+(bind-key "C-c K" '+rgb/kurecolor-hydra/body)
+(bind-key "C-c k H" '+rgb/kurecolor-hydra/body)
+(bind-key "C-c k x" 'kurecolor-xcode-color-literal-at-point-or-region-to-hex-rgb)
+(bind-key "C-c k X" 'kurecolor-xcode-color-literal-at-point-or-region-to-hex-rgba)
+(bind-key "C-c k c" 'kurecolor-cssrgb-at-point-or-region-to-hex)
+(bind-key "C-c k h" 'kurecolor-hexcolor-at-point-or-region-to-css-rgba)
+
+(bind-key "C-c t t h" 'humanize-at-point-or-region)
+(bind-key "C-c t t -" 'dasherise-at-point-or-region)
+(bind-key "C-c t t _" 'snake-case-at-point-or-region)
+(bind-key "C-c t t l" 'lower-camelcase-at-point-or-region)
+(bind-key "C-c t t u" 'upper-camelcase-at-point-or-region)
+(bind-key "C-c t t t" 'titleized-at-point-or-region)
+(bind-key "C-c t t U" 'url-encode-string-at-point)
+(bind-key "C-c t t ." 'hex-to-decimal-at-point-or-region)
+(bind-key "C-c t t /" 'decimal-to-hex-at-point-or-region)
+
+(bind-key "C-c t t v" 'video-time-to-seconds-at-point-or-region)
+
+
+
+(edit-server-start)
+
+(defun ocodo-sh-indent-rules ()
+  "Try to set sh-mode indent rules."
+  (setq smie-config
+        '((sh-mode
+           (2 :after "then" 2)
+           (0 :before "then" 0)
+           (2 :after "then" nil)
+           (2 :after "{" 2)
+           (2 :after "do" 2)
+           (2 :after "else" 2))))
+
+  (setq sh-styles-alist
+        '(("ocodo"
+           (sh-basic-offset . 4)
+           (sh-first-lines-indent . 0)
+           (sh-indent-after-case . +)
+           (sh-indent-after-do . +)
+           (sh-indent-after-done . 0)
+           (sh-indent-after-else . +)
+           (sh-indent-after-if . +)
+           (sh-indent-after-loop-construct . +)
+           (sh-indent-after-open . +)
+           (sh-indent-comment . t)
+           (sh-indent-for-case-alt . ++)
+           (sh-indent-for-case-label . +)
+           (sh-indent-for-continuation . +)
+           (sh-indent-for-do . 0)
+           (sh-indent-for-done . 0)
+           (sh-indent-for-else . 0)
+           (sh-indent-for-fi . 0)
+           (sh-indent-for-then . 0))))
+  (sh-load-style "ocodo"))
+
+(add-hook 'sh-mode-hook #'ocodo-sh-indent-rules)
+
+;; MPV Bookmarks to EDL (three steps...)
+
+(fset 'bookmarks-to-mpv-edl-step-one
+   (kmacro-lambda-form [?\C-a ?\M-z ?\] ?\M-z ?/ ?\C-s ?| return left left ?\C-  ?\C-s ?t ?i ?m ?e ?= return backspace ?, ?\C-e right] 0 "%d"))
+
+(defun bookmarks-to-mpv-edl-step-two ()
+  "Space edl bookmarks into pairs."
+  (message "Space EDL bookmarks into pairs... TODO automation"))
+
+(fset 'bookmarks-to-mpv-edl-step-three
+   (kmacro-lambda-form [?\C-s ?\C-j ?/ ?V ?o ?l return ?\C-e ?\M-z ?, ?\C-r ?, return right ?\C-  ?\C-e ?\M-w ?  ?\( ?- ?  ?\( ?- ?  ?\C-y right left ?\C-r ?, return right backspace ?  ?\C-e ?\C-c ?\s-e ?\C-r ?, return ?\M-z ?  right left ?, ?\C-d ?\C-e] 0 "%d"))

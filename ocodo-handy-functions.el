@@ -23,14 +23,18 @@
   "Build FUNCTION-NAME to use EVALUATOR on the current region, and replace it with the result."
   `(defun ,function-name ()
      (interactive)
-     (when (region-active-p)
-       (let* ((input (buffer-substring-no-properties (region-beginning) (region-end)))
-              (output (funcall ,evaluator input)))
-         (delete-region (region-beginning) (region-end))
-         (insert (if (stringp output) output
-                   (format "%S" output)))))))
+     (if (not (region-active-p))
+         (replace-thing-at-point-with ,evaluator)
+       ;; - else -
+       (replace-region-with ,evaluator))))
 
-(*-and-replace calc-eval-region #'calc-eval)
+(*-and-replace calc-eval-replace-at-region-or-point #'calc-eval)
+
+(*-and-replace decimal-to-hex-at-point-or-region #'decimal-to-hex)
+
+(*-and-replace hex-to-decimal-at-point-or-region #'hex-to-decimal)
+
+(*-and-replace video-time-to-seconds-at-point-or-region #'video-time-to-seconds)
 
 (defmacro defun-pcase (name arglist &optional docstring &rest body)
   "Define a pcase function called NAME with ARGLIST.
@@ -111,23 +115,34 @@ Note: this won't turn off face properties in a font-locked buffer."
   "Copy from cursor to end the current line to the kill ring."
   (interactive)
   (save-mark-and-excursion
-   (cua-set-mark)
-   (move-end-of-line 1)
-   (kill-ring-save nil nil t)))
+    (cua-set-mark)
+    (move-end-of-line 1)
+    (kill-ring-save nil nil t)))
 
 (defun copy-whole-line ()
   "Copy the current line to the kill ring."
   (interactive)
   (save-mark-and-excursion
-   (move-beginning-of-line 1)
-   (cua-set-mark)
-   (move-end-of-line 1)
-   (kill-ring-save nil nil t)))
+    (move-beginning-of-line 1)
+    (cua-set-mark)
+    (move-end-of-line 1)
+    (kill-ring-save nil nil t)))
 
 (defun csv--to-lists (csv)
   "Convert CSV to lists."
   (mapcar (lambda (line) (split-string line ","))
           (split-string (s-chomp csv) "\n")))
+
+(defun current-buffer-defuns-to-markdown (file)
+  "Create a markdown FILE of all defuns in the current buffer."
+  (interactive "FWrite List of defuns to Markdown File: ")
+  (f-write-text (generate-markdown-list-of-buffer-defuns (current-buffer)) 'utf-8 file)
+  (when (y-or-n-p (format "Open %s?" file))
+    (find-file file)))
+
+(defun decimal-to-hex (num)
+  "Convert NUM to hex."
+  (format "%X" (string-to-number num)))
 
 (defun decrease-default-font-height (m)
   "Adjust the default font :height by 10, universal argument is M (to set by multiples)."
@@ -140,7 +155,7 @@ Note: this won't turn off face properties in a font-locked buffer."
   (change-number-at-point '1-))
 
 (defun delete-frame-or-window-dwim ()
-    "Delete the current frame or buffer.
+  "Delete the current frame or buffer.
 When there is only one frame, kill the buffer."
   (interactive)
   (if (> 1 (length (frame-list)))
@@ -160,19 +175,12 @@ When there is only one frame, kill the buffer."
         (kill-buffer buffer)
         (message "Deleted '%s'" filename)))))
 
-;; Quick helpers to describe function or variable at point in help
 (defun describe-thing-at-point ()
   (interactive)
   (let* ((thing (symbol-at-point)))
     (cond
      ((fboundp thing) (describe-function thing))
      ((boundp thing) (describe-variable thing)))))
-
-(defun dired-visit-library (libraryname)
-  "Open directory with dired which contain the given LIBRARYNAME."
-  (interactive "M")
-  (dired (file-name-as-directory
-          (file-name-directory (find-library-name libraryname)))))
 
 (defun dired-find-file-other-window-and-back ()
   "In Dired, visit this file or directory in another window and remain in first window."
@@ -196,8 +204,14 @@ When there is only one frame, kill the buffer."
   (interactive)
   (shell-command-to-string (format "open %S" (dired-file-name-at-point))))
 
-;; Originally swiped from rejeep's emacs.d rejeep-defuns.el.
+(defun dired-visit-library (libraryname)
+  "Open directory with dired which contain the given LIBRARYNAME."
+  (interactive "M")
+  (dired (file-name-as-directory
+          (file-name-directory (find-library-name libraryname)))))
+
 (defun duplicate-current-line-or-region (arg &optional up)
+  ;; Originally swiped from rejeep's emacs.d rejeep-defuns.el.
   "Duplicates the current line or region ARG times.
 
 If UP is non-nil, duplicate and move point to the top."
@@ -232,25 +246,6 @@ If UP is non-nil, duplicate and move point to the top."
                  (push-mark-command nil)
                  (goto-char (- (point) (length region)))))
         (setq deactivate-mark nil)))))
-
-;; Originally swiped from rejeep's emacs.d rejeep-defuns.el.
-(defun duplicate-current-line-or-region (arg)
-  "Duplicates the current line or region ARG times."
-  (interactive "p")
-  (let (beg end (origin (point)))
-    (if (and (region-active-p) (> (point) (mark)))
-        (exchange-point-and-mark))
-    (setq beg (line-beginning-position))
-    (if (region-active-p)
-        (exchange-point-and-mark))
-    (setq end (line-end-position))
-    (let ((region (buffer-substring-no-properties beg end)))
-      (dotimes (i arg)
-        (goto-char end)
-        (newline)
-        (insert region)
-        (setq end (point)))
-      (goto-char (+ origin (* (length region) arg) arg)))))
 
 (defun duplicate-current-line-or-region-up (arg)
   "Duplicates the current line or region up ARG times."
@@ -327,6 +322,24 @@ If UP is non-nil, duplicate and move point to the top."
   (interactive "nDenomiator:")
   (insert (format "%s" (/ (* float-pi 2) denominator))))
 
+(defun generate-markdown-list-of-buffer-defuns (buffer)
+  "Generate markdown text of all defuns in buffer"
+  (s-join "\n"
+          (mapcar
+           (lambda (entry)
+             (cl-destructuring-bind (name args docstring) entry
+               (setq
+                name (format "%s" name)
+                args (format "%s" args))
+               (when (string= nil docstring)
+                 (setq docstring "no docs available"))
+               (format "# %s\n\n`(%s)`\n\n%s" name
+                       (if (string= "nil" args)
+                           (format "%s" name)
+                         (format "%s %s" name args))
+                       docstring)))
+           (get-defun-info (buffer)))))
+
 (defun generate-untitled-name ()
   "Generate a name with pattern untitled-n."
   (let ((n 1))
@@ -338,6 +351,33 @@ If UP is non-nil, duplicate and move point to the top."
 
       (setq n (+ n 1)))
     (format "untitled-%i" n)))
+
+(defun get-defun-info (buffer)
+  "Get information about all `defun' top-level sexps in a buffer
+BUFFER. Returns a list with elements of the form (symbol args docstring)."
+  (with-current-buffer buffer
+    (save-excursion
+      (save-restriction
+        (widen)
+        (goto-char (point-min))
+        (let (result)
+          ;; keep going while reading succeeds
+          (while (condition-case nil
+                     (progn
+                       (read (current-buffer))
+                       (forward-sexp -1)
+                       t)
+                   (error nil))
+            (let ((form (read (current-buffer))))
+              (cond
+               ((not (listp form))      ; if it's not a list, skip it
+                nil)
+               ((eq (nth 0 form) 'defun) ; if it's a defun, collect info
+                (let ((sym (nth 1 form))
+                      (args (nth 2 form))
+                      (doc (when (stringp (nth 3 form)) (nth 3 form))))
+                  (push (list sym args doc) result))))))
+          result)))))
 
 (defun get-osx-display-resolution ()
   "Get the current display resolution in OSX."
@@ -422,6 +462,10 @@ when matches are equidistant from the current point."
   (interactive "sGithub Repo [format: user/repo]: ")
   (browse-url (format "https://github.com/%s" repo)))
 
+(defun hex-to-decimal (num)
+  "Convert hex NUM to decimal."
+  (format "%i" (string-to-number num 16)))
+
 (defun increase-default-font-height (m)
   "Adjust the default font :height by 10, universal argument is M (to set by multiples)."
   (interactive "p")
@@ -487,7 +531,7 @@ If your're in the minibuffer it will use the other buffer file name."
 
 (defun insert-random-in-range (start end)
   "Insert a random number within the range of START and END."
-  (interactive "nRange start:\nnRange end:")
+  (interactive "nRange start: \nnRange end: ")
   (insert (format "%i" (random-in-range start end))))
 
 (defun insert-random-radian ()
@@ -499,6 +543,11 @@ If your're in the minibuffer it will use the other buffer file name."
   "Insert a random item from a list of STRINGS."
   (interactive "sList of strings separated by spaces: ")
   (insert (-sample (s-split " " strings))))
+
+(defun insert-time-now ()
+  "Insert current time."
+  (interactive)
+  (insert (format-time-string "%l:%M%P(%z) %Y-%m-%d")))
 
 (defun join-line-from-below ()
   "Join line from below."
@@ -547,21 +596,6 @@ If your're in the minibuffer it will use the other buffer file name."
     (shell-command "git --no-pager commit --amend --reuse-message=HEAD")
     (magit-refresh)))
 
-(defun make-kurecolor-hue-table ()
-  "Make a hue table from hex color at top of kill ring, no error checking."
-  (interactive)
-  (let ((color (car kill-ring-yank-pointer)))
-    (cl-loop for (a b) in '((1 12) (13 24) (25 36))
-          do
-          (insert ";; ")
-          (cl-loop for i from a upto b do
-                (insert (format "%-4s    " (format "%s°" (* i 10)))))
-          (newline-and-indent)
-          (insert ";;")
-          (cl-loop for i from a upto b do
-                (insert (format " %s" (kurecolor-hex-set-hue color (/ (* i 10) 360.0)))))
-          (newline-and-indent))))
-
 (defun make-kurecolor-24bit-hue-table (color)
   "Make a 24bit color table using Kurecolor."
   (interactive)
@@ -581,6 +615,21 @@ If your're in the minibuffer it will use the other buffer file name."
                     (insert (format "%s:" (kurecolor-hex-set-hue color (/ i 360.0)))))
            (newline-and-indent)))
 
+(defun make-kurecolor-hue-table ()
+  "Make a hue table from hex color at top of kill ring, no error checking."
+  (interactive)
+  (let ((color (car kill-ring-yank-pointer)))
+    (cl-loop for (a b) in '((1 12) (13 24) (25 36))
+             do
+             (insert ";; ")
+             (cl-loop for i from a upto b do
+                      (insert (format "%-4s    " (format "%s°" (* i 10)))))
+             (newline-and-indent)
+             (insert ";;")
+             (cl-loop for i from a upto b do
+                      (insert (format " %s" (kurecolor-hex-set-hue color (/ (* i 10) 360.0)))))
+             (newline-and-indent))))
+
 ;; Generated from: #A30905 (use Rainbow-mode for niceness)
 ;; ;; 10°     20°     30°     40°     50°     60°     70°     80°     90°     100°    110°    120°
 ;; ;; #A31F05 #A33905 #A35405 #A36E05 #A38805 #A3A305 #88A305 #6EA305 #54A305 #39A305 #1FA305 #05A305
@@ -588,18 +637,6 @@ If your're in the minibuffer it will use the other buffer file name."
 ;; ;; #05A31F #05A339 #05A354 #05A36E #05A388 #05A3A3 #0588A3 #056EA3 #0554A3 #0539A3 #051FA3 #0505A3
 ;; ;; 250°    260°    270°    280°    290°    300°    310°    320°    330°    340°    350°    360°
 ;; ;; #00030B #3905A3 #5405A3 #6E05A3 #8805A3 #A305A3 #A30588 #A3056E #A30554 #A30539 #A3051F #A30505
-
-(defun video-time-to-seconds-calc (video-time)
-  "Convert a VIDEO-TIME formar hh:mm:ss into seconds."
-  (cl-destructuring-bind (hh mm ss)
-      (mapcar 'string-to-number
-              (cdr (car
-                    (s-match-strings-all
-                     "\\([0-9][0-9]\\):\\([0-9][0-9]\\):\\([0-9][0-9]\\)"
-                     video-time))))
-    (+ (* 3600 hh) (* 60 mm) ss)))
-
-(*-and-replace video-time-to-seconds #'video-time-to-seconds-calc)
 
 (defun my-isearch-buffers ()
   "Incremental search through open buffers."
@@ -619,14 +656,9 @@ Optionally check ALLBUFS."
   (multi-occur-in-matching-buffers ".*" regexp))
 
 (defun new-untitled-buffer ()
-    "Open a new buffer called untitled-n."
-    (interactive)
-    (switch-to-buffer (generate-untitled-name)))
-
-(defun now-is ()
-  "Insert current time."
+  "Open a new buffer called untitled-n."
   (interactive)
-  (insert (format-time-string "%l:%M%P(%z) %Y-%m-%d")))
+  (switch-to-buffer (generate-untitled-name)))
 
 (defun nuke-all-buffers ()
   "Kill all buffers, leaving *scratch* only."
@@ -651,7 +683,6 @@ Leave *scratch* and *Messages* alone too."
    (buffer-list))
   (delete-other-windows))
 
-
 (defun open-line-above ()
   "Open a newline above the current point."
   (interactive)
@@ -659,7 +690,6 @@ Leave *scratch* and *Messages* alone too."
     (beginning-of-line)
     (newline)
     (forward-line -1)))
-
 
 (defun open-line-below ()
   "Open a newline below the current point."
@@ -678,15 +708,6 @@ Leave *scratch* and *Messages* alone too."
                                          (buffer-file-name)))
     (start-process-shell-command "switch-to-intellij" nil
                                  "osascript -e 'activate application \"IntelliJ IDEA\"'")))
-
-;; (require 'github-browse-file)
-
-;; (defun github-browse-this-repo ()
-;;   "Browse the current github repo."
-;;   (interactive)
-;;   (if (github-browse-file--relative-url)
-;;       (browse-url (concat "https://github.com/" (github-browse-file--relative-url))))
-;;   (message "Not a github repo"))
 
 (defun open-this-in-xcode ()
   "Open the current file in XCode."
@@ -748,6 +769,27 @@ OSX specific."
   (save-excursion
     (while (re-search-forward from nil t)
       (replace-match to))))
+
+(defun replace-region-with (fn)
+  (let* ((input (buffer-substring-no-properties (region-beginning) (region-end)))
+         (output (funcall fn input)))
+    (delete-region (region-beginning) (region-end))
+    (insert (if (stringp output) output
+              (format "%S" output)))))
+
+(defun replace-thing-at-point-with (fn)
+  "Get the current thing at point.
+Replace with the return value of the function FN"
+  (let* ((pos1 (car (bounds-of-thing-at-point 'symbol)))
+         (pos2 (cdr (bounds-of-thing-at-point 'symbol)))
+         replacement
+         excerpt)
+    (when (> pos1 0)
+      (setq pos1 (- pos1 1)))
+    (setq excerpt (buffer-substring-no-properties pos1 pos2))
+    (setq replacement (funcall fn excerpt))
+    (delete-region pos1 pos2)
+    (insert replacement)))
 
 (defun sass-hex-color-to-var ()
   "Find a hex color, and replace it with a newly created variable name.
@@ -948,9 +990,9 @@ Comments stay with the code below."
                         (delete-region (point) (marker-position end)))))))))
 
 (defun switch-to-message-buffer ()
-    "Switch to the message buffer."
-    (interactive)
-    (switch-to-buffer "*Messages*"))
+  "Switch to the message buffer."
+  (interactive)
+  (switch-to-buffer "*Messages*"))
 
 (defun switch-to-minibuffer-window ()
   "Switch to minibuffer window (if active)."
@@ -971,6 +1013,11 @@ Comments stay with the code below."
         (progn
           (goto-char (buffer-end 1))
           (insert contents)))))
+
+(defun time-now ()
+  "current time."
+  (interactive)
+  (message (format-time-string "%l:%M%P(%z) %Y-%m-%d")))
 
 (defun toggle-window-split ()
   "Toggle the current window split."
@@ -1008,54 +1055,20 @@ Comments stay with the code below."
   (interactive)
   (insert (format-time-string "%s")))
 
+(defun video-time-to-seconds (video-time)
+  "Convert a VIDEO-TIME formar hh:mm:ss into seconds."
+  (cl-destructuring-bind (hh mm ss)
+      (mapcar 'string-to-number
+              (cdr (car
+                    (s-match-strings-all
+                     "\\([0-9][0-9]\\):\\([0-9][0-9]\\):\\([0-9][0-9]\\)"
+                     video-time))))
+    (+ (* 3600 hh) (* 60 mm) ss)))
+
 (defun yank-repeat (&optional arg)
   "Repeat yank n times ARG."
   (interactive "*p")
   (dotimes (string-to-int arg) (yank)))
-
-(defun get-defun-info (buffer)
-  "Get information about all `defun' top-level sexps in a buffer
-BUFFER. Returns a list with elements of the form (symbol args docstring)."
-  (with-current-buffer buffer
-    (save-excursion
-      (save-restriction
-        (widen)
-        (goto-char (point-min))
-        (let (result)
-          ;; keep going while reading succeeds
-          (while (condition-case nil
-                     (progn
-                       (read (current-buffer))
-                       (forward-sexp -1)
-                       t)
-                   (error nil))
-            (let ((form (read (current-buffer))))
-              (cond
-               ((not (listp form))      ; if it's not a list, skip it
-                nil)
-               ((eq (nth 0 form) 'defun) ; if it's a defun, collect info
-                (let ((sym (nth 1 form))
-                      (args (nth 2 form))
-                      (doc (when (stringp (nth 3 form)) (nth 3 form))))
-                  (push (list sym args doc) result))))))
-          result)))))
-
-(defun buffer-defuns-to-markdown ()
-  "Format all defuns in the current buffer as markdown text."
-  (interactive)
-  (get-defun-info (buffer-name)))
-
-;; (mapcar (lambda (entry)
-;; (cl-destructuring-bind (name args docstring)
-;;     entry
-;; ;  (format "# %s\n\n`%s`\n\n%s"
-;; ;          name
-;; ;          (if (string= args "nil")
-;; ;              name
-;; ;            (format "%s %s" name args)) docstring))
-
-;;   (format "# %s" (name)))
-;; (get-defun-info (buffer-name)))
 
 (provide 'ocodo/handy-functions)
 

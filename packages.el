@@ -18,6 +18,7 @@
 (package! swiper)
 (package! try)
 (package! free-keys)
+(package! flymake-shellcheck)
 
 (unpin! kurecolor)
 (package! kurecolor :recipe
