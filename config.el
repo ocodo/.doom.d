@@ -165,6 +165,9 @@
 
 (bind-key "M-z" 'zap-up-to-char)
 
+(bind-key "C-M-^" 'join-line-from-below)
+(bind-key "s-^" 'join-line-from-below)
+
 ;; Unbind C-RET on global key map
 (map!
    "C-RET"      nil
@@ -188,7 +191,7 @@
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-(bind-key "C-c H" #'hippie-expand)
+(bind-key "C-s-H" #'hippie-expand)
 
 (bind-key "C-c f w" #'write-region)
 
