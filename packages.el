@@ -19,6 +19,7 @@
 (package! try)
 (package! free-keys)
 (package! flymake-shellcheck)
+(package! lorem-ipsum)
 
 (unpin! kurecolor)
 (package! kurecolor :recipe

@@ -88,6 +88,7 @@ FWIW I thoroughly recommend Doom Emacs.
 - `try`
 - `free-keys`
 - `flymake-shellcheck`
+- `lorem-ipsum`
 - unpin `kurecolor` grab from: `emacsfodder/kurecolor`
 - `text-transformers` grab from: `jasonm23/emacs-text-transformers`
 
