@@ -109,101 +109,65 @@
 ;; they are implemented.
 ;;
 
+(use-package swift-mode
+  :hook (swift-mode . (lambda () (lsp))))
+
+(use-package lsp-sourcekit
+  :after lsp-mode
+  :config
+  (setq lsp-sourcekit-executable
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp"))
+
+
 (load-file "~/.doom.d/ocodo-handy-functions.el")
 
 (bind-key "M-s-g g" 'google-this)
 (bind-key "M-s-g n" 'google-this-noconfirm)
-
 (bind-key "C-x x ." 'er/expand-region)
-
 (bind-key "C-x f" 'ag)
-
 (bind-key "C-c ]" 'embrace-commander)
-
 (bind-key "C-x r <left>" 'sp-slurp-hybrid-sexp)
-
 (bind-key "s-'" 'other-window)
 (bind-key "s-0" 'delete-window)
 (bind-key "s-1" 'delete-other-windows)
 (bind-key "s-2" 'split-window-below)
 (bind-key "s-3" 'split-window-right)
-
 (bind-key "s-`" 'other-frame)
 (bind-key "s-w" 'delete-frame)
-
 (bind-key "s-b" 'ivy-switch-buffer)
-
 (bind-key "s-<right>" 'next-buffer)
 (bind-key "s-<left>" 'previous-buffer)
-
 (bind-key "s-o" 'find-file)
 (bind-key "s-s" 'save-buffer)
 (bind-key "s-k" 'kill-this-buffer)
 (bind-key "s-t" 'projectile-find-file-dwim)
 (bind-key "s-q" 'kill-emacs)
-
 (bind-key "s-T" 'treemacs)
-
 (bind-key "C-x /" 'align-regexp)
-
 (bind-key "s-<up>" 'duplicate-current-line-or-region-up)
 (bind-key "s-<down>" 'duplicate-current-line-or-region)
-
 (bind-key "s-|" 'shell-command-on-region-replace)
-
 (bind-key "C-)" 'increment-number-at-point)
 (bind-key "C-(" 'decrement-number-at-point)
-
 (bind-key "C-c l h" 'hl-line-mode)
-
 (bind-key "M-o" 'dired-osx-open-this-file dired-mode-map)
 (bind-key "M-O" '+macos/open-in-default-program)
-
 (bind-key "C-c ;" 'iedit-mode)
-
 (bind-key "M-`" 'magit)
-
 (bind-key "M-z" 'zap-up-to-char)
-
-(bind-key "C-M-^" 'join-line-from-below)
-(bind-key "s-^" 'join-line-from-below)
-
-;; Unbind C-RET on global key map
-(map!
-   "C-RET"      nil
-   [C-return]   nil
-   "C-S-RET"    nil
-   [C-S-return] nil
-)                          
-
-;; turn paging back on in which-key
-(setq which-key-use-C-h-commands t)
-
-;; bind C-enter to CUA Rectangle mode
-(bind-key "C-<return>" #'cua-rectangle-mark-mode)
-
-;; Better help for CUA Rectangle mode via which-key
-(bind-key "C-?"
-          #'(lambda ()
-            (interactive)
-            (which-key-show-keymap 'cua--rectangle-keymap))
-          cua--rectangle-keymap)
-
-(defalias 'yes-or-no-p 'y-or-n-p)
-
 (bind-key "C-s-H" #'hippie-expand)
-
 (bind-key "C-c f w" #'write-region)
-
+(bind-key "C-c l e i" #'eval-print-last-sexp)
 (bind-key "C-c s-e" #'eval-and-replace)
-
 (bind-key "C-c K" '+rgb/kurecolor-hydra/body)
 (bind-key "C-c k H" '+rgb/kurecolor-hydra/body)
 (bind-key "C-c k x" 'kurecolor-xcode-color-literal-at-point-or-region-to-hex-rgb)
 (bind-key "C-c k X" 'kurecolor-xcode-color-literal-at-point-or-region-to-hex-rgba)
 (bind-key "C-c k c" 'kurecolor-cssrgb-at-point-or-region-to-hex)
 (bind-key "C-c k h" 'kurecolor-hexcolor-at-point-or-region-to-css-rgba)
-
+(bind-key "C-c k s" 'search-for-nearest-hex-color)
+(bind-key "C-M-^" 'join-line-from-below)
+(bind-key "s-^" 'join-line-from-below)
 (bind-key "C-c t t h" 'humanize-at-point-or-region)
 (bind-key "C-c t t -" 'dasherise-at-point-or-region)
 (bind-key "C-c t t _" 'snake-case-at-point-or-region)
@@ -213,10 +177,28 @@
 (bind-key "C-c t t U" 'url-encode-string-at-point)
 (bind-key "C-c t t ." 'hex-to-decimal-at-point-or-region)
 (bind-key "C-c t t /" 'decimal-to-hex-at-point-or-region)
-
 (bind-key "C-c t t v" 'video-time-to-seconds-at-point-or-region)
 
+;; Unbind C-RET on global key map
+(map!
+   "C-RET"      nil
+   [C-return]   nil
+   "C-S-RET"    nil
+   [C-S-return] nil
+)
 
+;; bind C-enter to CUA Rectangle mode
+(bind-key "C-<return>" #'cua-rectangle-mark-mode)
+;; turn paging back on in which-key
+(setq which-key-use-C-h-commands t)
+;; Better help for CUA Rectangle mode via which-key
+(bind-key "C-?"
+          #'(lambda ()
+            (interactive)
+            (which-key-show-keymap 'cua--rectangle-keymap))
+          cua--rectangle-keymap)
+
+(defalias 'yes-or-no-p 'y-or-n-p)
 
 (edit-server-start)
 

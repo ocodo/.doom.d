@@ -332,13 +332,21 @@ If UP is non-nil, duplicate and move point to the top."
                 name (format "%s" name)
                 args (format "%s" args))
                (when (string= nil docstring)
-                 (setq docstring "no docs available"))
-               (format "# %s\n\n`(%s)`\n\n%s" name
-                       (if (string= "nil" args)
-                           (format "%s" name)
-                         (format "%s %s" name args))
-                       docstring)))
-           (get-defun-info (buffer)))))
+                 (setq docstring "No docstring available: TODO"))
+               (format "### %s\n\n```lisp\n(%s)\n```\n\n%s\n"
+                       name
+                       (format "%s %s" name (or args ""))
+                       (docstring-args-to-markdown-code  docstring))))
+
+           (-sort (lambda (a b)
+                    (let ((c (symbol-name (first a)))
+                          (d (symbol-name (first b))))
+                      (string< c d)) )
+                  (get-defun-info (current-buffer))))))
+
+(defun docstring-args-to-markdown-code (docstring)
+  "transform DOCSTRING I arguments to inline markdown `code` style."
+  (format "%s" (s-replace-regexp "\([A-Z]\{2,\}\)" "@@\1@@" docstring)))
 
 (defun generate-untitled-name ()
   "Generate a name with pattern untitled-n."
@@ -935,7 +943,7 @@ Return an error if no buffer file."
          (beginning-of-line))))
 
 (defun snippy-comment ()
-  "Insert a snip line - - 8< - - - comment."
+  "Insert a snip line `- - 8< - - -' comment."
   (interactive)
   (end-of-line)
   (newline)
@@ -1073,3 +1081,117 @@ Comments stay with the code below."
 (provide 'ocodo/handy-functions)
 
 ;;; ocodo/handy-functions.el ends here
+
+
+;; usage: screencapture [-icMPmwsWxSCUtoa] [files]
+;;   -c         force screen capture to go to the clipboard
+;;   -b         capture Touch Bar - non-interactive modes only
+;;   -C         capture the cursor as well as the screen. only in non-interactive modes
+;;   -d         display errors to the user graphically
+;;   -i         capture screen interactively, by selection or window
+;;                control key - causes screen shot to go to clipboard
+;;                space key   - toggle between mouse selection and
+;;                              window selection modes
+;;                escape key  - cancels interactive screen shot
+;;   -m         only capture the main monitor, undefined if -i is set
+;;   -D<display> screen capture or record from the display specified. -D 1 is main display, -D 2 secondary, etc.
+;;   -o         in window capture mode, do not capture the shadow of the window
+;;   -p         screen capture will use the default settings for capture. The files argument will be ignored
+;;   -M         screen capture output will go to a new Mail message
+;;   -P         screen capture output will open in Preview or QuickTime Player if video
+;;   -I         screen capture output will open in Messages
+;;   -B<bundleid> screen capture output will open in app with bundleid
+;;   -s         only allow mouse selection mode
+;;   -S         in window capture mode, capture the screen not the window
+;;   -J<style>  sets the starting of interfactive capture
+;;                selection       - captures screen in selection mode
+;;                window          - captures screen in window mode
+;;                video           - records screen in selection mode
+;;   -t<format> image format to create, default is png (other options include pdf, jpg, tiff and other formats)
+;;   -T<seconds> take the picture after a delay of <seconds>, default is 5
+;;   -w         only allow window selection mode
+;;   -W         start interaction in window selection mode
+;;   -x         do not play sounds
+;;   -a         do not include windows attached to selected windows
+;;   -r         do not add dpi meta data to image
+;;   -l<windowid> capture this windowsid
+;;   -R<x,y,w,h> capture screen rect
+;;   -v        capture video recording of the screen
+;;   -V<seconds> limits video capture to specified seconds
+;;   -g        captures audio during a video recording using default input.
+;;   -G<id>    captures audio during a video recording using audio id specified.
+;;   -k        show clicks in video recording mode
+;;   -U        Show interactive toolbar in interactive mode
+;;   -u        present UI after screencapture is complete. files passed to command line will be ignored
+;;   files   where to save the screen capture, 1 file per screen
+
+(require 'kv)
+
+(defun screencapture-mac (options)
+  (interactive "P")
+  (if options
+      (let* (
+             (selected-summaries (completing-read-multiple "Options: " (screencapture-mac--summary-list) nil t nil nil nil nil))
+             (options-selected (screencapture-mac--entry-from-summaries selected-summaries))
+
+             )
+
+
+        (prin1 options-selected)
+
+        )
+
+
+
+    )
+  )
+
+(defun screencapture-mac--summary-list ()
+  "Summarized list of screencapture mac options"
+  (mapcar 'screencapture-mac--options-summary (screencapture-mac--options)) )
+
+
+(defun screencapture-mac--options-summary (plist)
+  (cl-destructuring-bind (&key flag arg description) plist
+    (format "%2s %10s %s." flag (or arg "") description)))
+
+(defun screencapture-mac--get-option ())
+
+(defun screencapture-mac--entry-from-summaries (summaries)
+
+  )
+
+(defun screencapture-mac--options ()
+  "Command line options for screencapture (macOS)."
+  '((:flag "-c" :arg nil        :description "force screen capture to go to the clipboard")
+    (:flag "-b" :arg nil        :description "capture Touch Bar - non-interactive modes only")
+    (:flag "-C" :arg nil        :description "capture the cursor as well as the screen. only in non-interactive modes")
+    (:flag "-d" :arg nil        :description "display errors to the user graphically")
+    (:flag "-i" :arg nil        :description "capture screen interactively by selection or window \n control key - causes screen shot to go to clipboard \n space key   - toggle between mouse selection and \n window selection modes \n escape key  - cancels interactive screen shot")
+    (:flag "-m" :arg nil        :description "only capture the main monitor undefined if -i is set")
+    (:flag "-D" :arg "<display>"  :description "screen capture or record from the display specified. -D 1 is main display -D 2 second")
+    (:flag "-o" :arg nil        :description "in window capture mode do not capture the shadow of the window")
+    (:flag "-p" :arg nil        :description "screen capture will use the default settings for capture. The files argument will be ig")
+    (:flag "-M" :arg nil        :description "screen capture output will go to a new Mail message")
+    (:flag "-P" :arg nil        :description "screen capture output will open in Preview or QuickTime Player if video")
+    (:flag "-I" :arg nil        :description "screen capture output will open in Messages")
+    (:flag "-B" :arg "<bundleid>" :description "screen capture output will open in app with bundleid")
+    (:flag "-s" :arg nil        :description "only allow mouse selection mode")
+    (:flag "-S" :arg nil        :description "in window capture mode capture the screen not the window")
+    (:flag "-J" :arg "<style>"    :description "sets the starting of interfactive capture \n selection       - captures screen in selection mode \n window          - captures screen in window mode \n video           - records screen in selection mode")
+    (:flag "-t" :arg "<format>"   :description "image format to create default is png (other options include pdf jpg tiff and other")
+    (:flag "-T" :arg "<seconds>"  :description "take the picture after a delay of <seconds> default is 5")
+    (:flag "-w" :arg nil        :description "only allow window selection mode")
+    (:flag "-W" :arg nil        :description "start interaction in window selection mode")
+    (:flag "-x" :arg nil        :description "do not play sounds")
+    (:flag "-a" :arg nil        :description "do not include windows attached to selected windows")
+    (:flag "-r" :arg nil        :description "do not add dpi meta data to image")
+    (:flag "-l" :arg "<windowid>" :description "capture this windowsid")
+    (:flag "-R" :arg "<xywh>"  :description "capture screen rect")
+    (:flag "-v" :arg nil        :description "capture video recording of the screen")
+    (:flag "-V" :arg "<seconds>"  :description "limits video capture to specified seconds")
+    (:flag "-g" :arg nil        :description "captures audio during a video recording using default input.")
+    (:flag "-G" :arg "<id>"       :description "captures audio during a video recording using audio id specified.")
+    (:flag "-k" :arg nil        :description "show clicks in video recording mode")
+    (:flag "-U" :arg nil        :description "Show interactive toolbar in interactive mode")
+    (:flag "-u" :arg nil        :description "present UI after screencapture is complete. files passed to command line will be ignored")))

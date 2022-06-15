@@ -8,3 +8,4 @@
 (put 'narrow-to-region 'disabled nil)
 (put 'projectile-ripgrep 'disabled nil)
 (put 'customize-face 'disabled nil)
+(put 'customize-set-variable 'disabled nil)

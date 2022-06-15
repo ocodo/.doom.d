@@ -20,6 +20,8 @@
 (package! free-keys)
 (package! flymake-shellcheck)
 (package! lorem-ipsum)
+(package! lsp-sourcekit)
+(package! kv)
 
 (unpin! kurecolor)
 (package! kurecolor :recipe
@@ -27,6 +29,9 @@
 
 (package! text-transformers :recipe
   (:host github :repo "jasonm23/emacs-text-transformers"))
+
+(package! markdown-soma :recipe
+  (:host github :repo "jasonm23/markdown-soma"))
 
 ;; To install a package directly from a remote git repo, you must specify a
 ;; `:recipe'. You'll find documentation on what `:recipe' accepts here:
