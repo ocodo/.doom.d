@@ -1265,6 +1265,15 @@ This works the same as `tr -s CHAR`."
     ( :flag "-x" :description "do not play sounds")
     ))
 
+(defun macos-get-window-id-of (app)
+  "Get the windowid of APP."
+  (shell-command-to-string (format "~/.doom.d/bin/wlist | grep '%s' | grep -E -o '^[0-9]*' " app)))
+
+(defun macos-get-window-id-of-app (app)
+  "Get the windowid of APP."
+  (interactive "MApp name: ")
+  (message "%s" (shell-command-to-string (format "~/.doom.d/bin/wlist | grep -s '%s'" app))))
+
 (provide 'ocodo/handy-functions)
 
 ;;; ocodo/handy-functions.el ends here
