@@ -8,6 +8,8 @@
 (setq user-full-name "Jason M23"
       user-mail-address "jasonm23@gmail.com")
 
+(setq fancy-splash-image "~/.doom.d/doom-creamsody.png")
+
 ;; Markdown settings
 (setq markdown-css-paths
              '("https://unpkg.com/@primer/css@^19.0.0/dist/primer.css"
