@@ -48,6 +48,14 @@ BODY is the form of the underlying `pcase-lambda'."
             (pcase-lambda ,arglist ,@body)
             ,docstring)))
 
+(defmacro plist-bind (args expr &rest body)
+  ;; http://emacs.stackexchange.com/questions/22542
+  "A `destructuring-bind' without the boilerplate for plists."
+  `(cl-destructuring-bind
+       (&key ,@args &allow-other-keys)
+       ,expr
+     ,@body))
+
 (defun -sample (list)
   "Return a random element from the LIST."
   (nth (random (length list)) list))
