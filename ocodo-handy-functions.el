@@ -419,6 +419,21 @@ when matches are equidistant from the current point."
           after
         before))))
 
+(defun get-position-of-nearest-regexp-match (regexp &optional arg)
+  "Get the position of nearest REGEXP match.
+
+optional ARG when less than zero, default to the before match
+when matches are equidistant from the current point."
+  (let* ((after        (save-excursion (search-forward-regexp regexp)))
+         (before       (save-excursion (search-backward-regexp regexp)))
+         (dist-after   (- after  (point)))
+         (dist-before  (- (point) before)))
+    (if (eq dist-after dist-before)
+        (if (and arg (>= 0 arg)) after before)
+      (if (< dist-after dist-before)
+          after
+        before))))
+
 (defun git-open-changed-and-new-files ()
   "Use git ls-files to open changed files."
   (interactive)
