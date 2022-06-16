@@ -14,6 +14,7 @@
 (require 's)
 (require 'cl)
 (require 'dash)
+(require 'kv)
 (require 'find-func)
 (require 'kurecolor)
 (require 'cua-base)
@@ -1149,34 +1150,51 @@ This works the same as `tr -s CHAR`."
 ;;   -u        present UI after screencapture is complete. files passed to command line will be ignored
 ;;   files   where to save the screen capture, 1 file per screen
 
-
-(require 'kv)
-
 (defvar screencapture-mac-default-file-location
-  (expand-file-name "~/Desktop")
+  (expand-file-name "~/Desktop/")
   "Default location to save screen captures.") 
 
-(defun screencapture-mac ()
-  "Screencapture on macOS."
-  (interactive)
-  (if screencapture-mac-default-commandline
-      (screencapture-mac--run screencapture-mac-default-commandline)
-    (let* ((command (s-squeeze
-                     " "
-                     (s-join " " (-concat '("screencapture")
-                                          (mapcar 'screencapture-mac--complete-arguments-for-option
-                                                  (screencapture-mac--entry-from-summaries
-                                                   (completing-read-multiple
-                                                    "Options: "                                                 
-                                                    (screencapture-mac--summary-list))))))))
-           (filename screencapture-mac-default-file-location))
+(defun screencapture-mac (&optional commandline)
+  "Screencapture on macOS, supply COMMANDLINE or useinteractive setting of command options."
+  (interactive)  
+  (if (or screencapture-mac-default-commandline commandline)
+      (if commandline
+          (screencapture-mac--run commandline
+                                  (screencapture-mac--filename-generator
+                                   screencapture-mac-default-file-location))
+      (screencapture-mac--run screencapture-mac-default-commandline
+                              (screencapture-mac--filename-generator
+                               screencapture-mac-default-file-location)))
+    (let* ((command (s-squeeze " "
+                               (s-join " " (-concat '("screencapture")
+                                                    (mapcar 'screencapture-mac--complete-arguments-for-option
+                                                            (screencapture-mac--entry-from-summaries
+                                                             (completing-read-multiple
+                                                              "Options: "                                                 
+                                                              (screencapture-mac--summary-list))))))))
+           (filename (screencapture-mac--filename-generator screencapture-mac-default-file-location)))
       
       (when (y-or-n-p (format "Make default (%s) :" command))
         (setq screencapture-mac-default-commandline command))    
       (screencapture-mac--run command filename))))
 
+(defun screencapture-mac--filename-generator (path &optional ext)
+  "Generate a filename for the screenshot."
+  (s-squeeze "-" 
+             (s-replace " " "-"
+                        (format "%sScreencapture-mac-%s.%s"
+                                path
+                                (s-replace ":" "." (time-stamp-string))
+                                (or ext "png")))))
+
+(defun screencapture-mac-reset-default-commandline ()
+  "Reset the default commandline"
+  (interactive)
+  (setq screencapture-mac-default-commandline nil))
+
 (defun screencapture-mac--run (command filename)
   "Execute the shell COMMAND with FILENAME."
+  (message "%s \"%s\"" command filename)
   (shell-command
    (format "%s \"%s\"" command filename )))
 
