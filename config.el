@@ -8,7 +8,9 @@
 (setq user-full-name "Jason M23"
       user-mail-address "jasonm23@gmail.com")
 
-(after! +doom-dashboard
+(add-hook 'doom-load-theme-hook #'set-fancy-splash)
+
+(defun set-fancy-splash ()
   (setq fancy-splash-image "~/.doom.d/doom-vapourwave.png")
   (add-hook! 'after-setting-font-hook (+doom-dashboard-reload 'force)))
 
@@ -122,7 +124,6 @@
   (setq lsp-sourcekit-executable
         "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp"))
 
-
 (load-file "~/.doom.d/ocodo-handy-functions.el")
 
 (bind-key "M-s-g g" 'google-this)
@@ -131,6 +132,8 @@
 (bind-key "C-x f" 'ag)
 (bind-key "C-c ]" 'embrace-commander)
 (bind-key "C-x r <left>" 'sp-slurp-hybrid-sexp)
+(bind-key "C-x r <right>" 'sp-forward-barf-sexp)
+(bind-key "C-x r <down>" 'sp-backward-barf-sexp)
 (bind-key "s-'" 'other-window)
 (bind-key "s-0" 'delete-window)
 (bind-key "s-1" 'delete-other-windows)
