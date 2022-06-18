@@ -8,8 +8,9 @@
 (setq user-full-name "Jason M23"
       user-mail-address "jasonm23@gmail.com")
 
-(setq fancy-splash-image "~/.doom.d/doom-vapourwave.png")
-(add-hook! 'after-setting-font-hook (+doom-dashboard-reload 'force))
+(after! +doom-dashboard
+  (setq fancy-splash-image "~/.doom.d/doom-vapourwave.png")
+  (add-hook! 'after-setting-font-hook (+doom-dashboard-reload 'force)))
 
 ;; Markdown settings
 (setq markdown-css-paths
@@ -158,7 +159,7 @@
 (bind-key "C-c ;" 'iedit-mode)
 (bind-key "M-`" 'magit)
 (bind-key "M-z" 'zap-up-to-char)
-(bind-key "C-s-H" #'hippie-expand)
+(bind-key "s-/" #'hippie-expand)
 (bind-key "C-c f w" #'write-region)
 (bind-key "C-c l e i" #'eval-print-last-sexp)
 (bind-key "C-c s-e" #'eval-and-replace)
