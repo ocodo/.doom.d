@@ -8,7 +8,8 @@
 (setq user-full-name "Jason M23"
       user-mail-address "jasonm23@gmail.com")
 
-(setq fancy-splash-image "~/.doom.d/doom-creamsody.png")
+(setq fancy-splash-image "~/.doom.d/doom-vapourwave.png")
+(add-hook! 'after-setting-font-hook (+doom-dashboard-reload 'force))
 
 ;; Markdown settings
 (setq markdown-css-paths

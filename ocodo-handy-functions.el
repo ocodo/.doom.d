@@ -19,6 +19,7 @@
 (require 'kurecolor)
 (require 'cua-base)
 (require 'magit)
+(require 'time-stamp)
 
 (defmacro *-and-replace (function-name evaluator)
   "Build FUNCTION-NAME to use EVALUATOR on the current region, and replace it with the result."
@@ -48,6 +49,8 @@ BODY is the form of the underlying `pcase-lambda'."
             (quote ,name)
             (pcase-lambda ,arglist ,@body)
             ,docstring)))
+
+(defmacro let1 (var val &rest body) `(let ((,var ,val)) ,@body))
 
 (defmacro plist-bind (args expr &rest body)
   ;; http://emacs.stackexchange.com/questions/22542
@@ -823,6 +826,11 @@ Replace with the return value of the function FN"
     (delete-region pos1 pos2)
     (insert replacement)))
 
+(defun s-squeeze (char string)
+  "Squeeze the occurences of CHAR in STRING.
+This works the same as `tr -s CHAR`."
+  (s-replace-regexp (format "%s+" char) char string))
+
 (defun sass-hex-color-to-var ()
   "Find a hex color, and replace it with a newly created variable name.
 Place the created variable at the top of the file.  Name it based
@@ -1102,12 +1110,6 @@ Comments stay with the code below."
   (interactive "*p")
   (dotimes (string-to-int arg) (yank)))
 
-(defun s-squeeze (char string)
-  "Squeeze the occurences of CHAR in STRING.
-This works the same as `tr -s CHAR`."
-  (s-replace-regexp (format "%s+" char) char string))
-
-
 ;; usage: screencapture [-icMPmwsWxSCUtoa] [files]
 ;;   -c         force screen capture to go to the clipboard
 ;;   -b         capture Touch Bar - non-interactive modes only
@@ -1154,6 +1156,9 @@ This works the same as `tr -s CHAR`."
   (expand-file-name "~/Desktop/")
   "Default location to save screen captures.") 
 
+(defvar screencapture-mac-default-commandline nil
+  "Default command line with options.")
+
 (defun screencapture-mac (&optional commandline)
   "Screencapture on macOS, supply COMMANDLINE or useinteractive setting of command options."
   (interactive)  
@@ -1162,9 +1167,9 @@ This works the same as `tr -s CHAR`."
           (screencapture-mac--run commandline
                                   (screencapture-mac--filename-generator
                                    screencapture-mac-default-file-location))
-      (screencapture-mac--run screencapture-mac-default-commandline
-                              (screencapture-mac--filename-generator
-                               screencapture-mac-default-file-location)))
+        (screencapture-mac--run screencapture-mac-default-commandline
+                                (screencapture-mac--filename-generator
+                                 screencapture-mac-default-file-location)))
     (let* ((command (s-squeeze " "
                                (s-join " " (-concat '("screencapture")
                                                     (mapcar 'screencapture-mac--complete-arguments-for-option
@@ -1207,8 +1212,8 @@ This works the same as `tr -s CHAR`."
    (screencapture-mac--options)))
 
 (defun screencapture-mac--options-summary (plist)
-  (cl-destructuring-bind (&key flag arg description) plist
-    (format "%2s %s." flag description)))
+  (plist-bind (flag description) plist
+              (format "%2s %s." flag description)))
 
 (defun screencapture-mac--get-option (summary)
   "Fetch the option from SUMMARY"
@@ -1221,58 +1226,83 @@ This works the same as `tr -s CHAR`."
 
 (defun screencapture-mac--complete-arguments-for-option (plist)
   "Do completeing read for arguments of option."
-  (plist-bind (flag arg description) plist
+  (plist-bind (flag arg description helper helper-prompt) plist
               (if arg
                   (format " %s %s " flag
-                          (read-string
-                           (format "%s %s %s ?: " description flag arg)))
+                          (if helper
+                              (funcall helper)
+                            (read-string
+                             (format "%s %s %s ?: " description flag arg))))
                 (format " %s " flag))))
 
 (defun screencapture-mac--options ()
   "Command line options for screencapture (macOS)."
-  '(
-    ( :flag "-B" :arg "<bundleid>" :description "screen capture output will open in app with bundleid")
-    ( :flag "-C" :description "capture the cursor as well as the screen. only in non-interactive modes")
-    ( :flag "-D" :arg "<display>"  :description "screen capture or record from the display specified. -D 1 is main display -D 2 second")
-    ( :flag "-G" :arg "<id>"       :description "captures audio during a video recording using audio id specified.")
-    ( :flag "-I" :description "screen capture output will open in Messages")
-    ( :flag "-J" :arg "<style>"    :description "sets the starting of interfactive capture \n selection       - captures screen in selection mode \n window          - captures screen in window mode \n video           - records screen in selection mode")
-    ( :flag "-M" :description "screen capture output will go to a new Mail message")
-    ( :flag "-P" :description "screen capture output will open in Preview or QuickTime Player if video")
-    ( :flag "-R" :arg "<x,y,w,h>"     :description "capture screen rect")
-    ( :flag "-S" :description "in window capture mode capture the screen not the window")
-    ( :flag "-T" :arg "<seconds>"  :description "take the picture after a delay of <seconds> default is 5")
-    ( :flag "-U" :description "Show interactive toolbar in interactive mode")
-    ( :flag "-V" :arg "<seconds>"  :description "limits video capture to specified seconds")
-    ( :flag "-W" :description "start interaction in window selection mode")
-    ( :flag "-a" :description "do not include windows attached to selected windows")
-    ( :flag "-b" :description "capture Touch Bar - non-interactive modes only")
-    ( :flag "-c" :description "force screen capture to go to the clipboard")
-    ( :flag "-d" :description "display errors to the user graphically")
-    ( :flag "-g" :description "captures audio during a video recording using default input.")
-    ( :flag "-i" :description "capture screen interactively by selection or window \n control key - causes screen shot to go to clipboard \n space key   - toggle between mouse selection and \n window selection modes \n escape key  - cancels interactive screen shot")
-    ( :flag "-k" :description "show clicks in video recording mode")
-    ( :flag "-l" :arg "<windowid>" :description "capture this windowsid")
-    ( :flag "-m" :description "only capture the main monitor undefined if -i is set")
-    ( :flag "-o" :description "in window capture mode do not capture the shadow of the window")
-    ( :flag "-p" :description "screen capture will use the default settings for capture. The files argument will be ig")
-    ( :flag "-r" :description "do not add dpi meta data to image")
-    ( :flag "-s" :description "only allow mouse selection mode")
-    ( :flag "-t" :arg "<format>"   :description "image format to create default is png (other options include pdf jpg tiff and other")
-    ( :flag "-u" :description "present UI after screencapture is complete. files passed to command line will be ignored")
-    ( :flag "-v" :description "capture video recording of the screen")
-    ( :flag "-w" :description "only allow window selection mode")
-    ( :flag "-x" :description "do not play sounds")
+  `(
+    (:flag "-B" :arg "<bundleid>" :description "screen capture output will open in app with bundleid")
+    (:flag "-C" :description "capture the cursor as well as the screen. only in non-interactive modes")
+    (:flag "-D" :arg "<display>"  :description "screen capture or record from the display specified. -D 1 is main display -D 2 second")
+    (:flag "-G" :arg "<id>"       :description "captures audio during a video recording using audio id specified.")
+    (:flag "-I" :description "screen capture output will open in Messages")
+    (:flag "-J" :arg "<style>"    :description "sets the starting of interfactive capture \n selection       - captures screen in selection mode \n window          - captures screen in window mode \n video           - records screen in selection mode")
+    (:flag "-M" :description "screen capture output will go to a new Mail message")
+    (:flag "-P" :description "screen capture output will open in Preview or QuickTime Player if video")
+    (:flag "-R" :arg "<x,y,w,h>"     :description "capture screen rect")
+    (:flag "-S" :description "in window capture mode capture the screen not the window")
+    (:flag "-T" :arg "<seconds>"  :description "take the picture after a delay of <seconds> default is 5")
+    (:flag "-U" :description "Show interactive toolbar in interactive mode")
+    (:flag "-V" :arg "<seconds>"  :description "limits video capture to specified seconds")
+    (:flag "-W" :description "start interaction in window selection mode")
+    (:flag "-a" :description "do not include windows attached to selected windows")
+    (:flag "-b" :description "capture Touch Bar - non-interactive modes only")
+    (:flag "-c" :description "force screen capture to go to the clipboard")
+    (:flag "-d" :description "display errors to the user graphically")
+    (:flag "-g" :description "captures audio during a video recording using default input.")
+    (:flag "-i" :description "capture screen interactively by selection or window \n control key - causes screen shot to go to clipboard \n space key   - toggle between mouse selection and \n window selection modes \n escape key  - cancels interactive screen shot")
+    (:flag "-k" :description "show clicks in video recording mode")
+    (:flag "-l" :arg "<windowid>" :description "capture this windowsid" :helper ,#'screencapture-mac--windowid-helper)
+    (:flag "-m" :description "only capture the main monitor undefined if -i is set")
+    (:flag "-o" :description "in window capture mode do not capture the shadow of the window")
+    (:flag "-p" :description "screen capture will use the default settings for capture. The files argument will be ig")
+    (:flag "-r" :description "do not add dpi meta data to image")
+    (:flag "-s" :description "only allow mouse selection mode")
+    (:flag "-t" :arg "<format>"   :description "image format to create default is png (other options include pdf jpg tiff and other")
+    (:flag "-u" :description "present UI after screencapture is complete. files passed to command line will be ignored")
+    (:flag "-v" :description "capture video recording of the screen")
+    (:flag "-w" :description "only allow window selection mode")
+    (:flag "-x" :description "do not play sounds")
     ))
+
+(defun screencapture-mac--windowid-helper ()
+  "Get the windowid from a completing-read list."
+  (car (last
+    (s-match "^\\([0-9]*\\) -"
+             (completing-read "Select window: "
+                              (--map
+                               (cl-destructuring-bind (windowid app name) it
+                                 (format "%s - [%s] %s" windowid app name))
+                               (macos-get-list-of-windowids)))))))
+
+(defun macos-get-list-of-windowids ()
+  "Get a list of macOS windowids."
+          (--map
+           (cl-destructuring-bind (&optional windowid layer app window-name)
+               (eval (car (read-from-string (format "'(%s)" it))))
+             `(,windowid ,app ,window-name))
+           (--reject (string-blank-p it)
+                     (s-split "\n"
+                              (shell-command-to-string  "~/.doom.d/bin/wlist")))))
 
 (defun macos-get-window-id-of (app)
   "Get the windowid of APP."
-  (shell-command-to-string (format "~/.doom.d/bin/wlist | grep '%s' | grep -E -o '^[0-9]*' " app)))
+  (shell-command-to-string
+    (format "~/.doom.d/bin/wlist | grep '%s' | grep -E -o '^[0-9]*' " app)))
 
 (defun macos-get-window-id-of-app (app)
   "Get the windowid of APP."
   (interactive "MApp name: ")
-  (message "%s" (shell-command-to-string (format "~/.doom.d/bin/wlist | grep -s '%s'" app))))
+  (message "%s"
+           (shell-command-to-string
+            (format "~/.doom.d/bin/wlist | grep '%s' | grep -E -o '^[0-9]*' " app))))
 
 (provide 'ocodo/handy-functions)
 

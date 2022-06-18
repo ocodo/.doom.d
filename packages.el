@@ -21,6 +21,7 @@
 (package! flymake-shellcheck)
 (package! lorem-ipsum)
 (package! lsp-sourcekit)
+(package! mpdel)
 (package! kv)
 
 (unpin! kurecolor)
