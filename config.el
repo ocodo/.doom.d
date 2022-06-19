@@ -15,6 +15,8 @@
   (add-hook! 'after-setting-font-hook (+doom-dashboard-reload 'force)))
 
 ;; Markdown settings
+(require 'markdown-soma)
+
 (setq markdown-css-paths
              '("https://unpkg.com/@primer/css@^19.0.0/dist/primer.css"
                "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/github.min.css"))

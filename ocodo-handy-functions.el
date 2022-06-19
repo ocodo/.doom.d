@@ -695,6 +695,38 @@ If your're in the minibuffer it will use the other buffer file name."
 ;; ;; 250°    260°    270°    280°    290°    300°    310°    320°    330°    340°    350°    360°
 ;; ;; #00030B #3905A3 #5405A3 #6E05A3 #8805A3 #A305A3 #A30588 #A3056E #A30554 #A30539 #A3051F #A30505
 
+(defun mc/cua-rectangle-to-multiple-cursors ()
+  (interactive)
+  (let ((right (cua--rectangle-right-side))
+        rows)
+    (cua--rectangle-operation
+        'clear nil t nil nil
+        (lambda (s e _l _r)
+          (setq rows
+                (append rows
+                        (list (cons (+ 0 s) (+ 0 e)))))))
+    (cua--cancel-rectangle)
+    (if rows
+        (let ((mark-row `(lambda (row)
+                           ,@(if right
+                                 '((push-mark (car row))
+                                   (goto-char (cdr row)))
+                               '((push-mark (cdr row))
+                                 (goto-char (car row))))
+                           (setq transient-mark-mode (cons 'only transient-mark-mode))
+                           (activate-mark)
+                           (setq deactivate-mark nil)))
+              (top (car rows))
+              (rest (cdr rows)))
+          (cl-loop for row in rest do
+                (mc/save-excursion
+                 (funcall mark-row row)
+                 (mc/create-fake-cursor-at-point)))
+          (funcall mark-row top)
+          (mc/maybe-multiple-cursors-mode)))))
+
+(define-key cua--rectangle-keymap (kbd "C-. C-,") 'mc/cua-rectangle-to-multiple-cursors)
+
 (defun my-isearch-buffers ()
   "Incremental search through open buffers."
   (interactive)
@@ -914,14 +946,14 @@ css-value to the hex color found."
     (goto-char 0) (newline) (goto-char 0)
     (insert variable-definition)))
 
-(defun screencapture-mac (&optional commandline)
-  "Screencapture on macOS, supply COMMANDLINE or useinteractive setting of command options."
+(defun screencapture-mac (&optional commandline file-keyword)
+  "Screencapture on macOS, interactive or supply COMMANDLINE and FILE_KEYWORD."
   (interactive)
   (if (or screencapture-mac-default-commandline commandline)
       (if commandline
           (screencapture-mac--run commandline
                                   (screencapture-mac--filename-generator
-                                   screencapture-mac-default-file-location))
+                                   screencapture-mac-default-file-location nil file-keyword))
         (screencapture-mac--run screencapture-mac-default-commandline
                                 (screencapture-mac--filename-generator
                                  screencapture-mac-default-file-location)))
@@ -932,7 +964,7 @@ css-value to the hex color found."
                                                              (completing-read-multiple
                                                               "Options: "
                                                               (screencapture-mac--summary-list))))))))
-           (filename (screencapture-mac--filename-generator screencapture-mac-default-file-location)))
+           (filename (screencapture-mac--filename-generator screencapture-mac-default-file-location nil file-keyword)))
 
       (when (y-or-n-p (format "Make default (%s) :" command))
         (setq screencapture-mac-default-commandline command))
@@ -952,14 +984,20 @@ css-value to the hex color found."
 (defun screencapture-mac--entry-from-summaries (summaries)
   (mapcar 'screencapture-mac--get-option summaries))
 
-(defun screencapture-mac--filename-generator (path &optional ext)
-  "Generate a filename for the screenshot."
-  (s-squeeze "-"
-             (s-replace " " "-"
-                        (format "%sScreencapture-mac-%s.%s"
-                                path
-                                (s-replace ":" "." (time-stamp-string))
-                                (or ext "png")))))
+(defun screencapture-mac--filename-generator (path &optional ext file-keyword)
+  "Generate a filename for the screenshot at PATH with optional EXT and FILE_KEYWORD."
+  (let ((path (if (s-ends-with? "/" path) path (format "%s/" path)))
+        (file-keyword (or file-keyword
+                          screencapture-mac-default-file-keyword)))
+  (s-squeeze
+   "-"
+   (s-replace
+    " " "-"
+    (format "%s%s%s.%s"
+            path
+            file-keyword
+            (s-replace ":" "." (time-stamp-string))
+            (or ext "png"))))))
 
 (defun screencapture-mac--get-option (summary)
   "Fetch the option from SUMMARY"
@@ -1303,6 +1341,10 @@ Comments stay with the code below."
 (defvar screencapture-mac-default-file-location
   (expand-file-name "~/Desktop/")
   "Default location to save screen captures.")
+
+(defvar
+  screencapture-mac-default-file-keyword
+  "screencapture")
 
 (provide 'ocodo/handy-functions)
 
