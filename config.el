@@ -187,6 +187,7 @@
 (bind-key "s-<right>" 'next-buffer)
 (bind-key "s-<up>" 'duplicate-current-line-or-region-up)
 (bind-key "s-T" 'treemacs)
+(bind-key "s-U" 'revert-buffer)
 (bind-key "s-^" 'join-line-from-below)
 (bind-key "s-`" 'other-frame)
 (bind-key "s-b" 'ivy-switch-buffer)
