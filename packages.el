@@ -23,6 +23,7 @@
 (package! lsp-sourcekit)
 (package! mpdel)
 (package! kv)
+(package! rainbow-identifiers)
 
 (unpin! kurecolor)
 (package! kurecolor :recipe

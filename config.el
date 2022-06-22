@@ -14,16 +14,24 @@
   (setq fancy-splash-image "~/.doom.d/doom-vapourwave.png")
   (add-hook! 'after-setting-font-hook (+doom-dashboard-reload 'force)))
 
+(setq doom-unreal-buffer-functions
+      '(minibufferp))
+
+;; Prettify symbols
+(global-prettify-symbols-mode t)
+
 ;; Markdown settings
 (require 'markdown-soma)
 
 (setq markdown-css-paths
-             '("https://unpkg.com/@primer/css@^19.0.0/dist/primer.css"
-               "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/github.min.css"))
+      '("https://unpkg.com/@primer/css@^19.0.0/dist/primer.css"
+        "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/github.min.css"))
 
 ;; Disable hl-mode
 (add-hook! 'rainbow-mode-hook
   (hl-line-mode (if rainbow-mode -1 +1)))
+
+(global-hl-line-mode -1)
 
 ;; Ensure SSH_AUTH_SOCK is set correctly
 ;; check that only one ssh-agent is running first.
@@ -32,7 +40,7 @@
   (interactive)
   (if (= (string-to-number (shell-command-to-string "pgrep ssh-agent | wc -l")) 1)
       (let ((private-sock (shell-command-to-string "lsof | grep ssh-agent | grep /private"))
-           (agent-sock (shell-command-to-string "lsof | grep ssh-agent | grep /agent")))
+            (agent-sock (shell-command-to-string "lsof | grep ssh-agent | grep /agent")))
         (unless (string= private-sock "")
           (setenv "SSH_AUTH_SOCK" (shell-command-to-string "lsof | grep ssh-agent | grep /private | awk '{printf($8)}'")))
 
@@ -105,7 +113,7 @@
 ;; - `add-load-path!' for adding directories to the `load-path', relative to
 ;;   this file. Emacs searches the `load-path' when you load packages with
 ;;   `require' or `use-package'.
-;; - `map!' for binding new keys
+;; - `map!' for bining new keys
 ;;
 ;; To get information about any of these functions/macros, move the cursor over
 ;; the highlighted symbol at press 'K' (non-evil users must press 'C-c c k').
@@ -128,73 +136,78 @@
 
 (load-file "~/.doom.d/ocodo-handy-functions.el")
 
-(bind-key "M-s-g g" 'google-this)
-(bind-key "M-s-g n" 'google-this-noconfirm)
-(bind-key "C-x x ." 'er/expand-region)
-(bind-key "C-x f" 'ag)
-(bind-key "C-c ]" 'embrace-commander)
-(bind-key "C-x r <left>" 'sp-slurp-hybrid-sexp)
-(bind-key "C-x r <right>" 'sp-forward-barf-sexp)
-(bind-key "C-x r <down>" 'sp-backward-barf-sexp)
-(bind-key "s-'" 'other-window)
-(bind-key "s-0" 'delete-window)
-(bind-key "s-1" 'delete-other-windows)
-(bind-key "s-2" 'split-window-below)
-(bind-key "s-3" 'split-window-right)
-(bind-key "s-`" 'other-frame)
-(bind-key "s-w" 'delete-frame)
-(bind-key "s-b" 'ivy-switch-buffer)
-(bind-key "s-<right>" 'next-buffer)
-(bind-key "s-<left>" 'previous-buffer)
-(bind-key "s-o" 'find-file)
-(bind-key "s-s" 'save-buffer)
-(bind-key "s-k" 'kill-this-buffer)
-(bind-key "s-t" 'projectile-find-file-dwim)
-(bind-key "s-q" 'kill-emacs)
-(bind-key "s-T" 'treemacs)
-(bind-key "C-x /" 'align-regexp)
-(bind-key "s-<up>" 'duplicate-current-line-or-region-up)
-(bind-key "s-<down>" 'duplicate-current-line-or-region)
-(bind-key "s-|" 'shell-command-on-region-replace)
-(bind-key "C-)" 'increment-number-at-point)
 (bind-key "C-(" 'decrement-number-at-point)
-(bind-key "C-c l h" 'hl-line-mode)
-(bind-key "M-o" 'dired-osx-open-this-file dired-mode-map)
-(bind-key "M-O" '+macos/open-in-default-program)
+(bind-key "C-)" 'increment-number-at-point)
+(bind-key "C-M-^" 'join-line-from-below)
 (bind-key "C-c ;" 'iedit-mode)
-(bind-key "M-`" 'magit)
-(bind-key "M-z" 'zap-up-to-char)
-(bind-key "s-/" #'hippie-expand)
-(bind-key "C-c f w" #'write-region)
-(bind-key "C-c l e i" #'eval-print-last-sexp)
-(bind-key "C-c s-e" #'eval-and-replace)
 (bind-key "C-c K" '+rgb/kurecolor-hydra/body)
+(bind-key "C-c ]" 'embrace-commander)
+(bind-key "C-c f w" #'write-region)
 (bind-key "C-c k H" '+rgb/kurecolor-hydra/body)
-(bind-key "C-c k x" 'kurecolor-xcode-color-literal-at-point-or-region-to-hex-rgb)
 (bind-key "C-c k X" 'kurecolor-xcode-color-literal-at-point-or-region-to-hex-rgba)
 (bind-key "C-c k c" 'kurecolor-cssrgb-at-point-or-region-to-hex)
 (bind-key "C-c k h" 'kurecolor-hexcolor-at-point-or-region-to-css-rgba)
 (bind-key "C-c k s" 'search-for-nearest-hex-color)
-(bind-key "C-M-^" 'join-line-from-below)
-(bind-key "s-^" 'join-line-from-below)
-(bind-key "C-c t t h" 'humanize-at-point-or-region)
+(bind-key "C-c k x" 'kurecolor-xcode-color-literal-at-point-or-region-to-hex-rgb)
+(bind-key "C-c l e i" #'eval-print-last-sexp)
+(bind-key "C-c l h" 'hl-line-mode)
+(bind-key "C-c s-e" #'eval-and-replace)
 (bind-key "C-c t t -" 'dasherise-at-point-or-region)
-(bind-key "C-c t t _" 'snake-case-at-point-or-region)
-(bind-key "C-c t t l" 'lower-camelcase-at-point-or-region)
-(bind-key "C-c t t u" 'upper-camelcase-at-point-or-region)
-(bind-key "C-c t t t" 'titleized-at-point-or-region)
-(bind-key "C-c t t U" 'url-encode-string-at-point)
 (bind-key "C-c t t ." 'hex-to-decimal-at-point-or-region)
 (bind-key "C-c t t /" 'decimal-to-hex-at-point-or-region)
+(bind-key "C-c t t U" 'url-encode-string-at-point)
+(bind-key "C-c t t _" 'snake-case-at-point-or-region)
+(bind-key "C-c t t h" 'humanize-at-point-or-region)
+(bind-key "C-c t t l" 'lower-camelcase-at-point-or-region)
+(bind-key "C-c t t t" 'titleized-at-point-or-region)
+(bind-key "C-c t t u" 'upper-camelcase-at-point-or-region)
 (bind-key "C-c t t v" 'video-time-to-seconds-at-point-or-region)
+(bind-key "C-x /" 'align-regexp)
+(bind-key "C-x f" 'ag)
+(bind-key "C-c r /" 'sp-split-sexp)
+(bind-key "C-c r ." 'sp-join-sexp)
+(bind-key "C-c r <down>" 'sp-backward-barf-sexp)
+(bind-key "C-c r <left>" 'sp-slurp-hybrid-sexp)
+(bind-key "C-c r <right>" 'sp-forward-barf-sexp)
+(bind-key "C-x x ." 'er/expand-region)
+(bind-key "M-O" '+macos/open-in-default-program)
+(bind-key "M-`" 'magit)
+(bind-key "M-o" 'dired-osx-open-this-file dired-mode-map)
+(bind-key "M-s-g g" 'google-this)
+(bind-key "M-s-g n" 'google-this-noconfirm)
+(bind-key "M-z" 'zap-up-to-char)
+(bind-key "s-'" 'other-window)
+(bind-key "s-/" #'hippie-expand)
+(bind-key "s-0" 'delete-window)
+(bind-key "s-1" 'delete-other-windows)
+(bind-key "s-2" 'split-window-below)
+(bind-key "s-3" 'split-window-right)
+(bind-key "s-<down>" 'duplicate-current-line-or-region)
+(bind-key "s-<left>" 'previous-buffer)
+(bind-key "s-<right>" 'next-buffer)
+(bind-key "s-<up>" 'duplicate-current-line-or-region-up)
+(bind-key "s-T" 'treemacs)
+(bind-key "s-^" 'join-line-from-below)
+(bind-key "s-`" 'other-frame)
+(bind-key "s-b" 'ivy-switch-buffer)
+(bind-key "s-k" 'kill-this-buffer)
+(bind-key "s-o" 'find-file)
+(bind-key "s-q" 'kill-emacs)
+(bind-key "s-s" 'save-buffer)
+(bind-key "s-t" 'projectile-find-file-dwim)
+(bind-key "s-w" 'delete-frame)
+(bind-key "s-|" 'shell-command-on-region-replace)
+
+(bind-key "C-M-%" 'anzu-query-replace-regexp)
+(bind-key "C-%" 'anzu-query-replace)
 
 ;; Unbind C-RET on global key map
 (map!
    "C-RET"      nil
    [C-return]   nil
    "C-S-RET"    nil
-   [C-S-return] nil
-)
+   [C-S-return] nil)
+
 
 ;; bind C-enter to CUA Rectangle mode
 (bind-key "C-<return>" #'cua-rectangle-mark-mode)
@@ -203,8 +216,8 @@
 ;; Better help for CUA Rectangle mode via which-key
 (bind-key "C-?"
           #'(lambda ()
-            (interactive)
-            (which-key-show-keymap 'cua--rectangle-keymap))
+             (interactive)
+             (which-key-show-keymap 'cua--rectangle-keymap))
           cua--rectangle-keymap)
 
 (defalias 'yes-or-no-p 'y-or-n-p)
