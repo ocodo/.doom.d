@@ -187,7 +187,7 @@
 (bind-key "s-<right>" #'next-buffer)
 (bind-key "s-<up>" #'duplicate-current-line-or-region-up)
 (bind-key "s-T" #'treemacs)
-(bind-key "s-U" #'(lambda () "Revert buffer without prompting" (revert-buffer t t t)))
+(bind-key "s-U" #'(lambda () "Revert buffer without prompting" (interactive) (revert-buffer t t t)))
 (bind-key "s-^" #'join-line-from-below)
 (bind-key "s-`" #'other-frame)
 (bind-key "s-b" #'ivy-switch-buffer)
