@@ -357,7 +357,7 @@ If UP is non-nil, duplicate and move point to the top."
            (-sort (lambda (a b)
                     (let ((c (symbol-name (first a)))
                           (d (symbol-name (first b))))
-                      (string< c d)) )
+                      (string< c d)))
                   (get-defun-info (current-buffer))))))
 
 (defun generate-untitled-name ()
@@ -413,7 +413,7 @@ BUFFER. Returns a list with elements of the form (symbol args docstring)."
 
 optional ARG when less than zero, default to the before match
 when matches are equidistant from the current point."
-  (let* ((after      (- (save-excursion (search-forward s)) (length s)))
+  (let* ((after        (- (save-excursion (search-forward s)) (length s)))
          (before       (save-excursion (search-backward s)))
          (dist-after   (- after  (point)))
          (dist-before  (- (point) before)))
@@ -940,7 +940,7 @@ css-value to the hex color found."
     (goto-char css-value-position)
 
     (re-search-forward
-     (rx "#" (** 3 6 (any hex-digit)) (0+ blank) ";" ))
+     (rx "#" (** 3 6 (any hex-digit)) (0+ blank) ";"))
     (replace-match (format "%s;" variable-name) t)
 
     (goto-char 0) (newline) (goto-char 0)
@@ -987,8 +987,9 @@ css-value to the hex color found."
 (defun screencapture-mac--filename-generator (path &optional ext file-keyword)
   "Generate a filename for the screenshot at PATH with optional EXT and FILE_KEYWORD."
   (let ((path (if (s-ends-with? "/" path) path (format "%s/" path)))
-        (file-keyword (or file-keyword
-                          screencapture-mac-default-file-keyword)))
+        (file-keyword
+         (or file-keyword
+             screencapture-mac-default-file-keyword)))
     (s-squeeze
      "-"
      (s-replace
@@ -1007,8 +1008,7 @@ css-value to the hex color found."
 
 (defun screencapture-mac--options ()
   "Command line options for screencapture (macOS)."
-  `(
-    (:flag "-B" :arg "<bundleid>" :description "screen capture output will open in app with bundleid")
+  `((:flag "-B" :arg "<bundleid>" :description "screen capture output will open in app with bundleid")
     (:flag "-C" :description "capture the cursor as well as the screen. only in non-interactive modes")
     (:flag "-D" :arg "<display>"  :description "screen capture or record from the display specified. -D 1 is main display -D 2 second")
     (:flag "-G" :arg "<id>"       :description "captures audio during a video recording using audio id specified.")
@@ -1039,8 +1039,7 @@ css-value to the hex color found."
     (:flag "-u" :description "present UI after screencapture is complete. files passed to command line will be ignored")
     (:flag "-v" :description "capture video recording of the screen")
     (:flag "-w" :description "only allow window selection mode")
-    (:flag "-x" :description "do not play sounds")
-    ))
+    (:flag "-x" :description "do not play sounds")))
 
 (defun screencapture-mac--options-summary (plist)
   (plist-bind (flag description) plist
@@ -1050,7 +1049,7 @@ css-value to the hex color found."
   "Execute the shell COMMAND with FILENAME."
   (message "%s \"%s\"" command filename)
   (shell-command
-   (format "%s \"%s\"" command filename )))
+   (format "%s \"%s\"" command filename)))
 
 ;; (screencapture-mac)
 
@@ -1063,12 +1062,12 @@ css-value to the hex color found."
 (defun screencapture-mac--windowid-helper ()
   "Get the windowid from a completing-read list."
   (car (last
-	(s-match "^\\([0-9]*\\) -"
-		 (completing-read "Select window: "
-				  (--map
-				   (cl-destructuring-bind (windowid app name) it
-                                     (format "%s - [%s] %s" windowid app name))
-				   (macos-get-list-of-windowids)))))))
+        (s-match "^\\([0-9]*\\) -"
+          (completing-read "Select window: "
+             (--map
+               (cl-destructuring-bind (windowid app name) it
+                                                    (format "%s - [%s] %s" windowid app name))
+               (macos-get-list-of-windowids)))))))
 
 (defun screencapture-mac-reset-default-commandline ()
   "Reset the default commandline"
