@@ -626,18 +626,18 @@ If your're in the minibuffer it will use the other buffer file name."
 
 (defun macos-get-list-of-windowids ()
   "Get a list of macOS windowids."
-          (--map
-           (cl-destructuring-bind (&optional windowid layer app window-name)
-               (eval (car (read-from-string (format "'(%s)" it))))
-             `(,windowid ,app ,window-name))
-           (--reject (string-blank-p it)
-                     (s-split "\n"
-                              (shell-command-to-string  "~/.doom.d/bin/wlist")))))
+  (--map
+   (cl-destructuring-bind (&optional windowid layer app window-name)
+       (eval (car (read-from-string (format "'(%s)" it))))
+     `(,windowid ,app ,window-name))
+   (--reject (string-blank-p it)
+             (s-split "\n"
+                      (shell-command-to-string  "~/.doom.d/bin/wlist")))))
 
 (defun macos-get-window-id-of (app)
   "Get the windowid of APP."
   (shell-command-to-string
-    (format "~/.doom.d/bin/wlist | grep '%s' | grep -E -o '^[0-9]*' " app)))
+   (format "~/.doom.d/bin/wlist | grep '%s' | grep -E -o '^[0-9]*' " app)))
 
 (defun macos-get-window-id-of-app (app)
   "Get the windowid of APP."
@@ -700,11 +700,11 @@ If your're in the minibuffer it will use the other buffer file name."
   (let ((right (cua--rectangle-right-side))
         rows)
     (cua--rectangle-operation
-        'clear nil t nil nil
-        (lambda (s e _l _r)
-          (setq rows
-                (append rows
-                        (list (cons (+ 0 s) (+ 0 e)))))))
+     'clear nil t nil nil
+     (lambda (s e _l _r)
+       (setq rows
+             (append rows
+                     (list (cons (+ 0 s) (+ 0 e)))))))
     (cua--cancel-rectangle)
     (if rows
         (let ((mark-row `(lambda (row)
@@ -719,9 +719,9 @@ If your're in the minibuffer it will use the other buffer file name."
               (top (car rows))
               (rest (cdr rows)))
           (cl-loop for row in rest do
-                (mc/save-excursion
-                 (funcall mark-row row)
-                 (mc/create-fake-cursor-at-point)))
+                   (mc/save-excursion
+                    (funcall mark-row row)
+                    (mc/create-fake-cursor-at-point)))
           (funcall mark-row top)
           (mc/maybe-multiple-cursors-mode)))))
 
@@ -989,15 +989,15 @@ css-value to the hex color found."
   (let ((path (if (s-ends-with? "/" path) path (format "%s/" path)))
         (file-keyword (or file-keyword
                           screencapture-mac-default-file-keyword)))
-  (s-squeeze
-   "-"
-   (s-replace
-    " " "-"
-    (format "%s%s%s.%s"
-            path
-            file-keyword
-            (s-replace ":" "." (time-stamp-string))
-            (or ext "png"))))))
+    (s-squeeze
+     "-"
+     (s-replace
+      " " "-"
+      (format "%s%s%s.%s"
+              path
+              file-keyword
+              (s-replace ":" "." (time-stamp-string))
+              (or ext "png"))))))
 
 (defun screencapture-mac--get-option (summary)
   "Fetch the option from SUMMARY"
@@ -1063,12 +1063,12 @@ css-value to the hex color found."
 (defun screencapture-mac--windowid-helper ()
   "Get the windowid from a completing-read list."
   (car (last
-    (s-match "^\\([0-9]*\\) -"
-             (completing-read "Select window: "
-                              (--map
-                               (cl-destructuring-bind (windowid app name) it
-                                 (format "%s - [%s] %s" windowid app name))
-                               (macos-get-list-of-windowids)))))))
+	(s-match "^\\([0-9]*\\) -"
+		 (completing-read "Select window: "
+				  (--map
+				   (cl-destructuring-bind (windowid app name) it
+                                     (format "%s - [%s] %s" windowid app name))
+				   (macos-get-list-of-windowids)))))))
 
 (defun screencapture-mac-reset-default-commandline ()
   "Reset the default commandline"
