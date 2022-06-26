@@ -134,6 +134,9 @@
   (setq lsp-sourcekit-executable
         "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp"))
 
+(use-package nameless
+  :config (add-hook 'emacs-lisp-mode-hook #'nameless-mode))
+
 (load-file "~/.doom.d/ocodo-handy-functions.el")
 
 (bind-key "C-(" #'decrement-number-at-point)

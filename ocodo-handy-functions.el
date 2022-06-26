@@ -300,21 +300,27 @@ If UP is non-nil, duplicate and move point to the top."
     (error (message "Invalid expression")
            (insert (current-kill 0)))))
 
+(defun filter-recentf (pattern)
+  "Remove entries matching PATTERN from recent files.
+This is operating on the recentf-list, in memory.
+Use recentf-save-list to persist."
+  (interactive "MRemove recentf entries mathing pattern: ")
+  (let ((temporary-recentf-list
+         (--reject (s-matches-p pattern it) recentf-list)))
+    (setq recentf-list temporary-recentf-list)))
+
 (defun flush-blank-lines ()
   "Flush blank lines."
   (interactive)
   (flush-lines "^\s*$" nil nil t))
 
-(defun format-bin (val width)
-  "Convert VAL of WIDTH to a binary string."
-  (let (result)
-    (while (> width 0)
-      (if (equal (mod val 2) 1)
-          (setq result (concat "1" result))
-        (setq result (concat "0" result)))
-      (setq val (/ val 2))
-      (setq width (1- width)))
-    result))
+(defun format-binary (val &optional width)
+  "Convert VAL of WIDTH to a binary string.
+&optional WIDTH will default to 8."
+  (let* ((w (or width 8))
+         (binary (int-to-binary-string val)))
+    (message "Width: %d" w)
+   (s-pad-left w "0" binary)))
 
 (defun format-thousands-separators (n)
   "Format N to have thousand separators."
@@ -583,6 +589,16 @@ If your're in the minibuffer it will use the other buffer file name."
   "Insert current time."
   (interactive)
   (insert (format-time-string "%l:%M%P(%z) %Y-%m-%d")))
+
+(defun int-to-binary-string (i)
+  "convert an integer into it's binary representation in string format"
+  (let ((res ""))
+    (while (not (= i 0))
+      (setq res (concat (if (= 1 (logand i 1)) "1" "0") res))
+      (setq i (lsh i -1)))
+    (if (string= res "")
+        (setq res "0"))
+    res))
 
 (defun join-line-from-below ()
   "Join line from below."
