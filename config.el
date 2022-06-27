@@ -198,7 +198,7 @@
 (bind-key "s-o" #'find-file)
 (bind-key "s-q" #'kill-emacs)
 (bind-key "s-s" #'save-buffer)
-(bind-key "s-t" #'projectile-find-file-dwim)
+(bind-key "s-t" #'projectile-find-file)
 (bind-key "s-w" #'delete-frame)
 (bind-key "s-|" #'shell-command-on-region-replace)
 
