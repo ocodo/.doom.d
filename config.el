@@ -194,6 +194,7 @@
 (bind-key "s-^" #'join-line-from-below)
 (bind-key "s-`" #'other-frame)
 (bind-key "s-b" #'ivy-switch-buffer)
+(bind-key "s-B" #'ibuffer)
 (bind-key "s-k" #'kill-this-buffer)
 (bind-key "s-o" #'find-file)
 (bind-key "s-q" #'kill-emacs)

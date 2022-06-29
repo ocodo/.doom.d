@@ -11,6 +11,7 @@
 (package! ag)
 (package! autothemer)
 (package! creamsody-theme)
+(package! consult-spotify)
 (package! edit-server)
 (package! embrace)
 (package! flymake-shellcheck)
