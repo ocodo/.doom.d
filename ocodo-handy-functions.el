@@ -103,7 +103,7 @@ Note: this won't turn off face properties in a font-locked buffer."
   (remove-text-properties 1 (point-max) '(face nil)))
 
 (defun comment-or-uncomment-current-line-or-region ()
-  "Comments or uncomments current current line or whole lines in region."
+  "Comments or uncomments the current line or all the lines in region."
   (interactive)
   (save-excursion
     (let (min max)
@@ -224,7 +224,11 @@ When there is only one frame, kill the buffer."
 
 (defun docstring-args-to-markdown-code (docstring)
   "transform DOCSTRING I arguments to inline markdown `code` style."
-  (format "%s" (s-replace-regexp "\([A-Z]\{2,\}\)" "@@\1@@" docstring)))
+  (format "%s" (s-replace-regexp "\([A-Z]\{2,\}\)" "`\1`" docstring)))
+
+(defun docstring-back-quoted-to-markdown-code (docstring)
+  "transform back-quoted docstring elements to inline markdown `code` style."
+  (format "%s" (s-replace-regexp "`\(.*?\)'" "`\1`" docstring)))
 
 (defun duplicate-current-line-or-region (arg &optional up)
   ;; Originally swiped from rejeep's emacs.d rejeep-defuns.el.
@@ -350,15 +354,16 @@ Use recentf-save-list to persist."
           (mapcar
            (lambda (entry)
              (cl-destructuring-bind (name args docstring) entry
-               (setq
-                name (format "%s" name)
-                args (format "%s" args))
-               (when (string= nil docstring)
-                 (setq docstring "No docstring available: TODO"))
-               (format "### %s\n\n```lisp\n(%s)\n```\n\n%s\n"
-                       name
-                       (format "%s %s" name (or args ""))
-                       (docstring-args-to-markdown-code  docstring))))
+               (let
+                   ((name (format "%s" name))
+                    (args (format " %s" (or args ""))))
+                (when (string= nil docstring)
+                  (setq docstring "No docstring available: TODO"))
+                (format "### %s\n\n%s\n\n```lisp\n(%s)\n```\n"
+                        name
+                        (docstring-back-quoted-to-markdown-code
+                         (docstring-args-to-markdown-code  docstring))
+                        (format "%s%s" name args)))))
 
            (-sort (lambda (a b)
                     (let ((c (symbol-name (first a)))
@@ -1293,8 +1298,8 @@ Comments stay with the code below."
   (interactive)
   (insert (format-time-string "%s")))
 
-(defun video-time-to-seconds (video-time)
-  "Convert a VIDEO-TIME formar hh:mm:ss into seconds."
+(defun time-to-seconds (time)
+  "Convert TIME `hh:mm:ss' into seconds."
   (cl-destructuring-bind (hh mm ss)
       (mapcar 'string-to-number
               (cdr (car

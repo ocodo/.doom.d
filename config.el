@@ -21,11 +21,17 @@
 (global-prettify-symbols-mode t)
 
 ;; Markdown settings
-(require 'markdown-soma)
+(use-package! markdown-mode
+  :init
 
-(setq markdown-css-paths
-      '("https://unpkg.com/@primer/css@^19.0.0/dist/primer.css"
-        "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/github.min.css"))
+  (use-package markdown-soma
+    :config (setq markdown-soma-custom-css "~/workspace/soma/styles/lopped-off-dark-subtle.css"
+                  markdown-soma-highlight-theme "atelier-plateau.dark"))
+
+  :bind (("C-c S c" . markdown-soma-select-css-file)
+         ("C-c S h" . markdown-soma-select-highlight-theme)
+         ("C-c S s" . markdown-soma-mode)
+         ("C-c S r" . markdown-soma-restart)))
 
 ;; Disable hl-mode
 (add-hook! 'rainbow-mode-hook
@@ -74,7 +80,10 @@
 (setq doom-font
       (font-spec
        :family "SauceCodePro Nerd Font"
-       :weight 'light))
+       :weight 'light)
+      doom-variable-pitch-font
+      (font-spec
+       :family "Avenir Next"))
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
