@@ -4,10 +4,11 @@ My attempt so far to discard `~/.ocodo.emacs`
 
 FWIW I thoroughly recommend Doom Emacs.
 
-- Migrated `handy-functions.el` ⟶ `ocodo-handy-functions.el`
+- Migrated [`handy-functions.el` ⟶  `ocodo-handy-functions.el`](./ocodo-handy-functions.md)
 - Set font to SauceCodePro Nerd Font extra light
 - turn off hl-line mode when rainbow-mode is switched on
-- bind keys for...
+
+## Custom Key bindings
 
 | command                                                      | key                           |
 |--------------------------------------------------------------|-------------------------------|
@@ -40,7 +41,6 @@ FWIW I thoroughly recommend Doom Emacs.
 | increment-number-at-point                                    | <kbd>C-)</kbd>                |
 | join-line-from-below                                         | <kbd>C-M-^</kbd>              |
 | join-line-from-below                                         | <kbd>s-^</kbd>                |
-| join-line-from-below                                         | <kbd>s-^</kbd>                |
 | kill-emacs                                                   | <kbd>s-q</kbd>                |
 | kill-this-buffer                                             | <kbd>s-k</kbd>                |
 | kurecolor-cssrgb-at-point-or-region-to-hex                   | <kbd>C-c k c</kbd>            |
@@ -71,26 +71,53 @@ FWIW I thoroughly recommend Doom Emacs.
 | zap-up-to-char                                               | <kbd>M-z</kbd>                |
 
 ---
+## Markdown mode custom bindings
 
-# Special functions
+| Command                           | Binding            |
+|-----------------------------------|--------------------|
+| markdown-soma-mode                | <kbd>C-c S s</kbd> |
+| markdown-soma-restart             | <kbd>C-c S r</kbd> |
+| markdown-soma-set-highlight-theme | <kbd>C-c S h</kbd> |
+| markdown-soma-set-css-file        | <kbd>C-c S c</kbd> |
+| markdown-soma-set-css-file        |                    |
+
+## Emacs lisp mode custom bindings
+
+| Command              | Binding            |
+|----------------------|--------------------|
+| ert-run-all-tests    | <kbd>C-c / t</kbd> |
+| ert-delete-all-tests | <kbd>C-c / c</kbd> |
+
+---
+
+## Special functions - init.el
 
 - `ssh-agent-env-fix`
 - `ocodo-sh-indent-rules`
 
-# Extra packages
+## Custom installed packages
 
+- `ag`
+- `autothemer`
+- `consult-spotify`
+- `creamsody-theme`
+- `edit-server`
+- `embrace`
+- `flymake-shellcheck`
+- `free-keys`
 - `google-this`
 - `iedit`
-- `creamsody-theme`
-- `autothemer`
-- `edit-server`
-- `ag`
-- `embrace`
-- `swiper`
-- `try`
-- `free-keys`
-- `flymake-shellcheck`
+- `iedit`
+- `kurecolor` grab from: `emacsfodder/kurecolor`
+- `kv`
 - `lorem-ipsum`
-- unpin `kurecolor` grab from: `emacsfodder/kurecolor`
+- `lsp-sourcekit`
+- `markdown-soma`
+- `mpdel`
+- `nameless`
+- `rainbow-identifiers`
+- `swiper`
 - `text-transformers` grab from: `jasonm23/emacs-text-transformers`
+- `try`
+- `xr`
 
