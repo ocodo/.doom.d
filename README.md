@@ -2,7 +2,7 @@
 
 # .doom.d
 
-My attempt so far to discard [ocodo/.emacs.d](/ocodo/.emacs.d)
+My attempt so far to discard [ocodo/.emacs.d](https://github.com/ocodo/.emacs.d)
 
 FWIW I thoroughly recommend Doom Emacs.
 
