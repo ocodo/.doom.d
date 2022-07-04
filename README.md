@@ -1,3 +1,5 @@
+![](./doom-vapourwave.png)
+
 # .doom.d
 
 My attempt so far to discard `~/.ocodo.emacs` 
