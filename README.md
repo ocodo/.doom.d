@@ -14,15 +14,13 @@ FWIW I thoroughly recommend Doom Emacs.
 
 | command                                                      | key                           |
 |--------------------------------------------------------------|-------------------------------|
+| decrement-number-at-point                                    | <kbd>C-(</kbd>                |
 | +macos/open-in-default-program                               | <kbd>M-O</kbd>                |
 | +rgb/kurecolor-hydra/body                                    | <kbd>C-c K</kbd>              |
 | +rgb/kurecolor-hydra/body                                    | <kbd>C-c k H</kbd>            |
 | ag                                                           | <kbd>C-x f</kbd>              |
 | align-regexp                                                 | <kbd>C-x /</kbd>              |
 | cua-rectangle-mark-mode                                      | <kbd>C-&lt;return&gt;</kbd>   |
-| dasherise-at-point-or-region                                 | <kbd>C-c t t -</kbd>          |
-| decimal-to-hex-at-point-or-region                            | <kbd>C-c t t /</kbd>          |
-| decrement-number-at-point                                    | <kbd>C-(</kbd>                |
 | delete-frame                                                 | <kbd>s-w</kbd>                |
 | delete-other-windows                                         | <kbd>s-1</kbd>                |
 | delete-window                                                | <kbd>s-0</kbd>                |
@@ -35,10 +33,8 @@ FWIW I thoroughly recommend Doom Emacs.
 | find-file                                                    | <kbd>s-o</kbd>                |
 | google-this                                                  | <kbd>M-s-g g</kbd>            |
 | google-this-noconfirm                                        | <kbd>M-s-g n</kbd>            |
-| hex-to-decimal-at-point-or-region                            | <kbd>C-c t t .</kbd>          |
 | hippie-expand                                                | <kbd>C-s-H</kbd>              |
 | hl-line-mode                                                 | <kbd>C-c l h</kbd>            |
-| humanize-at-point-or-region                                  | <kbd>C-c t t h</kbd>          |
 | iedit-mode                                                   | <kbd>C-c ;</kbd>              |
 | increment-number-at-point                                    | <kbd>C-)</kbd>                |
 | join-line-from-below                                         | <kbd>C-M-^</kbd>              |
@@ -49,7 +45,6 @@ FWIW I thoroughly recommend Doom Emacs.
 | kurecolor-hexcolor-at-point-or-region-to-css-rgba            | <kbd>C-c k h</kbd>            |
 | kurecolor-xcode-color-literal-at-point-or-region-to-hex-rgb  | <kbd>C-c k x</kbd>            |
 | kurecolor-xcode-color-literal-at-point-or-region-to-hex-rgba | <kbd>C-c k X</kbd>            |
-| lower-camelcase-at-point-or-region                           | <kbd>C-c t t l</kbd>          |
 | magit                                                        | <kbd>M-&#96;</kbd>            |
 | next-buffer                                                  | <kbd>s-&lt;right&gt;</kbd>    |
 | other-frame                                                  | <kbd>s-&#96;</kbd>            |
@@ -59,19 +54,29 @@ FWIW I thoroughly recommend Doom Emacs.
 | save-buffer                                                  | <kbd>s-s</kbd>                |
 | shell-command-on-region-replace                              | <kbd>s-\|</kbd>               |
 | show cua-rectangle help                                      | <kbd>C-?</kbd>                |
-| snake-case-at-point-or-region                                | <kbd>C-c t t _</kbd>          |
 | sp-slurp-hybrid-sexp                                         | <kbd>C-x r &lt;left&gt;</kbd> |
 | split-window-below                                           | <kbd>s-2</kbd>                |
 | split-window-right                                           | <kbd>s-3</kbd>                |
 | switch-to-buffer                                             | <kbd>s-b</kbd>                |
-| titleized-at-point-or-region                                 | <kbd>C-c t t t</kbd>          |
 | treemacs                                                     | <kbd>s-T</kbd>                |
-| upper-camelcase-at-point-or-region                           | <kbd>C-c t t u</kbd>          |
-| url-encode-string-at-point                                   | <kbd>C-c t t U</kbd>          |
-| video-time-to-seconds-at-point-or-region                     | <kbd>C-c t t v</kbd>          |
 | write-region                                                 | <kbd>C-c f w</kbd>            |
 | zap-up-to-char                                               | <kbd>M-z</kbd>                |
 
+## Text transformers
+
+| Command                            | Binding              |
+|------------------------------------|----------------------|
+| dasherise-at-point-or-region       | <kbd>C-c t t -</kbd> |
+| decimal-to-hex-at-point-or-region  | <kbd>C-c t t /</kbd> |
+| hex-to-decimal-at-point-or-region  | <kbd>C-c t t .</kbd> |
+| humanize-at-point-or-region        | <kbd>C-c t t h</kbd> |
+| lower-camelcase-at-point-or-region | <kbd>C-c t t l</kbd> |
+| snake-case-at-point-or-region      | <kbd>C-c t t _</kbd> |
+| titleized-at-point-or-region       | <kbd>C-c t t t</kbd> |
+| upper-camelcase-at-point-or-region | <kbd>C-c t t u</kbd> |
+| url-encode-string-at-point         | <kbd>C-c t t U</kbd> |
+| time-to-seconds-at-point-or-region | <kbd>C-c t t c</kbd> |
+ 
 ---
 ## Markdown mode custom bindings
 

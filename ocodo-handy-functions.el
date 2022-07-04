@@ -38,7 +38,7 @@
 
 (*-and-replace hex-to-decimal-at-point-or-region #'hex-to-decimal)
 
-(*-and-replace video-time-to-seconds-at-point-or-region #'video-time-to-seconds)
+(*-and-replace time-to-seconds-at-point-or-region #'time-to-seconds)
 
 (defmacro defun-pcase (name arglist &optional docstring &rest body)
   "Define a pcase function called NAME with ARGLIST.
