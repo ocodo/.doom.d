@@ -2,7 +2,7 @@
 
 # .doom.d
 
-My attempt so far to discard `~/.ocodo.emacs` 
+My attempt so far to discard [ocodo/.emacs.d](/ocodo/.emacs.d)
 
 FWIW I thoroughly recommend Doom Emacs.
 
