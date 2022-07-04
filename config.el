@@ -22,16 +22,18 @@
 
 ;; Markdown settings
 (use-package! markdown-mode
-  :init
+  :config
+  (use-package! markdown-soma
+    :config (setq markdown-soma-custom-css
+                  "~/workspace/soma/styles/lopped-off-dark-subtle.css"
+                  markdown-soma-highlight-theme
+                  "atelier-plateau.dark")
 
-  (use-package markdown-soma
-    :config (setq markdown-soma-custom-css "~/workspace/soma/styles/lopped-off-dark-subtle.css"
-                  markdown-soma-highlight-theme "atelier-plateau.dark"))
-
-  :bind (("C-c S c" . markdown-soma-select-css-file)
-         ("C-c S h" . markdown-soma-select-highlight-theme)
-         ("C-c S s" . markdown-soma-mode)
-         ("C-c S r" . markdown-soma-restart)))
+    :bind  (:map markdown-mode-map
+            ("C-c S c" . markdown-soma-select-css-file)
+            ("C-c S h" . markdown-soma-select-highlight-theme)
+            ("C-c S s" . markdown-soma-mode)
+            ("C-c S r" . markdown-soma-restart))))
 
 ;; Disable hl-mode
 (add-hook! 'rainbow-mode-hook
