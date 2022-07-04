@@ -19,6 +19,8 @@
 (require 'kurecolor)
 (require 'cua-base)
 (require 'magit)
+(require 'rx)
+(require 'xr)
 (require 'time-stamp)
 
 (defmacro *-and-replace (function-name evaluator)
@@ -223,12 +225,19 @@ When there is only one frame, kill the buffer."
           (file-name-directory (find-library-name libraryname)))))
 
 (defun docstring-args-to-markdown-code (docstring)
-  "transform DOCSTRING I arguments to inline markdown `code` style."
-  (format "%s" (s-replace-regexp "\([A-Z]\{2,\}\)" "`\1`" docstring)))
+  "transform DOCSTRING arguments to inline markdown `code` style."
+  (let ((case-fold-search nil))
+       (replace-regexp-in-string
+        (rx (group (>= 2 (any upper-case num "_" "-"))))
+        (lambda (match) (downcase (format "`%s`" match)))
+        docstring t)))
 
 (defun docstring-back-quoted-to-markdown-code (docstring)
   "transform back-quoted docstring elements to inline markdown `code` style."
-  (format "%s" (s-replace-regexp "`\(.*?\)'" "`\1`" docstring)))
+  (s-replace-regexp
+   (rx "`" (group (*? not-newline)) "'")
+   "`\\1`"
+   docstring))
 
 (defun duplicate-current-line-or-region (arg &optional up)
   ;; Originally swiped from rejeep's emacs.d rejeep-defuns.el.
@@ -348,23 +357,28 @@ Use recentf-save-list to persist."
   (interactive "nDenomiator:")
   (insert (format "%s" (/ (* float-pi 2) denominator))))
 
+(defun generate-markdown-defun-entry (fn)
+  "Generate a markdown entry for FN."
+  (cl-destructuring-bind (name args docstring) fn
+       (let
+           ((name (format "%s" name))
+            (args (if args
+                      (format " %s" args)
+                    "")))
+           (when (string= nil docstring)
+              (setq docstring "No docstring available: TODO"))
+           (format "### %s\n\n%s\n\n```lisp\n(%s)\n```\n"
+                   name
+                   (docstring-back-quoted-to-markdown-code
+                     (docstring-args-to-markdown-code
+                      docstring))
+                   (format "%s%s" name args)))))
+
 (defun generate-markdown-list-of-buffer-defuns (buffer)
   "Generate markdown text of all defuns in buffer"
   (s-join "\n"
           (mapcar
-           (lambda (entry)
-             (cl-destructuring-bind (name args docstring) entry
-               (let
-                   ((name (format "%s" name))
-                    (args (format " %s" (or args ""))))
-                (when (string= nil docstring)
-                  (setq docstring "No docstring available: TODO"))
-                (format "### %s\n\n%s\n\n```lisp\n(%s)\n```\n"
-                        name
-                        (docstring-back-quoted-to-markdown-code
-                         (docstring-args-to-markdown-code  docstring))
-                        (format "%s%s" name args)))))
-
+           #'generate-markdown-defun-entry
            (-sort (lambda (a b)
                     (let ((c (symbol-name (first a)))
                           (d (symbol-name (first b))))
@@ -384,8 +398,8 @@ Use recentf-save-list to persist."
     (format "untitled-%i" n)))
 
 (defun get-defun-info (buffer)
-  "Get information about all `defun' top-level sexps in a buffer
-BUFFER. Returns a list with elements of the form (symbol args docstring)."
+  "Get information about all `defun' top-level sexps in a BUFFER.
+Returns a list with elements of the form (symbol args docstring)."
   (with-current-buffer buffer
     (save-excursion
       (save-restriction
@@ -717,6 +731,7 @@ If your're in the minibuffer it will use the other buffer file name."
 ;; ;; #00030B #3905A3 #5405A3 #6E05A3 #8805A3 #A305A3 #A30588 #A3056E #A30554 #A30539 #A3051F #A30505
 
 (defun mc/cua-rectangle-to-multiple-cursors ()
+  "Switch from cua rectangle to multiple cursors."
   (interactive)
   (let ((right (cua--rectangle-right-side))
         rows)
@@ -904,7 +919,7 @@ Replace with the return value of the function FN"
 (defun s-squeeze (char string)
   "Squeeze the occurences of CHAR in STRING.
 This works the same as `tr -s CHAR`."
-  (s-replace-regexp (format "%s+" char) char string))
+  (replace-regexp-in-string (format "%s+" (regexp-quote char)) char string))
 
 (defun sass-hex-color-to-var ()
   "Find a hex color, and replace it with a newly created variable name.
@@ -1305,7 +1320,7 @@ Comments stay with the code below."
               (cdr (car
                     (s-match-strings-all
                      "\\([0-9][0-9]\\):\\([0-9][0-9]\\):\\([0-9][0-9]\\)"
-                     video-time))))
+                     time))))
     (+ (* 3600 hh) (* 60 mm) ss)))
 
 (defun yank-repeat (&optional arg)

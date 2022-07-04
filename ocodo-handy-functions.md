@@ -1,6 +1,6 @@
 ### -sample
 
-Return a random element from the LIST.
+Return a random element from the `list`.
 
 ```lisp
 (-sample (list))
@@ -8,7 +8,7 @@ Return a random element from the LIST.
 
 ### align-number-right
 
-Align region to equal signs from BEGIN to END.
+Align region to equal signs from `begin` to `end`.
 
 ```lisp
 (align-number-right (begin end))
@@ -19,12 +19,12 @@ Align region to equal signs from BEGIN to END.
 Save the buffer file name to the kill ring.
 
 ```lisp
-(buffer-file-name-to-kill-ring )
+(buffer-file-name-to-kill-ring)
 ```
 
 ### change-number-at-point
 
-Change the number at point using FUNC.
+Change the number at point using `func`.
 
 ```lisp
 (change-number-at-point (func))
@@ -35,7 +35,7 @@ Change the number at point using FUNC.
 Perform a cleanup operations on a buffer, tabs to spaces, re-indent, trim whitespace.
 
 ```lisp
-(cleanup-buffer )
+(cleanup-buffer)
 ```
 
 ### clear-buffer-text-properties
@@ -47,7 +47,7 @@ propertied buffer.
 Note: this won't turn off face properties in a font-locked buffer.
 
 ```lisp
-(clear-buffer-text-properties )
+(clear-buffer-text-properties)
 ```
 
 ### comment-or-uncomment-current-line-or-region
@@ -55,7 +55,7 @@ Note: this won't turn off face properties in a font-locked buffer.
 Comments or uncomments the current line or all the lines in region.
 
 ```lisp
-(comment-or-uncomment-current-line-or-region )
+(comment-or-uncomment-current-line-or-region)
 ```
 
 ### copy-region-or-rest-of-line-to-other-window
@@ -63,7 +63,7 @@ Comments or uncomments the current line or all the lines in region.
 Copy the current region to the other window.
 
 ```lisp
-(copy-region-or-rest-of-line-to-other-window )
+(copy-region-or-rest-of-line-to-other-window)
 ```
 
 ### copy-rest-of-line
@@ -71,7 +71,7 @@ Copy the current region to the other window.
 Copy from cursor to end the current line to the kill ring.
 
 ```lisp
-(copy-rest-of-line )
+(copy-rest-of-line)
 ```
 
 ### copy-whole-line
@@ -79,12 +79,12 @@ Copy from cursor to end the current line to the kill ring.
 Copy the current line to the kill ring.
 
 ```lisp
-(copy-whole-line )
+(copy-whole-line)
 ```
 
 ### csv--to-lists
 
-Convert CSV to lists.
+Convert `csv` to lists.
 
 ```lisp
 (csv--to-lists (csv))
@@ -92,7 +92,7 @@ Convert CSV to lists.
 
 ### current-buffer-defuns-to-markdown
 
-Create a markdown FILE of all defuns in the current buffer.
+Create a markdown `file` of all defuns in the current buffer.
 
 ```lisp
 (current-buffer-defuns-to-markdown (file))
@@ -100,7 +100,7 @@ Create a markdown FILE of all defuns in the current buffer.
 
 ### decimal-to-hex
 
-Convert NUM to hex.
+Convert `num` to hex.
 
 ```lisp
 (decimal-to-hex (num))
@@ -108,7 +108,7 @@ Convert NUM to hex.
 
 ### decrease-default-font-height
 
-Adjust the default font :height by 10, universal argument is M (to set by multiples).
+Adjust the default font :height by `10`, universal argument is M (to set by multiples).
 
 ```lisp
 (decrease-default-font-height (m))
@@ -119,7 +119,7 @@ Adjust the default font :height by 10, universal argument is M (to set by multip
 Decrement number at point like vim's Ctrl x.
 
 ```lisp
-(decrement-number-at-point )
+(decrement-number-at-point)
 ```
 
 ### delete-frame-or-window-dwim
@@ -128,12 +128,12 @@ Delete the current frame or buffer.
 When there is only one frame, kill the buffer.
 
 ```lisp
-(delete-frame-or-window-dwim )
+(delete-frame-or-window-dwim)
 ```
 
 ### delete-this-buffer-and-file
 
-Delete the file connected to this buffer and kill it, FORCE is universal argument.
+Delete the file connected to this buffer and kill it, `force` is universal argument.
 
 ```lisp
 (delete-this-buffer-and-file (force))
@@ -141,10 +141,10 @@ Delete the file connected to this buffer and kill it, FORCE is universal argumen
 
 ### describe-thing-at-point
 
-No docstring available: TODO
+No docstring available: `todo`
 
 ```lisp
-(describe-thing-at-point )
+(describe-thing-at-point)
 ```
 
 ### dired-find-file-other-window-and-back
@@ -152,7 +152,7 @@ No docstring available: TODO
 In Dired, visit this file or directory in another window and remain in first window.
 
 ```lisp
-(dired-find-file-other-window-and-back )
+(dired-find-file-other-window-and-back)
 ```
 
 ### dired-menu
@@ -160,20 +160,20 @@ In Dired, visit this file or directory in another window and remain in first win
 Go to one of the currently open dired buffers (if there is one).
 
 ```lisp
-(dired-menu )
+(dired-menu)
 ```
 
 ### dired-osx-open-this-file
 
-Use the OSX `open' command to launch the current dired file at point.
+Use the `osx` `open` command to launch the current dired file at point.
 
 ```lisp
-(dired-osx-open-this-file )
+(dired-osx-open-this-file)
 ```
 
 ### dired-visit-library
 
-Open directory with dired which contain the given LIBRARYNAME.
+Open directory with dired which contain the given `libraryname`.
 
 ```lisp
 (dired-visit-library (libraryname))
@@ -181,7 +181,7 @@ Open directory with dired which contain the given LIBRARYNAME.
 
 ### docstring-args-to-markdown-code
 
-transform DOCSTRING I arguments to inline markdown `code` style.
+transform `docstring` arguments to inline markdown `code` style.
 
 ```lisp
 (docstring-args-to-markdown-code (docstring))
@@ -197,9 +197,9 @@ transform back-quoted docstring elements to inline markdown `code` style.
 
 ### duplicate-current-line-or-region
 
-Duplicates the current line or region ARG times.
+Duplicates the current line or region `arg` times.
 
-If UP is non-nil, duplicate and move point to the top.
+If `up` is non-nil, duplicate and move point to the top.
 
 ```lisp
 (duplicate-current-line-or-region (arg &optional up))
@@ -207,7 +207,7 @@ If UP is non-nil, duplicate and move point to the top.
 
 ### duplicate-current-line-or-region-up
 
-Duplicates the current line or region up ARG times.
+Duplicates the current line or region up `arg` times.
 
 ```lisp
 (duplicate-current-line-or-region-up (arg))
@@ -215,12 +215,12 @@ Duplicates the current line or region up ARG times.
 
 ### elpa-package-insert-ends-here
 
-Insert the ELPA package file ending string.
+Insert the `elpa` package file ending string.
 
 (When it's missing)
 
 ```lisp
-(elpa-package-insert-ends-here )
+(elpa-package-insert-ends-here)
 ```
 
 ### eval-and-replace
@@ -228,7 +228,7 @@ Insert the ELPA package file ending string.
 Replace the preceding sexp with its value.
 
 ```lisp
-(eval-and-replace )
+(eval-and-replace)
 ```
 
 ### eval-and-replace-prin1
@@ -236,12 +236,12 @@ Replace the preceding sexp with its value.
 Replace the preceding sexp with its value using prin1.
 
 ```lisp
-(eval-and-replace-prin1 )
+(eval-and-replace-prin1)
 ```
 
 ### filter-recentf
 
-Remove entries matching PATTERN from recent files.
+Remove entries matching `pattern` from recent files.
 This is operating on the recentf-list, in memory.
 Use recentf-save-list to persist.
 
@@ -254,13 +254,13 @@ Use recentf-save-list to persist.
 Flush blank lines.
 
 ```lisp
-(flush-blank-lines )
+(flush-blank-lines)
 ```
 
 ### format-binary
 
-Convert VAL of WIDTH to a binary string.
-&optional WIDTH will default to 8.
+Convert `val` of `width` to a binary string.
+&optional `width` will default to 8.
 
 ```lisp
 (format-binary (val &optional width))
@@ -276,10 +276,18 @@ Format N to have thousand separators.
 
 ### fraction-radian
 
-Fraction DENOMINATOR of circle to radians.
+Fraction `denominator` of circle to radians.
 
 ```lisp
 (fraction-radian (denominator))
+```
+
+### generate-markdown-defun-entry
+
+Generate a markdown entry for `fn`.
+
+```lisp
+(generate-markdown-defun-entry (fn))
 ```
 
 ### generate-markdown-list-of-buffer-defuns
@@ -295,13 +303,13 @@ Generate markdown text of all defuns in buffer
 Generate a name with pattern untitled-n.
 
 ```lisp
-(generate-untitled-name )
+(generate-untitled-name)
 ```
 
 ### get-defun-info
 
-Get information about all `defun' top-level sexps in a buffer
-BUFFER. Returns a list with elements of the form (symbol args docstring).
+Get information about all `defun` top-level sexps in a `buffer`.
+Returns a list with elements of the form (symbol args docstring).
 
 ```lisp
 (get-defun-info (buffer))
@@ -309,17 +317,17 @@ BUFFER. Returns a list with elements of the form (symbol args docstring).
 
 ### get-osx-display-resolution
 
-Get the current display resolution in OSX.
+Get the current display resolution in `osx`.
 
 ```lisp
-(get-osx-display-resolution )
+(get-osx-display-resolution)
 ```
 
 ### get-position-of-nearest-matching
 
 Get the position of nearest S.
 
-optional ARG when less than zero, default to the before match
+optional `arg` when less than zero, default to the before match
 when matches are equidistant from the current point.
 
 ```lisp
@@ -328,9 +336,9 @@ when matches are equidistant from the current point.
 
 ### get-position-of-nearest-regexp-match
 
-Get the position of nearest REGEXP match.
+Get the position of nearest `regexp` match.
 
-optional ARG when less than zero, default to the before match
+optional `arg` when less than zero, default to the before match
 when matches are equidistant from the current point.
 
 ```lisp
@@ -342,7 +350,7 @@ when matches are equidistant from the current point.
 Use git ls-files to open changed files.
 
 ```lisp
-(git-open-changed-and-new-files )
+(git-open-changed-and-new-files)
 ```
 
 ### git-open-changed-files
@@ -350,12 +358,12 @@ Use git ls-files to open changed files.
 Use git ls-files to open changed files.
 
 ```lisp
-(git-open-changed-files )
+(git-open-changed-files)
 ```
 
 ### git-open-from-ls-files
 
-Use GIT-LS-OPTIONS to open changed files.
+Use `git-ls-options` to open changed files.
 
 ```lisp
 (git-open-from-ls-files (git-ls-options))
@@ -363,7 +371,7 @@ Use GIT-LS-OPTIONS to open changed files.
 
 ### git-open-ls-files
 
-Use GIT-LS-OPTIONS to open changed files.
+Use `git-ls-options` to open changed files.
 
 ```lisp
 (git-open-ls-files (git-ls-options))
@@ -376,12 +384,12 @@ Use git ls-files to open untracked files.
     Open any untracked file in the repo (unless it's been .gitignored)
 
 ```lisp
-(git-open-untracked-files )
+(git-open-untracked-files)
 ```
 
 ### github-browse-repo
 
-Browse a github REPO by supplying the user/reponame.
+Browse a github `repo` by supplying the user/reponame.
 
 ```lisp
 (github-browse-repo (repo))
@@ -389,7 +397,7 @@ Browse a github REPO by supplying the user/reponame.
 
 ### hex-to-decimal
 
-Convert hex NUM to decimal.
+Convert hex `num` to decimal.
 
 ```lisp
 (hex-to-decimal (num))
@@ -397,7 +405,7 @@ Convert hex NUM to decimal.
 
 ### increase-default-font-height
 
-Adjust the default font :height by 10, universal argument is M (to set by multiples).
+Adjust the default font :height by `10`, universal argument is M (to set by multiples).
 
 ```lisp
 (increase-default-font-height (m))
@@ -408,12 +416,12 @@ Adjust the default font :height by 10, universal argument is M (to set by multip
 Increment number at point like vim's Ctrl a.
 
 ```lisp
-(increment-number-at-point )
+(increment-number-at-point)
 ```
 
 ### increment-number-binary
 
-Increment the number forward from point by ARG.
+Increment the number forward from point by `arg`.
 
 ```lisp
 (increment-number-binary (&optional arg))
@@ -424,7 +432,7 @@ Increment the number forward from point by ARG.
 Indent the current buffer.
 
 ```lisp
-(indent-buffer )
+(indent-buffer)
 ```
 
 ### insert-buffer-base-filename
@@ -434,7 +442,7 @@ Insert the base filename for the current buffer.
 If your're in the minibuffer it will use the other buffer file name.
 
 ```lisp
-(insert-buffer-base-filename )
+(insert-buffer-base-filename)
 ```
 
 ### insert-buffer-filename
@@ -444,12 +452,12 @@ Insert the filename for the current buffer.
 If your're in the minibuffer it will use the other buffer file name.
 
 ```lisp
-(insert-buffer-filename )
+(insert-buffer-filename)
 ```
 
 ### insert-iso8601-date
 
-Insert DATE.
+Insert `date`.
 
 ```lisp
 (insert-iso8601-date (&optional date))
@@ -457,7 +465,7 @@ Insert DATE.
 
 ### insert-kill
 
-Insert STRING and copy to the kill ring.
+Insert `string` and copy to the kill ring.
 
 ```lisp
 (insert-kill (string))
@@ -465,7 +473,7 @@ Insert STRING and copy to the kill ring.
 
 ### insert-random-in-range
 
-Insert a random number within the range of START and END.
+Insert a random number within the range of `start` and `end`.
 
 ```lisp
 (insert-random-in-range (start end))
@@ -473,15 +481,15 @@ Insert a random number within the range of START and END.
 
 ### insert-random-radian
 
-Insert a radian value from 0 to 6.28318 (2PI : 360 deg).
+Insert a radian value from 0 to 6.`28318` (`2pi` : `360` deg).
 
 ```lisp
-(insert-random-radian )
+(insert-random-radian)
 ```
 
 ### insert-sample
 
-Insert a random item from a list of STRINGS.
+Insert a random item from a list of `strings`.
 
 ```lisp
 (insert-sample (strings))
@@ -492,7 +500,7 @@ Insert a random item from a list of STRINGS.
 Insert current time.
 
 ```lisp
-(insert-time-now )
+(insert-time-now)
 ```
 
 ### int-to-binary-string
@@ -508,7 +516,7 @@ convert an integer into it's binary representation in string format
 Join line from below.
 
 ```lisp
-(join-line-from-below )
+(join-line-from-below)
 ```
 
 ### join-line-or-lines-in-region
@@ -516,7 +524,7 @@ Join line from below.
 Join this line or the lines in the selected region.
 
 ```lisp
-(join-line-or-lines-in-region )
+(join-line-or-lines-in-region)
 ```
 
 ### kill-untitled-buffers
@@ -524,7 +532,7 @@ Join this line or the lines in the selected region.
 Kill untitled buffers.
 
 ```lisp
-(kill-untitled-buffers )
+(kill-untitled-buffers)
 ```
 
 ### kill-whole-word
@@ -532,20 +540,20 @@ Kill untitled buffers.
 Kill the current word at point.
 
 ```lisp
-(kill-whole-word )
+(kill-whole-word)
 ```
 
 ### macos-get-list-of-windowids
 
-Get a list of macOS windowids.
+Get a list of mac`os` windowids.
 
 ```lisp
-(macos-get-list-of-windowids )
+(macos-get-list-of-windowids)
 ```
 
 ### macos-get-window-id-of
 
-Get the windowid of APP.
+Get the windowid of `app`.
 
 ```lisp
 (macos-get-window-id-of (app))
@@ -553,7 +561,7 @@ Get the windowid of APP.
 
 ### macos-get-window-id-of-app
 
-Get the windowid of APP.
+Get the windowid of `app`.
 
 ```lisp
 (macos-get-window-id-of-app (app))
@@ -561,15 +569,15 @@ Get the windowid of APP.
 
 ### magit-just-amend
 
-Just git commit --amend.
+Just git commit `--`amend.
 
 ```lisp
-(magit-just-amend )
+(magit-just-amend)
 ```
 
 ### make-kurecolor-24bit-hue-table
 
-Make a 24bit color table using Kurecolor.
+Make a `24`bit color table using Kurecolor.
 
 ```lisp
 (make-kurecolor-24bit-hue-table (color))
@@ -580,15 +588,15 @@ Make a 24bit color table using Kurecolor.
 Make a hue table from hex color at top of kill ring, no error checking.
 
 ```lisp
-(make-kurecolor-hue-table )
+(make-kurecolor-hue-table)
 ```
 
 ### mc/cua-rectangle-to-multiple-cursors
 
-No docstring available: TODO
+Switch from cua rectangle to multiple cursors.
 
 ```lisp
-(mc/cua-rectangle-to-multiple-cursors )
+(mc/cua-rectangle-to-multiple-cursors)
 ```
 
 ### my-isearch-buffers
@@ -596,13 +604,13 @@ No docstring available: TODO
 Incremental search through open buffers.
 
 ```lisp
-(my-isearch-buffers )
+(my-isearch-buffers)
 ```
 
 ### my-multi-occur-in-matching-buffers
 
-Show all lines matching REGEXP in all buffers.
-Optionally check ALLBUFS.
+Show all lines matching `regexp` in all buffers.
+Optionally check `allbufs`.
 
 ```lisp
 (my-multi-occur-in-matching-buffers (regexp &optional allbufs))
@@ -613,7 +621,7 @@ Optionally check ALLBUFS.
 Open a new buffer called untitled-n.
 
 ```lisp
-(new-untitled-buffer )
+(new-untitled-buffer)
 ```
 
 ### nuke-all-buffers
@@ -621,7 +629,7 @@ Open a new buffer called untitled-n.
 Kill all buffers, leaving *scratch* only.
 
 ```lisp
-(nuke-all-buffers )
+(nuke-all-buffers)
 ```
 
 ### nuke-all-buffers-execept-current
@@ -630,7 +638,7 @@ Kill all the open buffers except the current one.
 Leave *scratch* and *Messages* alone too.
 
 ```lisp
-(nuke-all-buffers-execept-current )
+(nuke-all-buffers-execept-current)
 ```
 
 ### open-line-above
@@ -638,7 +646,7 @@ Leave *scratch* and *Messages* alone too.
 Open a newline above the current point.
 
 ```lisp
-(open-line-above )
+(open-line-above)
 ```
 
 ### open-line-below
@@ -646,28 +654,28 @@ Open a newline above the current point.
 Open a newline below the current point.
 
 ```lisp
-(open-line-below )
+(open-line-below)
 ```
 
 ### open-this-in-intellij-idea-15-osx
 
-Open the current file in intellij IDEA 15 (OS X specific).
+Open the current file in intellij `idea` `15` (`os` X specific).
 
 ```lisp
-(open-this-in-intellij-idea-15-osx )
+(open-this-in-intellij-idea-15-osx)
 ```
 
 ### open-this-in-xcode
 
-Open the current file in XCode.
+Open the current file in `xc`ode.
 
 ```lisp
-(open-this-in-xcode )
+(open-this-in-xcode)
 ```
 
 ### pcre-regexp-from-list-of-words
 
-Insert a pcre regexp to match a list of WORDS.
+Insert a pcre regexp to match a list of `words`.
 
 ```lisp
 (pcre-regexp-from-list-of-words (words))
@@ -675,7 +683,7 @@ Insert a pcre regexp to match a list of WORDS.
 
 ### random-in-range
 
-Return a random number in range START to END.
+Return a random number in range `start` to `end`.
 
 ```lisp
 (random-in-range (start end))
@@ -685,10 +693,10 @@ Return a random number in range START to END.
 
 Run a simple applescript to reload the current Google Chrome tab.
 
-OSX specific.
+`osx` specific.
 
 ```lisp
-(reload-current-chrome-tab-osx )
+(reload-current-chrome-tab-osx)
 ```
 
 ### rename-this-buffer-and-file
@@ -696,7 +704,7 @@ OSX specific.
 Renames current buffer and file it is visiting.
 
 ```lisp
-(rename-this-buffer-and-file )
+(rename-this-buffer-and-file)
 ```
 
 ### replace-pretty-quotes
@@ -704,12 +712,12 @@ Renames current buffer and file it is visiting.
 Replace pretty quotes with standard quotes.
 
 ```lisp
-(replace-pretty-quotes )
+(replace-pretty-quotes)
 ```
 
 ### replace-regexp-and-return
 
-Replace regexp FROM to TO and return cursor to point.
+Replace regexp `from` to `to` and return cursor to point.
 
 ```lisp
 (replace-regexp-and-return (from to))
@@ -717,7 +725,7 @@ Replace regexp FROM to TO and return cursor to point.
 
 ### replace-region-with
 
-No docstring available: TODO
+No docstring available: `todo`
 
 ```lisp
 (replace-region-with (fn))
@@ -726,7 +734,7 @@ No docstring available: TODO
 ### replace-thing-at-point-with
 
 Get the current thing at point.
-Replace with the return value of the function FN
+Replace with the return value of the function `fn`
 
 ```lisp
 (replace-thing-at-point-with (fn))
@@ -734,8 +742,8 @@ Replace with the return value of the function FN
 
 ### s-squeeze
 
-Squeeze the occurences of CHAR in STRING.
-This works the same as `tr -s CHAR`.
+Squeeze the occurences of `char` in `string`.
+This works the same as `tr -s `char``.
 
 ```lisp
 (s-squeeze (char string))
@@ -745,16 +753,16 @@ This works the same as `tr -s CHAR`.
 
 Find a hex color, and replace it with a newly created variable name.
 Place the created variable at the top of the file.  Name it based
-on the property being set, and its CSS selector, and set its
+on the property being set, and its `css` selector, and set its
 css-value to the hex color found.
 
 ```lisp
-(sass-hex-color-to-var )
+(sass-hex-color-to-var)
 ```
 
 ### screencapture-mac
 
-Screencapture on macOS, interactive or supply COMMANDLINE and FILE_KEYWORD.
+Screencapture on mac`os`, interactive or supply `commandline` and `file_keyword`.
 
 ```lisp
 (screencapture-mac (&optional commandline file-keyword))
@@ -770,7 +778,7 @@ Do completeing read for arguments of option.
 
 ### screencapture-mac--entry-from-summaries
 
-No docstring available: TODO
+No docstring available: `todo`
 
 ```lisp
 (screencapture-mac--entry-from-summaries (summaries))
@@ -778,7 +786,7 @@ No docstring available: TODO
 
 ### screencapture-mac--filename-generator
 
-Generate a filename for the screenshot at PATH with optional EXT and FILE_KEYWORD.
+Generate a filename for the screenshot at `path` with optional `ext` and `file_keyword`.
 
 ```lisp
 (screencapture-mac--filename-generator (path &optional ext file-keyword))
@@ -786,7 +794,7 @@ Generate a filename for the screenshot at PATH with optional EXT and FILE_KEYWOR
 
 ### screencapture-mac--get-option
 
-Fetch the option from SUMMARY
+Fetch the option from `summary`
 
 ```lisp
 (screencapture-mac--get-option (summary))
@@ -794,15 +802,15 @@ Fetch the option from SUMMARY
 
 ### screencapture-mac--options
 
-Command line options for screencapture (macOS).
+Command line options for screencapture (mac`os`).
 
 ```lisp
-(screencapture-mac--options )
+(screencapture-mac--options)
 ```
 
 ### screencapture-mac--options-summary
 
-No docstring available: TODO
+No docstring available: `todo`
 
 ```lisp
 (screencapture-mac--options-summary (plist))
@@ -810,7 +818,7 @@ No docstring available: TODO
 
 ### screencapture-mac--run
 
-Execute the shell COMMAND with FILENAME.
+Execute the shell `command` with `filename`.
 
 ```lisp
 (screencapture-mac--run (command filename))
@@ -821,7 +829,7 @@ Execute the shell COMMAND with FILENAME.
 Summarized list of screencapture mac options
 
 ```lisp
-(screencapture-mac--summary-list )
+(screencapture-mac--summary-list)
 ```
 
 ### screencapture-mac--windowid-helper
@@ -829,7 +837,7 @@ Summarized list of screencapture mac options
 Get the windowid from a completing-read list.
 
 ```lisp
-(screencapture-mac--windowid-helper )
+(screencapture-mac--windowid-helper)
 ```
 
 ### screencapture-mac-reset-default-commandline
@@ -837,18 +845,18 @@ Get the windowid from a completing-read list.
 Reset the default commandline
 
 ```lisp
-(screencapture-mac-reset-default-commandline )
+(screencapture-mac-reset-default-commandline)
 ```
 
 ### search-backward-wrapped-string
 
 Search for a string backwards from the current point.
 
-Use the strings WRAP_START and WRAP_END, to match the start and
+Use the strings `wrap_start` and `wrap_end`, to match the start and
 end of the string.
 
-if WRAP_END and WRAP_START are equal, we first position the point
-at the beginning of the first WRAP_END match, before the initial
+if `wrap_end` and `wrap_start` are equal, we first position the point
+at the beginning of the first `wrap_end` match, before the initial
 point.
 
 The string found between the two wrappers is returned.
@@ -891,12 +899,12 @@ Run a shell command, using the file of current buffer as input.
 Return an error if no buffer file.
 
 ```lisp
-(shell-command-on-buffer-file )
+(shell-command-on-buffer-file)
 ```
 
 ### shell-command-on-region-replace
 
-Run `shell-command-on-region' replacing the selected region.  START END COMMAND.
+Run `shell-command-on-region` replacing the selected region.  `start` `end` `command`.
 
 ```lisp
 (shell-command-on-region-replace (start end command))
@@ -904,18 +912,18 @@ Run `shell-command-on-region' replacing the selected region.  START END COMMAND.
 
 ### smart-beginning-of-line
 
-Move point to first non-whitespace character or `beginning-of-line'.
+Move point to first non-whitespace character or `beginning-of-line`.
 
 ```lisp
-(smart-beginning-of-line )
+(smart-beginning-of-line)
 ```
 
 ### snippy-comment
 
-Insert a snip line `- - 8< - - -' comment.
+Insert a snip line `- - 8< - - -` comment.
 
 ```lisp
-(snippy-comment )
+(snippy-comment)
 ```
 
 ### sort-sexps
@@ -932,7 +940,7 @@ Comments stay with the code below.
 Switch to the message buffer.
 
 ```lisp
-(switch-to-message-buffer )
+(switch-to-message-buffer)
 ```
 
 ### switch-to-minibuffer-window
@@ -940,7 +948,7 @@ Switch to the message buffer.
 Switch to minibuffer window (if active).
 
 ```lisp
-(switch-to-minibuffer-window )
+(switch-to-minibuffer-window)
 ```
 
 ### switch-to-scratch
@@ -948,7 +956,7 @@ Switch to minibuffer window (if active).
 Switch to scratch, grab the region if it's active.
 
 ```lisp
-(switch-to-scratch )
+(switch-to-scratch)
 ```
 
 ### time-now
@@ -956,12 +964,12 @@ Switch to scratch, grab the region if it's active.
 current time.
 
 ```lisp
-(time-now )
+(time-now)
 ```
 
 ### time-to-seconds
 
-Convert TIME `hh:mm:ss' into seconds.
+Convert `time` `hh:mm:ss` into seconds.
 
 ```lisp
 (time-to-seconds (time))
@@ -972,7 +980,7 @@ Convert TIME `hh:mm:ss' into seconds.
 Toggle the current window split.
 
 ```lisp
-(toggle-window-split )
+(toggle-window-split)
 ```
 
 ### untabify-buffer
@@ -980,20 +988,20 @@ Toggle the current window split.
 Untabify the current buffer.
 
 ```lisp
-(untabify-buffer )
+(untabify-buffer)
 ```
 
 ### utc-seconds
 
-Insert UTC seconds.
+Insert `utc` seconds.
 
 ```lisp
-(utc-seconds )
+(utc-seconds)
 ```
 
 ### yank-repeat
 
-Repeat yank n times ARG.
+Repeat yank n times `arg`.
 
 ```lisp
 (yank-repeat (&optional arg))

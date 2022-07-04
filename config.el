@@ -20,6 +20,19 @@
 ;; Prettify symbols
 (global-prettify-symbols-mode t)
 
+;; ert settings
+(use-package! ert
+
+  :config
+  (defun ert-run-all-tests ()
+    "Run all tests available."
+    (interactive)
+    (ert t))
+
+  :bind (:map emacs-lisp-mode-map
+         ("C-c / t" . #'ert-run-all-tests)
+         ("C-c / c" . #'ert-delete-all-tests)))
+
 ;; Markdown settings
 (use-package! markdown-mode
   :config
