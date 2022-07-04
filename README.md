@@ -86,7 +86,6 @@ FWIW I thoroughly recommend Doom Emacs.
 | markdown-soma-restart             | <kbd>C-c S r</kbd> |
 | markdown-soma-set-highlight-theme | <kbd>C-c S h</kbd> |
 | markdown-soma-set-css-file        | <kbd>C-c S c</kbd> |
-| markdown-soma-set-css-file        |                    |
 
 ## Emacs lisp mode custom bindings
 
