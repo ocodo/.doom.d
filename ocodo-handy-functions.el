@@ -818,10 +818,26 @@ Leave *scratch* and *Messages* alone too."
    (buffer-list))
   (delete-other-windows))
 
-(defun ocodo-custom-bindings-markdown (file)
+(defun ocodo-custom-bindings-markdown ()
   "Generate markdown FILE with table of custom bindings."
-  (interactive (read-file-name "[Cusom Bindings] Generate markdown file: " nil "ocodo-custom-bindings.md" nil "*.md")))
-(defalias 'yes-or-no-p 'y-or-n-p)
+  (interactive)
+
+  (let ((custom-bindings (shell-command-to-string "
+echo '| Command | Binding |'
+echo '|---------|---------|'
+grep 'bind-key' ~/.doom.d/config.el |\\
+ sed 's/(bind-key //' |\\
+  tr -d '\"#' |\\
+  tr -d \"'\" |\\
+  sed 's/)$//' |\\
+ perl -pe 's/(.*?) {1,}(.*)$/| \\2 | <kbd>\\1<\\/kbd> |/'"))
+
+        (file (read-file-name
+               "[Cusom Bindings] Generate markdown file: "
+               nil "ocodo-custom-bindings.md" nil "*.md"
+               'is-markdown-filename-p)))
+   (f-write custom-bindings file)
+   (message "Generated: %s" file)))
 
 (defun open-line-above ()
   "Open a newline above the current point."

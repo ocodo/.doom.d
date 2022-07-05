@@ -20,6 +20,8 @@
 ;; Prettify symbols
 (global-prettify-symbols-mode t)
 
+(defalias 'yes-or-no-p 'y-or-n-p)
+
 ;; ert settings
 (use-package! ert
 
@@ -200,6 +202,8 @@
 (bind-key "M-O"           #'+macos/open-in-default-program)
 (bind-key "C-x /"         #'align-regexp)
 (bind-key "C-x f"         #'ag)
+(bind-key "C-x X d y"     #'edebug-defun)
+(bind-key "C-x X d n"     #'edebug-remove-instrumentation)
 (bind-key "M-`"           #'magit)
 (bind-key "M-o"           #'dired-osx-open-this-file dired-mode-map)
 (bind-key "M-s-g g"       #'google-this)
