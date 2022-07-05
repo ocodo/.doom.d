@@ -147,6 +147,12 @@ Note: this won't turn off face properties in a font-locked buffer."
   (mapcar (lambda (line) (split-string line ","))
           (split-string (s-chomp csv) "\n")))
 
+(defun cua-rectangle-which-key-help ()
+  "Display cua-rectangle-keymap in which-key."
+  (interactive)
+  (which-key-show-keymap 'cua--rectangle-keymap
+           cua--rectangle-keymap))
+
 (defun current-buffer-defuns-to-markdown (file)
   "Create a markdown FILE of all defuns in the current buffer."
   (interactive "FWrite List of defuns to Markdown File: ")
@@ -619,6 +625,10 @@ If your're in the minibuffer it will use the other buffer file name."
         (setq res "0"))
     res))
 
+(defun is-markdown-filename-p (filename)
+  "Is the FILENAME markdown."
+  (s-matches-p "^.*[.]\\(md\\|markdown\\)$" filename))
+
 (defun join-line-from-below ()
   "Join line from below."
   (interactive)
@@ -808,6 +818,11 @@ Leave *scratch* and *Messages* alone too."
    (buffer-list))
   (delete-other-windows))
 
+(defun ocodo-custom-bindings-markdown (file)
+  "Generate markdown FILE with table of custom bindings."
+  (interactive (read-file-name "[Cusom Bindings] Generate markdown file: " nil "ocodo-custom-bindings.md" nil "*.md")))
+(defalias 'yes-or-no-p 'y-or-n-p)
+
 (defun open-line-above ()
   "Open a newline above the current point."
   (interactive)
@@ -915,6 +930,11 @@ Replace with the return value of the function FN"
     (setq replacement (funcall fn excerpt))
     (delete-region pos1 pos2)
     (insert replacement)))
+
+(defun revert-buffer-instant ()
+  "Revert buffer without prompting."
+  (interactive)
+  (revert-buffer t t t))
 
 (defun s-squeeze (char string)
   "Squeeze the occurences of CHAR in STRING.
@@ -1273,9 +1293,19 @@ Comments stay with the code below."
           (insert contents)))))
 
 (defun time-now ()
-  "current time."
-  (interactive)
-  (message (format-time-string "%l:%M%P(%z) %Y-%m-%d")))
+ "current time."
+ (interactive)
+ (message (format-time-string "%l:%M%P(%z) %Y-%m-%d")))
+
+(defun time-to-seconds (time)
+ "Convert TIME `hh:mm:ss' into seconds."
+ (cl-destructuring-bind (hh mm ss)
+     (mapcar 'string-to-number
+             (cdr (car
+                   (s-match-strings-all
+                    "\\([0-9][0-9]\\):\\([0-9][0-9]\\):\\([0-9][0-9]\\)"
+                    time))))
+   (+ (* 3600 hh) (* 60 mm) ss)))
 
 (defun toggle-window-split ()
   "Toggle the current window split."
@@ -1312,16 +1342,6 @@ Comments stay with the code below."
   "Insert UTC seconds."
   (interactive)
   (insert (format-time-string "%s")))
-
-(defun time-to-seconds (time)
-  "Convert TIME `hh:mm:ss' into seconds."
-  (cl-destructuring-bind (hh mm ss)
-      (mapcar 'string-to-number
-              (cdr (car
-                    (s-match-strings-all
-                     "\\([0-9][0-9]\\):\\([0-9][0-9]\\):\\([0-9][0-9]\\)"
-                     time))))
-    (+ (* 3600 hh) (* 60 mm) ss)))
 
 (defun yank-repeat (&optional arg)
   "Repeat yank n times ARG."

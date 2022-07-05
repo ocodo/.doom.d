@@ -60,3 +60,14 @@ Align region to equal signs from `begin` to `end`.
 ")
         (info '(align-number-right (begin end) "Align region to equal signs from BEGIN to END.")))
    (should (string= expected (generate-markdown-defun-entry info)))))
+
+(ert-deftest is-markdown-filename-p ()
+  "Test is-markdown-filename-p"
+  (let ((expected `(,t ,t ,nil))
+        (filenames '("test.md"
+                     "test.markdown"
+                     "test.txt")))
+    (should (equal expected
+                   (--map
+                    (is-markdown-filename-p it)
+                    filenames)))))

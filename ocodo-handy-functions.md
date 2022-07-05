@@ -90,6 +90,14 @@ Convert `csv` to lists.
 (csv--to-lists (csv))
 ```
 
+### cua-rectangle-which-key-help
+
+Display cua-rectangle-keymap in which-key.
+
+```lisp
+(cua-rectangle-which-key-help)
+```
+
 ### current-buffer-defuns-to-markdown
 
 Create a markdown `file` of all defuns in the current buffer.
@@ -738,6 +746,14 @@ Replace with the return value of the function `fn`
 
 ```lisp
 (replace-thing-at-point-with (fn))
+```
+
+### revert-buffer-instant
+
+Revert buffer without prompting.
+
+```lisp
+(revert-buffer-instant)
 ```
 
 ### s-squeeze

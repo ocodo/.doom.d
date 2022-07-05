@@ -42,11 +42,11 @@
                   markdown-soma-highlight-theme
                   "atelier-plateau.dark")
 
-    :bind  (:map markdown-mode-map
-            ("C-c S c" . markdown-soma-select-css-file)
-            ("C-c S h" . markdown-soma-select-highlight-theme)
-            ("C-c S s" . markdown-soma-mode)
-            ("C-c S r" . markdown-soma-restart))))
+    :bind (:map markdown-mode-map
+           ("C-c S c" . #'markdown-soma-select-css-file)
+           ("C-c S h" . #'markdown-soma-select-highlight-theme)
+           ("C-c S s" . #'markdown-soma-mode)
+           ("C-c S r" . #'markdown-soma-restart))))
 
 ;; Disable hl-mode
 (add-hook! 'rainbow-mode-hook
@@ -163,21 +163,23 @@
 
 (load-file "~/.doom.d/ocodo-handy-functions.el")
 
+(bind-key "C-c ;"         #'iedit-mode)
 (bind-key "C-("           #'decrement-number-at-point)
 (bind-key "C-)"           #'increment-number-at-point)
 (bind-key "C-M-^"         #'join-line-from-below)
-(bind-key "C-c ;"         #'iedit-mode)
-(bind-key "C-c K"         #'+rgb/kurecolor-hydra/body)
+(bind-key "s-^"           #'join-line-from-below)
 (bind-key "C-c ]"         #'embrace-commander)
 (bind-key "C-c f w"       #'write-region)
-(bind-key "C-c k H"       #'+rgb/kurecolor-hydra/body)
-(bind-key "C-c k X"       #'kurecolor-xcode-color-literal-at-point-or-region-to-hex-rgba)
-(bind-key "C-c k c"       #'kurecolor-cssrgb-at-point-or-region-to-hex)
-(bind-key "C-c k h"       #'kurecolor-hexcolor-at-point-or-region-to-css-rgba)
-(bind-key "C-c k s"       #'search-for-nearest-hex-color)
-(bind-key "C-c k x"       #'kurecolor-xcode-color-literal-at-point-or-region-to-hex-rgb)
 (bind-key "C-c l e i"     #'eval-print-last-sexp)
 (bind-key "C-c l h"       #'hl-line-mode)
+(bind-key "C-c K"         #'+rgb/kurecolor-hydra/body)
+(bind-key "C-c k H"       #'+rgb/kurecolor-hydra/body)
+(bind-key "C-c k c"       #'kurecolor-cssrgb-at-point-or-region-to-hex)
+(bind-key "C-c k h r"     #'kurecolor-hexcolor-at-point-or-region-to-css-rgb)
+(bind-key "C-c k h a"     #'kurecolor-hexcolor-at-point-or-region-to-css-rgba)
+(bind-key "C-c k s"       #'search-for-nearest-hex-color)
+(bind-key "C-c k X"       #'kurecolor-xcode-color-literal-at-point-or-region-to-hex-rgba)
+(bind-key "C-c k x"       #'kurecolor-xcode-color-literal-at-point-or-region-to-hex-rgb)
 (bind-key "C-c s-e"       #'eval-and-replace)
 (bind-key "C-c t t -"     #'dasherise-at-point-or-region)
 (bind-key "C-c t t ."     #'hex-to-decimal-at-point-or-region)
@@ -189,8 +191,6 @@
 (bind-key "C-c t t t"     #'titleized-at-point-or-region)
 (bind-key "C-c t t u"     #'upper-camelcase-at-point-or-region)
 (bind-key "C-c t t v"     #'video-time-to-seconds-at-point-or-region)
-(bind-key "C-x /"         #'align-regexp)
-(bind-key "C-x f"         #'ag)
 (bind-key "C-c r /"       #'sp-split-sexp)
 (bind-key "C-c r ."       #'sp-join-sexp)
 (bind-key "C-c r <down>"  #'sp-backward-barf-sexp)
@@ -198,6 +198,8 @@
 (bind-key "C-c r <right>" #'sp-forward-barf-sexp)
 (bind-key "C-x x ."       #'er/expand-region)
 (bind-key "M-O"           #'+macos/open-in-default-program)
+(bind-key "C-x /"         #'align-regexp)
+(bind-key "C-x f"         #'ag)
 (bind-key "M-`"           #'magit)
 (bind-key "M-o"           #'dired-osx-open-this-file dired-mode-map)
 (bind-key "M-s-g g"       #'google-this)
@@ -209,13 +211,14 @@
 (bind-key "s-1"           #'delete-other-windows)
 (bind-key "s-2"           #'split-window-below)
 (bind-key "s-3"           #'split-window-right)
-(bind-key "s-<down>"      #'duplicate-current-line-or-region)
+(bind-key "s-4"           #'toggle-window-split)
+(bind-key "s-5"           #'balance-windows-area)
 (bind-key "s-<left>"      #'previous-buffer)
 (bind-key "s-<right>"     #'next-buffer)
 (bind-key "s-<up>"        #'duplicate-current-line-or-region-up)
+(bind-key "s-<down>"      #'duplicate-current-line-or-region)
 (bind-key "s-T"           #'treemacs)
-(bind-key "s-U"           #'(lambda () "Revert buffer without prompting" (interactive) (revert-buffer t t t)))
-(bind-key "s-^"           #'join-line-from-below)
+(bind-key "s-U"           #'revert-buffer-instant)
 (bind-key "s-`"           #'other-frame)
 (bind-key "s-b"           #'ivy-switch-buffer)
 (bind-key "s-B"           #'ibuffer)
@@ -225,6 +228,7 @@
 (bind-key "s-s"           #'save-buffer)
 (bind-key "s-t"           #'projectile-find-file)
 (bind-key "s-w"           #'delete-frame)
+(bind-key "s-y"           #'yank-from-kill-ring)
 (bind-key "s-|"           #'shell-command-on-region-replace)
 (bind-key "C-M-%"         #'anzu-query-replace-regexp)
 (bind-key "C-%"           #'anzu-query-replace)
@@ -236,18 +240,11 @@
    "C-S-RET"    nil
    [C-S-return] nil)
 
-;; bind C-enter to CUA Rectangle mode
-(bind-key "C-<return>" #'cua-rectangle-mark-mode)
+(bind-key "C-<return>"  #'cua-rectangle-mark-mode)
+;; Better help for CUA Rectangle mode via which-key
+(bind-key "C-?"  #'cua-rectangle-which-key-help)
 ;; turn paging back on in which-key
 (setq which-key-use-C-h-commands t)
-;; Better help for CUA Rectangle mode via which-key
-(bind-key "C-?"
-          #'(lambda ()
-             (interactive)
-             (which-key-show-keymap 'cua--rectangle-keymap))
-          cua--rectangle-keymap)
-
-(defalias 'yes-or-no-p 'y-or-n-p)
 
 (edit-server-start)
 
@@ -274,7 +271,7 @@
            (sh-indent-after-loop-construct . +)
            (sh-indent-after-open . +)
            (sh-indent-comment . t)
-           (sh-indent-for-case-alt . ++)
+           (sh-indent-for-case-alt . +)
            (sh-indent-for-case-label . +)
            (sh-indent-for-continuation . +)
            (sh-indent-for-do . 0)
