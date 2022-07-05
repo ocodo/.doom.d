@@ -33,12 +33,10 @@
        (replace-region-with ,evaluator))))
 
 (*-and-replace calc-eval-replace-at-region-or-point #'calc-eval)
-
 (*-and-replace decimal-to-hex-at-point-or-region #'decimal-to-hex)
-
 (*-and-replace hex-to-decimal-at-point-or-region #'hex-to-decimal)
-
 (*-and-replace time-to-seconds-at-point-or-region #'time-to-seconds)
+(*-and-replace eval-regexp-to-rx-replace #'xr)
 
 (defmacro defun-pcase (name arglist &optional docstring &rest body)
   "Define a pcase function called NAME with ARGLIST.
@@ -818,26 +816,121 @@ Leave *scratch* and *Messages* alone too."
    (buffer-list))
   (delete-other-windows))
 
-(defun ocodo-custom-bindings-markdown ()
-  "Generate markdown FILE with table of custom bindings."
-  (interactive)
+(defun ocodo-make-binding-groups (bindings headings &optional groups)
+  "Group BINDINGS into GROUPS."
+  (concat
+   headings
+   (s-join "\n" binding-list)))
 
-  (let ((custom-bindings (shell-command-to-string "
-echo '| Command | Binding |'
-echo '|---------|---------|'
-grep 'bind-key' ~/.doom.d/config.el |\\
- sed 's/(bind-key //' |\\
-  tr -d '\"#' |\\
-  tr -d \"'\" |\\
-  sed 's/)$//' |\\
- perl -pe 's/(.*?) {1,}(.*)$/| \\2 | <kbd>\\1<\\/kbd> |/'"))
+(defun ocodo-binding-direction-keys-etc-to-unicode-arrows (key-binding &optional white-arrows)
+  "KEY-BINDING string directions to unicode arrows.
+<up> <down> <left> <right> replaced with ↑ ↓ ← →.
+<return> replaced with ⮐.
 
-        (file (read-file-name
-               "[Cusom Bindings] Generate markdown file: "
-               nil "ocodo-custom-bindings.md" nil "*.md"
-               'is-markdown-filename-p)))
-   (f-write custom-bindings file)
-   (message "Generated: %s" file)))
+Setting WHITE-ARROWS to t, gives these replacements: ⇧ ⇩ ⇦ ⇨ and ⏎."
+  (s-replace
+   "<return>" (or (and white-arrows "⏎") "⮐")
+   (s-replace
+    "<up>"    (or (and white-arrows "⇧"  ) "↑")
+    (s-replace
+     "<down>"  (or (and white-arrows "⇩"  ) "↓")
+     (s-replace
+      "<left>"  (or (and white-arrows "⇦"  ) "←")
+      (s-replace
+       "<right>" (or (and white-arrows "⇨"  ) "→")
+       key-binding))))))
+
+(defun ocodo-collate-key-bindings-from-emacs-lisp ()
+  "Collate all emacs lisp which has key bindings.
+Uses ocodo-lisp-key-bindings."
+  (--filter (s-contains-p "(bind-key " it)
+            (-flatten
+             (--map (s-split "\n" (f-read it 'utf-8))
+                    ocodo-lisp-key-bindings))))
+
+(defvar ocodo-lisp-key-bindings
+  '("~/.doom.d/key-bindings.el"
+    "~/.doom.d/use/use-ert.el"
+    "~/.doom.d/use/use-markdown-mode.el")
+  "List of emacs-lisp files which have personalised key bindings")
+
+(defun ocodo-custom-bindings-markdown (open)
+  "Generate markdown FILE with table of custom bindings, any prefix will OPEN file.
+Prefix of 2 (e.g. M-2 M-x ocodo-custom-bindings-markdown). Will use open arrow
+and return glyphs."
+  (interactive "P")
+  (let* ((table-heading (concat
+                         "| Key(s)  | Command | keymap  |\n"
+                         "|---------|---------|---------|\n"))
+         (binding-list
+          (--map
+           (ocodo-binding-direction-keys-etc-to-unicode-arrows
+            (s-replace-regexp "| *|$" "| global |"
+             (s-replace-regexp (rx
+                                (seq
+                                 (* " ")
+                                 (literal "(bind-key")
+                                 (>= 1 " ")
+                                 (literal "\"")
+                                 (group (*? nonl))
+                                 (literal "\"")
+                                 (>= 1 " ")
+                                 (literal "#'")
+                                 (group (one-or-more (not (any " "))))
+                                 (* " ")
+                                 (opt "'")
+                                 (group (*? (not (any " "))))
+                                 (* " ")
+                                 (one-or-more ")")))
+                                 
+                               "| <kbd>\\1</kbd> | \\2 | \\3 |"
+                               (s-replace "|" "\\|" it)))
+
+            (and (numberp open)(= 2 open)))
+           (ocodo-collate-key-bindings-from-emacs-lisp)))
+
+         (custom-bindings-markdown (ocodo-make-binding-groups binding-list table-heading))
+         (file (read-file-name
+                "[Cusom Bindings] Generate markdown file: "
+                nil "ocodo-custom-bindings.md" nil "*.md"
+                'is-markdown-filename-p)))
+        (f-write custom-bindings-markdown 'utf-8 file)
+        (message "Generated: %s" file)
+        (when open (find-file file))))
+
+(defun ocodo-sh-indent-rules ()
+  "Try to set sh-mode indent rules."
+  (setq smie-config
+        '((sh-mode
+           (2 :after "then" 2)
+           (0 :before "then" 0)
+           (2 :after "then" nil)
+           (2 :after "{" 2)
+           (2 :after "do" 2)
+           (2 :after "else" 2))))
+
+  (setq sh-styles-alist
+        '(("ocodo"
+           (sh-basic-offset . 4)
+           (sh-first-lines-indent . 0)
+           (sh-indent-after-case . +)
+           (sh-indent-after-do . +)
+           (sh-indent-after-done . 0)
+           (sh-indent-after-else . +)
+           (sh-indent-after-if . +)
+           (sh-indent-after-loop-construct . +)
+           (sh-indent-after-open . +)
+           (sh-indent-comment . t)
+           (sh-indent-for-case-alt . +)
+           (sh-indent-for-case-label . +)
+           (sh-indent-for-continuation . +)
+           (sh-indent-for-do . 0)
+           (sh-indent-for-done . 0)
+           (sh-indent-for-else . 0)
+           (sh-indent-for-fi . 0)
+           (sh-indent-for-then . 0))))
+  (sh-load-style "ocodo"))
+
 
 (defun open-line-above ()
   "Open a newline above the current point."
@@ -1123,8 +1216,6 @@ css-value to the hex color found."
   (shell-command
    (format "%s \"%s\"" command filename)))
 
-;; (screencapture-mac)
-
 (defun screencapture-mac--summary-list ()
   "Summarized list of screencapture mac options"
   (mapcar
@@ -1282,6 +1373,19 @@ Comments stay with the code below."
                         (goto-char (marker-position start))
                         (insert-before-markers real)
                         (delete-region (point) (marker-position end)))))))))
+
+(defun ssh-agent-env-fix ()
+  "Ensure ssh_auth_sock is set correctly in the environment."
+  (interactive)
+  (if (= (string-to-number (shell-command-to-string "pgrep ssh-agent | wc -l")) 1)
+      (let ((private-sock (shell-command-to-string "lsof | grep ssh-agent | grep /private"))
+            (agent-sock (shell-command-to-string "lsof | grep ssh-agent | grep /agent")))
+        (unless (string= private-sock "")
+          (setenv "SSH_AUTH_SOCK" (shell-command-to-string (format "echo '%s' | awk '{printf($8)}'" private-sock))))
+        (unless (string= agent-sock "")
+          (setenv "SSH_AUTH_SOCK" (shell-command-to-string (format "echo '%s' | awk '{printf($8)}'" agent-sock)))))
+
+    (message "There are more than 1 ssh-agents running (I can't choose which one to use!)...:\n %s" (shell-command-to-string "pgrep -l ssh-agent"))))
 
 (defun switch-to-message-buffer ()
   "Switch to the message buffer."
