@@ -1,79 +1,118 @@
-| Key(s)               | Command                                                      | keymap              |
-|----------------------|--------------------------------------------------------------|---------------------|
-| <kbd>C-%</kbd>       | anzu-query-replace                                           | global              |
-| <kbd>C-(</kbd>       | decrement-number-at-point                                    | global              |
-| <kbd>C-)</kbd>       | increment-number-at-point                                    | global              |
-| <kbd>C-⏎</kbd>       | cua-rectangle-mark-mode                                      | global              |
-| <kbd>C-?</kbd>       | cua-rectangle-which-key-help                                 | global              |
-| <kbd>C-M-%</kbd>     | anzu-query-replace-regexp                                    | global              |
-| <kbd>C-M-^</kbd>     | join-line-from-below                                         | global              |
-| <kbd>C-c ;</kbd>     | iedit-mode                                                   | global              |
-| <kbd>C-c ]</kbd>     | embrace-commander                                            | global              |
-| <kbd>C-c f w</kbd>   | write-region                                                 | global              |
-| <kbd>C-c k H</kbd>   | +rgb/kurecolor-hydra/body                                    | global              |
-| <kbd>C-c k X</kbd>   | kurecolor-xcode-color-literal-at-point-or-region-to-hex-rgba | global              |
-| <kbd>C-c k c</kbd>   | kurecolor-cssrgb-at-point-or-region-to-hex                   | global              |
-| <kbd>C-c k h a</kbd> | kurecolor-hexcolor-at-point-or-region-to-css-rgba            | global              |
-| <kbd>C-c k h r</kbd> | kurecolor-hexcolor-at-point-or-region-to-css-rgb             | global              |
-| <kbd>C-c k s</kbd>   | search-for-nearest-hex-color                                 | global              |
-| <kbd>C-c k x</kbd>   | kurecolor-xcode-color-literal-at-point-or-region-to-hex-rgb  | global              |
-| <kbd>C-c l e i</kbd> | eval-print-last-sexp                                         | global              |
-| <kbd>C-c l h</kbd>   | hl-line-mode                                                 | global              |
-| <kbd>C-c r .</kbd>   | sp-join-sexp                                                 | global              |
-| <kbd>C-c r /</kbd>   | sp-split-sexp                                                | global              |
-| <kbd>C-c r ⇩</kbd>   | sp-backward-barf-sexp                                        | global              |
-| <kbd>C-c r ⇦</kbd>   | sp-slurp-hybrid-sexp                                         | global              |
-| <kbd>C-c r ⇨</kbd>   | sp-forward-barf-sexp                                         | global              |
-| <kbd>C-c s-e</kbd>   | eval-and-replace                                             | global              |
-| <kbd>C-c t t -</kbd> | dasherise-at-point-or-region                                 | global              |
-| <kbd>C-c t t .</kbd> | hex-to-decimal-at-point-or-region                            | global              |
-| <kbd>C-c t t /</kbd> | decimal-to-hex-at-point-or-region                            | global              |
-| <kbd>C-c t t U</kbd> | url-encode-string-at-point                                   | global              |
-| <kbd>C-c t t _</kbd> | snake-case-at-point-or-region                                | global              |
-| <kbd>C-c t t h</kbd> | humanize-at-point-or-region                                  | global              |
-| <kbd>C-c t t l</kbd> | lower-camelcase-at-point-or-region                           | global              |
-| <kbd>C-c t t s</kbd> | time-to-seconds-at-point-or-region                           | global              |
-| <kbd>C-c t t t</kbd> | titleized-at-point-or-region                                 | global              |
-| <kbd>C-c t t u</kbd> | upper-camelcase-at-point-or-region                           | global              |
-| <kbd>C-x /</kbd>     | align-regexp                                                 | global              |
-| <kbd>C-x X d n</kbd> | edebug-remove-instrumentation                                | global              |
-| <kbd>C-x X d y</kbd> | edebug-defun                                                 | global              |
-| <kbd>C-x f</kbd>     | ag                                                           | global              |
-| <kbd>C-x x .</kbd>   | er/expand-region                                             | global              |
-| <kbd>M-O</kbd>       | +macos/open-in-default-program                               | global              |
-| <kbd>M-`</kbd>       | magit                                                        | global              |
-| <kbd>M-o</kbd>       | dired-osx-open-this-file                                     | dired-mode-map      |
-| <kbd>M-s-g g</kbd>   | google-this                                                  | global              |
-| <kbd>M-s-g n</kbd>   | google-this-noconfirm                                        | global              |
-| <kbd>M-z</kbd>       | zap-up-to-char                                               | global              |
-| <kbd>s-'</kbd>       | other-window                                                 | global              |
-| <kbd>s-/</kbd>       | hippie-expand                                                | global              |
-| <kbd>s-0</kbd>       | delete-window                                                | global              |
-| <kbd>s-1</kbd>       | delete-other-windows                                         | global              |
-| <kbd>s-2</kbd>       | split-window-below                                           | global              |
-| <kbd>s-3</kbd>       | split-window-right                                           | global              |
-| <kbd>s-4</kbd>       | toggle-window-split                                          | global              |
-| <kbd>s-5</kbd>       | balance-windows-area                                         | global              |
-| <kbd>s-⇩</kbd>       | duplicate-current-line-or-region                             | global              |
-| <kbd>s-⇦</kbd>       | previous-buffer                                              | global              |
-| <kbd>s-⇨</kbd>       | next-buffer                                                  | global              |
-| <kbd>s-⇧</kbd>       | duplicate-current-line-or-region-up                          | global              |
-| <kbd>s-B</kbd>       | ibuffer                                                      | global              |
-| <kbd>s-T</kbd>       | treemacs                                                     | global              |
-| <kbd>s-U</kbd>       | revert-buffer-instant                                        | global              |
-| <kbd>s-`</kbd>       | other-frame                                                  | global              |
-| <kbd>s-b</kbd>       | ivy-switch-buffer                                            | global              |
-| <kbd>s-k</kbd>       | kill-this-buffer                                             | global              |
-| <kbd>s-o</kbd>       | find-file                                                    | global              |
-| <kbd>s-q</kbd>       | kill-emacs                                                   | global              |
-| <kbd>s-s</kbd>       | save-buffer                                                  | global              |
-| <kbd>s-t</kbd>       | projectile-find-file                                         | global              |
-| <kbd>s-w</kbd>       | delete-frame                                                 | global              |
-| <kbd>s-y</kbd>       | yank-from-kill-ring                                          | global              |
-| <kbd>s-\|</kbd>      | shell-command-on-region-replace                              | global              |
-| <kbd>C-c / t</kbd>   | ert-run-all-tests                                            | emacs-lisp-mode-map |
-| <kbd>C-c / c</kbd>   | ert-delete-all-tests                                         | emacs-lisp-mode-map |
-| <kbd>C-c S c</kbd>   | markdown-soma-select-css-file                                | markdown-mode-map   |
-| <kbd>C-c S h</kbd>   | markdown-soma-select-highlight-theme                         | markdown-mode-map   |
-| <kbd>C-c S s</kbd>   | markdown-soma-mode                                           | markdown-mode-map   |
-| <kbd>C-c S r</kbd>   | markdown-soma-restart                                        | markdown-mode-map   |
+# Ocodo's Doom Emacs Custom Key Bindings.
+
+### General
+
+| Key(s)  | Command | keymap  |
+|:--------|:--------|--------:|
+| C-% | Anzu query replace | Global |
+| C-( | Decrement number at point | Global |
+| C-) | Increment number at point | Global |
+| C-⮐ | Cua rectangle mark mode | Global |
+| C-? | Cua rectangle which key help | Global |
+| C-M-% | Anzu query replace regexp | Global |
+| C-M-^ | Join line from below | Global |
+| C-c ; | Iedit mode | Global |
+| C-c ] | Embrace commander | Global |
+| C-c f w | Write region | Global |
+| C-c l e i | Eval print last sexp | Global |
+| C-c l h | Hl line mode | Global |
+| C-c s-e | Eval and replace | Global |
+| C-x / | Align regexp | Global |
+| C-x f | Ag | Global |
+| C-x x . | Er expand region | Global |
+| M-O | Macos open in default program | Global |
+| M-` | Magit | Global |
+| M-o | Dired osx open this file | Dired mode map |
+| M-s-g g | Google this | Global |
+| M-s-g n | Google this noconfirm | Global |
+| M-z | Zap up to char | Global |
+| s-/ | Hippie expand | Global |
+| s-↓ | Duplicate current line or region | Global |
+| s-← | Previous buffer | Global |
+| s-→ | Next buffer | Global |
+| s-↑ | Duplicate current line or region up | Global |
+| s-B | Ibuffer | Global |
+| s-T | Treemacs | Global |
+| s-U | Revert buffer instant | Global |
+| s-` | Other frame | Global |
+| s-b | Ivy switch buffer | Global |
+| s-k | Kill this buffer | Global |
+| s-o | Find file | Global |
+| s-q | Kill emacs | Global |
+| s-s | Save buffer | Global |
+| s-t | Projectile find file | Global |
+| s-w | Delete frame | Global |
+| s-y | Yank from kill ring | Global |
+| s-\| | Shell command on region replace | Global |
+
+### Markdown Soma
+
+| Key(s)  | Command | keymap  |
+|:--------|:--------|--------:|
+| C-c S c | Markdown soma select css file | Markdown mode map |
+| C-c S h | Markdown soma select highlight theme | Markdown mode map |
+| C-c S s | Markdown soma mode | Markdown mode map |
+| C-c S r | Markdown soma restart | Markdown mode map |
+
+### Smart Parens
+
+| Key(s)  | Command | keymap  |
+|:--------|:--------|--------:|
+| C-c r . | Sp join sexp | Global |
+| C-c r / | Sp split sexp | Global |
+| C-c r ↓ | Sp backward barf sexp | Global |
+| C-c r ← | Sp slurp hybrid sexp | Global |
+| C-c r → | Sp forward barf sexp | Global |
+
+### Text Transforms
+
+| Key(s)  | Command | keymap  |
+|:--------|:--------|--------:|
+| C-c t t - | Dasherise at point or region | Global |
+| C-c t t . | Hex to decimal at point or region | Global |
+| C-c t t / | Decimal to hex at point or region | Global |
+| C-c t t U | Url encode string at point | Global |
+| C-c t t _ | Snake case at point or region | Global |
+| C-c t t h | Humanize at point or region | Global |
+| C-c t t l | Lower camelcase at point or region | Global |
+| C-c t t s | Time to seconds at point or region | Global |
+| C-c t t t | Titleized at point or region | Global |
+| C-c t t u | Upper camelcase at point or region | Global |
+
+### Color
+
+| Key(s)  | Command | keymap  |
+|:--------|:--------|--------:|
+| C-c k H | Rgb kurecolor hydra body | Global |
+| C-c k X | Kurecolor xcode color literal at point or region to hex rgba | Global |
+| C-c k c | Kurecolor cssrgb at point or region to hex | Global |
+| C-c k h a | Kurecolor hexcolor at point or region to css rgba | Global |
+| C-c k h r | Kurecolor hexcolor at point or region to css rgb | Global |
+| C-c k s | Search for nearest hex color | Global |
+| C-c k x | Kurecolor xcode color literal at point or region to hex rgb | Global |
+
+### ERT Testing
+
+| Key(s)  | Command | keymap  |
+|:--------|:--------|--------:|
+| C-c / t | Ert run all tests | Emacs lisp mode map |
+| C-c / c | Ert delete all tests | Emacs lisp mode map |
+
+### Debugging
+
+| Key(s)  | Command | keymap  |
+|:--------|:--------|--------:|
+| C-x X d n | Edebug remove instrumentation | Global |
+| C-x X d y | Edebug defun | Global |
+
+### Windows
+
+| Key(s)  | Command | keymap  |
+|:--------|:--------|--------:|
+| s-' | Other window | Global |
+| s-0 | Delete window | Global |
+| s-1 | Delete other windows | Global |
+| s-2 | Split window below | Global |
+| s-3 | Split window right | Global |
+| s-4 | Toggle window split | Global |
+| s-5 | Balance windows area | Global |

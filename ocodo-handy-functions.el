@@ -27,6 +27,7 @@
                                ("Smart Parens" 1 "^Sp ")
                                ("Text Transforms" 0 "C-c t t")
                                ("Color" 1 "[Cc]olor")
+                               ("ERT Testing" 1 "^Ert ")
                                ("Debugging" 1 "[Dd]ebug")
                                ("Windows" 1 "[Ww]indow"))
   "Key binding group filters")
@@ -36,6 +37,10 @@
     "~/.doom.d/use/use-ert.el"
     "~/.doom.d/use/use-markdown-mode.el")
   "List of emacs-lisp files which have personalised key bindings")
+
+(defvar ocodo-key-bindings-heading
+  "Ocodo's Emacs Key Bindings."
+  "Key bindings page heading")
 
 (defvar ocodo-key-bindings-table-heading (concat
                                           "| Key(s)  | Command | keymap  |\n"
@@ -845,7 +850,6 @@ Leave *scratch* and *Messages* alone too."
    (buffer-list))
   (delete-other-windows))
 
-
 (defun ocodo-make-binding-table-row (binding)
   "Make a table row from BINDING."
   (cl-destructuring-bind
@@ -879,7 +883,7 @@ Leave *scratch* and *Messages* alone too."
        bindings)))
    groups))
 
-(defun ocodo-binding-direction-keys-etc-to-unicode-arrows (key-binding &optional white-arrows)
+(defun ocodo-bindings-use-unicode-symbols (key-binding &optional white-arrows)
   "KEY-BINDING string directions to unicode arrows.
 <up> <down> <left> <right> replaced with ↑ ↓ ← →.
 <return> replaced with ⮐.
@@ -904,14 +908,13 @@ Setting WHITE-ARROWS to t, gives these replacements: ⇧ ⇩ ⇦ ⇨ and ⏎."
 
 (defun ocodo-clean-bindings-for-documentation (binding-list)
   "Prepare collated binding LIST for documentation."
-  (--map `(,(ocodo-binding-direction-keys-to-unicode-arrows (first it))
+  (--map `(,(s-replace "|" "\\|" (ocodo-bindings-use-unicode-symbols (first it)))
            ,(s-capitalized-words (s-replace "#'" "" (format "%s"(second it))))
            ,(s-capitalized-words (s-replace-regexp "^nil$" "Global" (s-replace "'" "" (format "%s" (third it))))))
          (ocodo-collate-key-bindings-for-documentation)))
 
 (defun ocodo-collate-key-bindings-for-documentation ()
-  "Collate all key bindings into a list.
-Uses ocodo-key-bindings-lisp-files."
+  "Collate all key bindings found in ocodo-key-bindings-lisp-files."
    (eval
     (car
      (read-from-string
@@ -929,30 +932,28 @@ Uses ocodo-key-bindings-lisp-files."
                     (--map (s-split "\n" (f-read it 'utf-8))
                      ocodo-key-bindings-lisp-files))))))))))
 
-
-
-
-
 (defun ocodo-binding-groups-to-markdown (binding-groups headings)
   "Convert BINDING-GROUPS to string of markdown tables."
-  (s-join "\n"
-   (--map
-    (cl-destructuring-bind (title bindings) it
-      (format "
-## %s
+  (concat
+   (format "# %s\n" ocodo-key-bindings-heading)
+   (s-join "\n"
+    (--map
+     (cl-destructuring-bind (title bindings) it
+       (format "
+### %s
 
 %s
 %s"
-         title
-         headings
-         (s-join "\n"
-          (--map
-           (ocodo-make-binding-table-row it)
-           bindings))))
-    (push
-     (ocodo-ungrouped-bindings (ocodo-key-bindings-for-documentation)
-       "General" ocodo-binding-groups)
-     binding-groups))))
+          title
+          headings
+          (s-join "\n"
+           (--map
+            (ocodo-make-binding-table-row it)
+            bindings))))
+     (push
+      (ocodo-ungrouped-bindings (ocodo-key-bindings-for-documentation)
+        "General" ocodo-binding-groups)
+      binding-groups)))))
 
 (defun ocodo-custom-bindings-markdown (open)
   "Generate markdown FILE with table of custom bindings, any prefix will OPEN file.
