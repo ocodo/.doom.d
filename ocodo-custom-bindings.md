@@ -3,7 +3,7 @@
 | <kbd>C-%</kbd>       | anzu-query-replace                                           | global              |
 | <kbd>C-(</kbd>       | decrement-number-at-point                                    | global              |
 | <kbd>C-)</kbd>       | increment-number-at-point                                    | global              |
-| <kbd>C-⮐</kbd>       | cua-rectangle-mark-mode                                      | global              |
+| <kbd>C-⏎</kbd>       | cua-rectangle-mark-mode                                      | global              |
 | <kbd>C-?</kbd>       | cua-rectangle-which-key-help                                 | global              |
 | <kbd>C-M-%</kbd>     | anzu-query-replace-regexp                                    | global              |
 | <kbd>C-M-^</kbd>     | join-line-from-below                                         | global              |
@@ -21,9 +21,9 @@
 | <kbd>C-c l h</kbd>   | hl-line-mode                                                 | global              |
 | <kbd>C-c r .</kbd>   | sp-join-sexp                                                 | global              |
 | <kbd>C-c r /</kbd>   | sp-split-sexp                                                | global              |
-| <kbd>C-c r ↓</kbd>   | sp-backward-barf-sexp                                        | global              |
-| <kbd>C-c r ←</kbd>   | sp-slurp-hybrid-sexp                                         | global              |
-| <kbd>C-c r →</kbd>   | sp-forward-barf-sexp                                         | global              |
+| <kbd>C-c r ⇩</kbd>   | sp-backward-barf-sexp                                        | global              |
+| <kbd>C-c r ⇦</kbd>   | sp-slurp-hybrid-sexp                                         | global              |
+| <kbd>C-c r ⇨</kbd>   | sp-forward-barf-sexp                                         | global              |
 | <kbd>C-c s-e</kbd>   | eval-and-replace                                             | global              |
 | <kbd>C-c t t -</kbd> | dasherise-at-point-or-region                                 | global              |
 | <kbd>C-c t t .</kbd> | hex-to-decimal-at-point-or-region                            | global              |
@@ -54,10 +54,10 @@
 | <kbd>s-3</kbd>       | split-window-right                                           | global              |
 | <kbd>s-4</kbd>       | toggle-window-split                                          | global              |
 | <kbd>s-5</kbd>       | balance-windows-area                                         | global              |
-| <kbd>s-↓</kbd>       | duplicate-current-line-or-region                             | global              |
-| <kbd>s-←</kbd>       | previous-buffer                                              | global              |
-| <kbd>s-→</kbd>       | next-buffer                                                  | global              |
-| <kbd>s-↑</kbd>       | duplicate-current-line-or-region-up                          | global              |
+| <kbd>s-⇩</kbd>       | duplicate-current-line-or-region                             | global              |
+| <kbd>s-⇦</kbd>       | previous-buffer                                              | global              |
+| <kbd>s-⇨</kbd>       | next-buffer                                                  | global              |
+| <kbd>s-⇧</kbd>       | duplicate-current-line-or-region-up                          | global              |
 | <kbd>s-B</kbd>       | ibuffer                                                      | global              |
 | <kbd>s-T</kbd>       | treemacs                                                     | global              |
 | <kbd>s-U</kbd>       | revert-buffer-instant                                        | global              |
