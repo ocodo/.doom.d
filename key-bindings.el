@@ -66,7 +66,6 @@
 (bind-key "s-B"            #'ibuffer)
 (bind-key "s-T"            #'treemacs)
 (bind-key "s-U"            #'revert-buffer-instant)
-(bind-key "s-^"            #'join-line-from-below)
 (bind-key "s-`"            #'other-frame)
 (bind-key "s-b"            #'ivy-switch-buffer)
 (bind-key "s-k"            #'kill-this-buffer)

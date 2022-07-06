@@ -61,7 +61,6 @@
 | <kbd>s-B</kbd>       | ibuffer                                                      | global              |
 | <kbd>s-T</kbd>       | treemacs                                                     | global              |
 | <kbd>s-U</kbd>       | revert-buffer-instant                                        | global              |
-| <kbd>s-^</kbd>       | join-line-from-below                                         | global              |
 | <kbd>s-`</kbd>       | other-frame                                                  | global              |
 | <kbd>s-b</kbd>       | ivy-switch-buffer                                            | global              |
 | <kbd>s-k</kbd>       | kill-this-buffer                                             | global              |
