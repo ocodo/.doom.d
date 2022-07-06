@@ -23,6 +23,35 @@
 (require 'xr)
 (require 'time-stamp)
 
+(defvar ocodo-binding-groups '(("Markdown Soma" 1 "^Markdown soma")
+                               ("Smart Parens" 1 "^Sp ")
+                               ("Text Transforms" 0 "C-c t t")
+                               ("Color" 1 "[Cc]olor")
+                               ("Debugging" 1 "[Dd]ebug")
+                               ("Windows" 1 "[Ww]indow"))
+  "Key binding group filters")
+
+(defvar ocodo-key-bindings-lisp-files
+  '("~/.doom.d/key-bindings.el"
+    "~/.doom.d/use/use-ert.el"
+    "~/.doom.d/use/use-markdown-mode.el")
+  "List of emacs-lisp files which have personalised key bindings")
+
+(defvar ocodo-key-bindings-table-heading (concat
+                                          "| Key(s)  | Command | keymap  |\n"
+                                          "|:--------|:--------|--------:|")
+  "Markdown table heading for key binding documentation.")
+
+(defvar screencapture-mac-default-commandline nil
+  "Default command line with options.")
+
+(defvar screencapture-mac-default-file-location
+  (expand-file-name "~/Desktop/")
+  "Default location to save screen captures.")
+
+(defvar screencapture-mac-default-file-keyword
+  "screencapture")
+
 (defmacro *-and-replace (function-name evaluator)
   "Build FUNCTION-NAME to use EVALUATOR on the current region, and replace it with the result."
   `(defun ,function-name ()
@@ -816,11 +845,39 @@ Leave *scratch* and *Messages* alone too."
    (buffer-list))
   (delete-other-windows))
 
-(defun ocodo-make-binding-groups (bindings headings &optional groups)
-  "Group BINDINGS into GROUPS."
-  (concat
-   headings
-   (s-join "\n" binding-list)))
+
+(defun ocodo-make-binding-table-row (binding)
+  "Make a table row from BINDING."
+  (cl-destructuring-bind
+      (keys command keymap)
+      binding
+   (format "| %s | %s | %s |" keys command keymap)))
+
+(defun ocodo-filter-bindings (filter index bindings)
+  "Filter BINDINGS by FILTER on INDEX."
+  (--filter (s-matches-p filter (nth-value index it)) bindings))
+
+(defun ocodo-ungrouped-bindings (bindings title groups)
+  "Collect BINDINGS and HEADINGS into GROUPS."
+  (let ((bindings (ocodo-key-bindings-for-documentation))
+        (predicates (--map
+                       (cl-destructuring-bind (_ index filter) it
+                         `(lambda (bind) (s-matches-p ,filter (nth ,index bind))))
+                       groups)))
+    (list title
+     (-filter (lambda (b) (--all? (eql nil it)
+                           (--map (funcall it b) predicates)))
+       bindings))))
+
+(defun ocodo-make-binding-groups (bindings headings groups)
+  "Collect BINDINGS and HEADINGS into GROUPS."
+  (--map
+   (cl-destructuring-bind (title index filter) it
+    (list title
+      (ocodo-filter-bindings
+       filter index
+       bindings)))
+   groups))
 
 (defun ocodo-binding-direction-keys-etc-to-unicode-arrows (key-binding &optional white-arrows)
   "KEY-BINDING string directions to unicode arrows.
@@ -840,63 +897,82 @@ Setting WHITE-ARROWS to t, gives these replacements: ⇧ ⇩ ⇦ ⇨ and ⏎."
        "<right>" (or (and white-arrows "⇨"  ) "→")
        key-binding))))))
 
-(defun ocodo-collate-key-bindings-from-emacs-lisp ()
-  "Collate all emacs lisp which has key bindings.
-Uses ocodo-lisp-key-bindings."
-  (--filter (s-contains-p "(bind-key " it)
-            (-flatten
-             (--map (s-split "\n" (f-read it 'utf-8))
-                    ocodo-lisp-key-bindings))))
+(defun ocodo-key-bindings-for-documentation ()
+  "Cleaned list of key bindings for documentation."
+  (ocodo-clean-bindings-for-documentation
+   (ocodo-collate-key-bindings-for-documentation)))
 
-(defvar ocodo-lisp-key-bindings
-  '("~/.doom.d/key-bindings.el"
-    "~/.doom.d/use/use-ert.el"
-    "~/.doom.d/use/use-markdown-mode.el")
-  "List of emacs-lisp files which have personalised key bindings")
+(defun ocodo-clean-bindings-for-documentation (binding-list)
+  "Prepare collated binding LIST for documentation."
+  (--map `(,(ocodo-binding-direction-keys-to-unicode-arrows (first it))
+           ,(s-capitalized-words (s-replace "#'" "" (format "%s"(second it))))
+           ,(s-capitalized-words (s-replace-regexp "^nil$" "Global" (s-replace "'" "" (format "%s" (third it))))))
+         (ocodo-collate-key-bindings-for-documentation)))
+
+(defun ocodo-collate-key-bindings-for-documentation ()
+  "Collate all key bindings into a list.
+Uses ocodo-key-bindings-lisp-files."
+   (eval
+    (car
+     (read-from-string
+      (format "'(%s)"
+       (s-join
+        "\n"
+        (--map
+         (format
+          "( %s )"
+          (second (s-match
+                   "[[:space:]]*?(bind-key\\(.*?\\))+$"
+                   it)))
+         (--filter (s-contains-p "(bind-key " it)
+                   (-flatten
+                    (--map (s-split "\n" (f-read it 'utf-8))
+                     ocodo-key-bindings-lisp-files))))))))))
+
+
+
+
+
+(defun ocodo-binding-groups-to-markdown (binding-groups headings)
+  "Convert BINDING-GROUPS to string of markdown tables."
+  (s-join "\n"
+   (--map
+    (cl-destructuring-bind (title bindings) it
+      (format "
+## %s
+
+%s
+%s"
+         title
+         headings
+         (s-join "\n"
+          (--map
+           (ocodo-make-binding-table-row it)
+           bindings))))
+    (push
+     (ocodo-ungrouped-bindings (ocodo-key-bindings-for-documentation)
+       "General" ocodo-binding-groups)
+     binding-groups))))
 
 (defun ocodo-custom-bindings-markdown (open)
   "Generate markdown FILE with table of custom bindings, any prefix will OPEN file.
 Prefix of 2 (e.g. M-2 M-x ocodo-custom-bindings-markdown). Will use open arrow
 and return glyphs."
   (interactive "P")
-  (let* ((table-heading (concat
-                         "| Key(s)  | Command | keymap  |\n"
-                         "|---------|---------|---------|\n"))
-         (binding-list
-          (--map
-           (ocodo-binding-direction-keys-etc-to-unicode-arrows
-            (s-replace-regexp "| *|$" "| global |"
-             (s-replace-regexp (rx
-                                (seq
-                                 (* " ")
-                                 (literal "(bind-key")
-                                 (>= 1 " ")
-                                 (literal "\"")
-                                 (group (*? nonl))
-                                 (literal "\"")
-                                 (>= 1 " ")
-                                 (literal "#'")
-                                 (group (one-or-more (not (any " "))))
-                                 (* " ")
-                                 (opt "'")
-                                 (group (*? (not (any " "))))
-                                 (* " ")
-                                 (one-or-more ")")))
-                                 
-                               "| <kbd>\\1</kbd> | \\2 | \\3 |"
-                               (s-replace "|" "\\|" it)))
+  (let* ((table-heading ocodo-key-bindings-table-heading)
 
-            (and (numberp open)(= 2 open)))
-           (ocodo-collate-key-bindings-from-emacs-lisp)))
+         (binding-list (ocodo-key-bindings-for-documentation))
 
-         (custom-bindings-markdown (ocodo-make-binding-groups binding-list table-heading))
+         (custom-bindings-markdown (ocodo-binding-groups-to-markdown
+                                    (ocodo-make-binding-groups binding-list table-heading ocodo-binding-groups)
+                                    table-heading))
          (file (read-file-name
                 "[Cusom Bindings] Generate markdown file: "
                 nil "ocodo-custom-bindings.md" nil "*.md"
                 'is-markdown-filename-p)))
-        (f-write custom-bindings-markdown 'utf-8 file)
-        (message "Generated: %s" file)
-        (when open (find-file file))))
+    (f-write custom-bindings-markdown 'utf-8 file)
+    (message "Generated: %s" file)
+    (when open (find-file file))))
 
 (defun ocodo-sh-indent-rules ()
   "Try to set sh-mode indent rules."
@@ -930,7 +1006,6 @@ and return glyphs."
            (sh-indent-for-fi . 0)
            (sh-indent-for-then . 0))))
   (sh-load-style "ocodo"))
-
 
 (defun open-line-above ()
   "Open a newline above the current point."
@@ -1465,61 +1540,7 @@ Comments stay with the code below."
 
 (defun yank-repeat (&optional arg)
   "Repeat yank n times ARG."
-  (interactive "*p")
-  (dotimes (string-to-int arg) (yank)))
-
-(defvar screencapture-mac-default-commandline nil
-  "Default command line with options.")
-
-;; usage: screencapture [-icMPmwsWxSCUtoa] [files]
-;;   -c         force screen capture to go to the clipboard
-;;   -b         capture Touch Bar - non-interactive modes only
-;;   -C         capture the cursor as well as the screen. only in non-interactive modes
-;;   -d         display errors to the user graphically
-;;   -i         capture screen interactively, by selection or window
-;;                control key - causes screen shot to go to clipboard
-;;                space key   - toggle between mouse selection and
-;;                              window selection modes
-;;                escape key  - cancels interactive screen shot
-;;   -m         only capture the main monitor, undefined if -i is set
-;;   -D<display> screen capture or record from the display specified. -D 1 is main display, -D 2 secondary, etc.
-;;   -o         in window capture mode, do not capture the shadow of the window
-;;   -p         screen capture will use the default settings for capture. The files argument will be ignored
-;;   -M         screen capture output will go to a new Mail message
-;;   -P         screen capture output will open in Preview or QuickTime Player if video
-;;   -I         screen capture output will open in Messages
-;;   -B<bundleid> screen capture output will open in app with bundleid
-;;   -s         only allow mouse selection mode
-;;   -S         in window capture mode, capture the screen not the window
-;;   -J<style>  sets the starting of interfactive capture
-;;                selection       - captures screen in selection mode
-;;                window          - captures screen in window mode
-;;                video           - records screen in selection mode
-;;   -t<format> image format to create, default is png (other options include pdf, jpg, tiff and other formats)
-;;   -T<seconds> take the picture after a delay of <seconds>, default is 5
-;;   -w         only allow window selection mode
-;;   -W         start interaction in window selection mode
-;;   -x         do not play sounds
-;;   -a         do not include windows attached to selected windows
-;;   -r         do not add dpi meta data to image
-;;   -l<windowid> capture this windowsid
-;;   -R<x,y,w,h> capture screen rect
-;;   -v        capture video recording of the screen
-;;   -V<seconds> limits video capture to specified seconds
-;;   -g        captures audio during a video recording using default input.
-;;   -G<id>    captures audio during a video recording using audio id specified.
-;;   -k        show clicks in video recording mode
-;;   -U        Show interactive toolbar in interactive mode
-;;   -u        present UI after screencapture is complete. files passed to command line will be ignored
-;;   files   where to save the screen capture, 1 file per screen
-
-(defvar screencapture-mac-default-file-location
-  (expand-file-name "~/Desktop/")
-  "Default location to save screen captures.")
-
-(defvar
-  screencapture-mac-default-file-keyword
-  "screencapture")
+  (interactive "*p"))
 
 (provide 'ocodo/handy-functions)
 
