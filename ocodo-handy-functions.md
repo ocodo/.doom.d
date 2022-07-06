@@ -519,6 +519,14 @@ convert an integer into it's binary representation in string format
 (int-to-binary-string (i))
 ```
 
+### is-markdown-filename-p
+
+Is the `filename` markdown.
+
+```lisp
+(is-markdown-filename-p (filename))
+```
+
 ### join-line-from-below
 
 Join line from below.
@@ -647,6 +655,100 @@ Leave *scratch* and *Messages* alone too.
 
 ```lisp
 (nuke-all-buffers-execept-current)
+```
+
+### ocodo-binding-groups-to-markdown
+
+Convert `binding-groups` to string of markdown tables.
+
+```lisp
+(ocodo-binding-groups-to-markdown (binding-groups headings))
+```
+
+### ocodo-bindings-use-unicode-symbols
+
+`key-binding` string directions to unicode arrows.
+<up> <down> <left> <right> replaced with ↑ ↓ ← →.
+<return> replaced with ⮐.
+
+Setting `white-arrows` to t, gives these replacements: ⇧ ⇩ ⇦ ⇨ and ⏎.
+
+```lisp
+(ocodo-bindings-use-unicode-symbols (key-binding &optional white-arrows))
+```
+
+### ocodo-clean-bindings-for-documentation
+
+Prepare collated binding `list` for documentation.
+
+```lisp
+(ocodo-clean-bindings-for-documentation (binding-list))
+```
+
+### ocodo-collate-key-bindings-for-documentation
+
+Collate all key bindings found in ocodo-key-bindings-lisp-files.
+
+```lisp
+(ocodo-collate-key-bindings-for-documentation)
+```
+
+### ocodo-custom-bindings-markdown
+
+Generate markdown `file` with table of custom bindings, any prefix will `open` file.
+Prefix of 2 (e.g. `m-2` `m-`x ocodo-custom-bindings-markdown). Will use open arrow
+and return glyphs.
+
+```lisp
+(ocodo-custom-bindings-markdown (open))
+```
+
+### ocodo-filter-bindings
+
+Filter `bindings` by `filter` on `index`.
+
+```lisp
+(ocodo-filter-bindings (filter index bindings))
+```
+
+### ocodo-key-bindings-for-documentation
+
+Cleaned list of key bindings for documentation.
+
+```lisp
+(ocodo-key-bindings-for-documentation)
+```
+
+### ocodo-make-binding-groups
+
+Collect `bindings` and `headings` into `groups`.
+
+```lisp
+(ocodo-make-binding-groups (bindings headings groups))
+```
+
+### ocodo-make-binding-table-row
+
+Make a table row from `binding`.
+
+```lisp
+(ocodo-make-binding-table-row (binding))
+```
+
+### ocodo-sh-indent-rules
+
+Try to set sh-mode indent rules.
+
+```lisp
+(ocodo-sh-indent-rules)
+```
+
+### ocodo-ungrouped-bindings
+
+Collect `bindings` and `headings` into `groups`.
+
+```lisp
+(ocodo-ungrouped-bindings (bindings title groups))
 ```
 
 ### open-line-above
@@ -949,6 +1051,14 @@ Comments stay with the code below.
 
 ```lisp
 (sort-sexps (beg end))
+```
+
+### ssh-agent-env-fix
+
+Ensure ssh_auth_sock is set correctly in the environment.
+
+```lisp
+(ssh-agent-env-fix)
 ```
 
 ### switch-to-message-buffer
