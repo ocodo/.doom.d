@@ -478,14 +478,16 @@ For example:
                   |\"
   \"one\" 2 #xf \"the end\")
 
-=> \"- List...
-  - Item one
-  - Item 0x2
-  - Item f
-
-... the end
-\"
-```"
+;;=>
+;;\"- List...
+;;  - Item one
+;;  - Item 0x2
+;;  - Item f
+;;
+;;... the end
+;;\"
+```
+"
     (apply 'format
       (s-join "\n"
             (--map (s-replace-regexp "^[ ]*|" "" it)
