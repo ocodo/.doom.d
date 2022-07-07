@@ -127,7 +127,7 @@ For example:
            ,docstring)))
 
 (defmacro let1 (var val &rest body)
-  "Syntax sugar for `let`. A single `var` `val` let over `body`.
+  "Syntax sugar for LET. A single VAR VAL let over BODY.
 
 Example usage:
 
@@ -973,6 +973,7 @@ For example:
 "
   (s-replace-regexp
    (rx "`" (group (>= 1 (any alnum "_" "-"))) "`")
+   (lambda (match) (upcase (format "%s" (s-replace "`" "" match))))
    string t))
 
 (defun my-isearch-buffers ()
@@ -1140,7 +1141,7 @@ Setting WHITE-ARROWS to t, gives these replacements: ⇧ ⇩ ⇦ ⇨ and ⏎."
     (when (y-or-n-p (format "Generated %s, open it?" file)) (find-file file))))
 
 (defun ocodo-sh-indent-rules ()
-  "Try to set sh-mode indent rules."
+  "Set up shell script indenation rules engines."
   (setq smie-config
         '((sh-mode
            (2 :after "then" 2)
@@ -1219,6 +1220,16 @@ Setting WHITE-ARROWS to t, gives these replacements: ⇧ ⇩ ⇦ ⇨ and ⏎."
   "Return a random number in range START to END."
   (random t)
   (+ start (random (+ 1 (- end start)))))
+
+(defun reload-current-firefox-tab-osx ()
+  "Run a simple applescript to reload the current Google Chrome tab.
+
+OSX specific."
+  (interactive)
+  (shell-command "echo 'tell application \"Firefox\"
+                             reload active tab of window 1
+                        end tell' | osascript" nil nil)
+  (message "refreshed active Firefox tab"))
 
 (defun reload-current-chrome-tab-osx ()
   "Run a simple applescript to reload the current Google Chrome tab.

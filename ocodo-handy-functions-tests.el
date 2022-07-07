@@ -11,8 +11,8 @@
              
 (ert-deftest docstring-args-to-markdown-code ()
   "Transform DOCSTRING arguments to inline markdown `code` document style."
-  (let ((docstring  "Convert `doc-string_1` to markdown `code'")
-        (expected  "Convert `doc-string`_1`` to markdown `code'"))
+  (let ((docstring  "Convert DOC-STRING_1 to markdown code")
+        (expected  "Convert `doc-string_1` to markdown code"))
     (should (string= expected (docstring-args-to-markdown-code docstring)))))
 
 (ert-deftest csv--to-lists ()
@@ -88,3 +88,13 @@ Align region to equal signs from `begin` to `end`.
 "))
 
    (should (equal expected (apply 'format-multiline input)))))
+
+
+(ert-deftest md-code-to-docstring-arg ()
+  "Test md-code-to-docstring-arg."
+  (let ((input "this is a `test`")
+        (expected "this is a TEST"))
+
+    (should (equal
+              expected
+              (md-code-to-docstring-arg input)))))
