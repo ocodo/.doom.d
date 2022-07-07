@@ -1,46 +1,24 @@
 
 # Ocodo handy functions
 
- A collection of miscellaneous functions and macros, which are either
- candidates to migrate to a minor mode, or will languish here in perpetuity.
+A collection of miscellaneous functions and macros, which are either
+candidates to migrate to a minor mode, or will languish here in perpetuity.
 
- Peppered in here are a few gems, some redundancies and some stuff I was just
- playing with. They are auto-documented in this markdown document.
+Peppered in here are a few gems, some redundancies and some stuff I was just
+playing with. They are auto-documented in this markdown document.
 
- Items used often:...
+Items used often:...
 
- - document-current-elisp-buffer-to-markdown (which generated this page.)
- - defun-pcase
- - plist-bind
- - *-and-replace
- - screencapture-mac
- - ocodo-custom-key-bindings-to-markdown
- - format-multiline
+- document-current-elisp-buffer-to-markdown (which generated this page.)
+- defun-pcase
+- plist-bind
+- *-and-replace
+- screencapture-mac
+- ocodo-custom-key-bindings-to-markdown
+- format-multiline
 
  - - -
-## Functions & Macros
-
-### *-and-replace
-
-A macro which creates a new command `name` using `evaluator`.
-
-The new command will send the region string to the `evaluator`, and replace it the result.
-
-For example, using `shell-command-to-string`, we can wrap it with `*-and-replace`
-
-```lisp
-(*-and-replace shell-command-eval-and-replace #'shell-command-to-string)
-
-;; a new interactive function: =>
-;; (shell-command-eval-and-replace)
-```
-
-The command `shell-command-eval-and-replace` will be created.
-
-
-```lisp
-(*-and-replace (name evaluator))
-```
+## Functions
 
 ### -sample
 
@@ -50,9 +28,9 @@ Return a random element from the `list`.
 (-sample (list))
 ```
 
-### align-numbers-right
+### align-number-right
 
-Align columns of numbers right in the region (`begin`, `end`).
+Align columns of numbers right in the region (BEGIN, `end`).
 
 For example:
 
@@ -71,7 +49,7 @@ For example:
 
 
 ```lisp
-(align-numbers-right (begin end))
+(align-number-right (begin end))
 ```
 
 ### buffer-file-name-to-kill-ring
@@ -92,7 +70,7 @@ Change the number at point using `func`.
 
 ### cleanup-buffer
 
-Clean up the current, tabs to spaces, re-indent, trim whitespace.
+Perform a cleanup operations on a buffer, tabs to spaces, re-indent, trim whitespace.
 
 ```lisp
 (cleanup-buffer)
@@ -128,7 +106,7 @@ Copy the current region to the other window.
 
 ### copy-rest-of-line
 
-Copy from cursor to end of the current line to the kill ring.
+Copy from cursor to end the current line to the kill ring.
 
 ```lisp
 (copy-rest-of-line)
@@ -155,11 +133,11 @@ For example:
 ```lisp
 (let1 csv (format-multiline
             "|1, 2, 3, Words like this, #ffeeff
-             |2, 41, 414, 2002, Foo Bar")
+            |2, 41, 414, 2002, Foo Bar")
   (csv-to-lists csv))
 
 ;; => (("1" "2" "3" "Words like this" "#ffeeff")
-;;    ("2" "41" "414" "2002" "Foo Bar"))
+;;     ("2" "41" "414" "2002" "Foo Bar"))
 ```
 
 
@@ -173,6 +151,14 @@ Display cua-rectangle-keymap in which-key.
 
 ```lisp
 (cua-rectangle-which-key-help)
+```
+
+### current-buffer-defuns-to-markdown
+
+Create a markdown `file` of all defuns in the current buffer.
+
+```lisp
+(current-buffer-defuns-to-markdown (file))
 ```
 
 ### decimal-to-hex
@@ -197,33 +183,6 @@ Decrement number at point like vim's Ctrl x.
 
 ```lisp
 (decrement-number-at-point)
-```
-
-### defun-pcase
-
-Define a pcase function called `name` with `arglist`.
-
-While &optional all `defun-pcase` should have a `docstring`.
-
-`body` is the form of the underlying `pcase-lambda`.
-
-These are very useful for certain destructuring / cherry picking
-operations on lists / trees.
-
-Example:
-
-```lisp
-(defun-pcase pick-it (`(,_ ,_ (,_ ,it ,_)))
-    "Select it"
-   (format "%s" it))
-
-(my-pfun '(1 2 (1 "this one" 3)))
-;; => "this one"
-```
-
-
-```lisp
-(defun-pcase (name arglist &optional docstring &rest body))
 ```
 
 ### delete-frame-or-window-dwim
@@ -299,19 +258,11 @@ transform back-quoted docstring elements to inline markdown `code` style.
 (docstring-back-quoted-to-markdown-code (docstring))
 ```
 
-### document-current-elisp-buffer-to-markdown
-
-Create a markdown `file` of all defuns in the current buffer.
-
-```lisp
-(document-current-elisp-buffer-to-markdown (file))
-```
-
 ### duplicate-current-line-or-region
 
 Duplicates the current line or region `arg` times.
 
-If UP is non-nil, duplicate and move point to the top.
+If `up` is non-nil, duplicate and move point to the top.
 
 ```lisp
 (duplicate-current-line-or-region (arg &optional up))
@@ -385,12 +336,12 @@ Format a  multiline indented `format-string` with `args`.
 A multiline string can use leading `|` (pipe) characters to line
 up indentation.
 
-`args` passed will populate format template tokens in the
-`format-string`. Tokens are as defined in `(format ...)`
+ARGS passed will populate format template tokens in the
+FORMAT-STRING. Tokens are as defined in `(format ...)`
 
 For example:
 
-```lisp
+```
 (fomat-multiline "|- List...
                   |  - Item %s
                   |  - Item %#x
@@ -398,13 +349,13 @@ For example:
                   |
                   |... %s
                   |"
-  "one" 2 15 "the end")
+  "one" 2 #xf "the end")
 
-;; =>
+;;=>
 ;;"- List...
-;;   - Item one
-;;   - Item 0x2
-;;   - Item f
+;;  - Item one
+;;  - Item 0x2
+;;  - Item f
 ;;
 ;;... the end
 ;;"
@@ -433,7 +384,7 @@ Fraction `denominator` of circle to radians.
 
 ### generate-markdown-defun-entry
 
-Generate a markdown entry for FN.
+Generate a markdown entry for `fn`.
 
 ```lisp
 (generate-markdown-defun-entry (fn))
@@ -451,7 +402,7 @@ Generate markdown text of all defuns in buffer
 
 Generate markdown page for all defun in `buffer`.
 
-`buffer` file name and commentary are used as the page heading.
+BUFFER file name and commentary are used as the page heading.
 
 ```lisp
 (generate-markdown-page-of-buffer-defuns (&optional buffer))
@@ -710,24 +661,6 @@ Kill the current word at point.
 (kill-whole-word)
 ```
 
-### let1
-
-Syntax sugar for `let`. A single `var` `val` let over `body`.
-
-Example usage:
-
-```lisp
-(let1 my-var "Hello World"
-  (message "%s" my-var))
-
-=> "Hello World"
-```
-
-
-```lisp
-(let1 (var val &rest body))
-```
-
 ### macos-get-list-of-windowids
 
 Get a list of macOS windowids.
@@ -784,6 +717,22 @@ Switch from cua rectangle to multiple cursors.
 (mc/cua-rectangle-to-multiple-cursors)
 ```
 
+### md-code-to-docstring-arg
+
+Replace markdown inline code with docstring arg style in `string`.
+
+For example:
+
+```lisp
+(md-code-to-docstring-arg "`code`")
+;;  => `code`
+```
+
+
+```lisp
+(md-code-to-docstring-arg (string))
+```
+
 ### my-isearch-buffers
 
 Incremental search through open buffers.
@@ -828,7 +777,7 @@ Leave *scratch* and *Messages* alone too.
 
 ### ocodo-clean-key-bindings-for-documentation
 
-Prepare collated key binding `list` for documentation.
+Prepare collated binding `list` for documentation.
 
 ```lisp
 (ocodo-clean-key-bindings-for-documentation (binding-list))
@@ -842,17 +791,17 @@ Collate all key bindings found in ocodo-key-bindings-lisp-files.
 (ocodo-collate-key-bindings-for-documentation)
 ```
 
-### ocodo-custom-key-bindings-to-markdown
+### ocodo-custom-key-bindings-markdown
 
-Generate markdown `file` with table of custom key bindings
+Generate markdown `file` with table of custom bindings
 
 ```lisp
-(ocodo-custom-key-bindings-to-markdown (file))
+(ocodo-custom-key-bindings-markdown (file))
 ```
 
 ### ocodo-filter-key-bindings
 
-Filter key `bindings` by `filter` on `index`.
+Filter `bindings` by `filter` on `index`.
 
 ```lisp
 (ocodo-filter-key-bindings (filter index bindings))
@@ -860,7 +809,7 @@ Filter key `bindings` by `filter` on `index`.
 
 ### ocodo-key-binding-groups-to-markdown
 
-Convert key `binding-groups` to string of markdown tables.
+Convert `binding-groups` to string of markdown tables.
 
 ```lisp
 (ocodo-key-binding-groups-to-markdown (binding-groups headings))
@@ -876,7 +825,7 @@ Cleaned list of key bindings for documentation.
 
 ### ocodo-key-bindings-use-unicode-symbols
 
-`key-binding` string directions to unicode arrows.
+KEY-BINDING string directions to unicode arrows.
 <up> <down> <left> <right> replaced with ↑ ↓ ← →.
 <return> replaced with ⮐.
 
@@ -888,7 +837,7 @@ Setting `white-arrows` to t, gives these replacements: ⇧ ⇩ ⇦ ⇨ and ⏎.
 
 ### ocodo-make-key-binding-groups
 
-Collect key `bindings` and `headings` into `groups`.
+Collect `bindings` and `headings` into `groups`.
 
 ```lisp
 (ocodo-make-key-binding-groups (bindings headings groups))
@@ -904,7 +853,7 @@ Make a table row from `binding`.
 
 ### ocodo-sh-indent-rules
 
-Try to set sh-mode indent rules.
+Set up shell script indenation rules engines.
 
 ```lisp
 (ocodo-sh-indent-rules)
@@ -944,7 +893,7 @@ Open the current file in intellij `idea` 15 (OS X specific).
 
 ### open-this-in-xcode
 
-Open the current file in XCode.
+Open the current file in `xc`ode.
 
 ```lisp
 (open-this-in-xcode)
@@ -956,29 +905,6 @@ Insert a pcre regexp to match a list of `words`.
 
 ```lisp
 (pcre-regexp-from-list-of-words (words))
-```
-
-### plist-bind
-
-Syntax sugar to destructure `plist`, binding values to `args` named as keys. Access them in `body` form.
-
-For example:
-
-```lisp
-(plist-bind (a c)            ;; <- arg names match required keys.
-  '(:a "foo" :b 13 :c "bar") ;; <- plist
-  (list a c))                ;; <- Body
-
-;; => ("foo" "bar")
-```
-
-Appeared in http://emacs.stackexchange.com/questions/22542
-
-Credit: fommil - https://emacs.stackexchange.com/users/5142/fommil
-
-
-```lisp
-(plist-bind (args plist &rest body))
 ```
 
 ### random-in-range
@@ -993,10 +919,20 @@ Return a random number in range `start` to `end`.
 
 Run a simple applescript to reload the current Google Chrome tab.
 
-`osx` specific.
+OSX specific.
 
 ```lisp
 (reload-current-chrome-tab-osx)
+```
+
+### reload-current-firefox-tab-osx
+
+Run a simple applescript to reload the current Google Chrome tab.
+
+OSX specific.
+
+```lisp
+(reload-current-firefox-tab-osx)
 ```
 
 ### rename-this-buffer-and-file
@@ -1017,7 +953,7 @@ Replace pretty quotes with standard quotes.
 
 ### replace-regexp-and-return
 
-Replace regexp `from` to TO and return cursor to point.
+Replace regexp `from` to `to` and return cursor to point.
 
 ```lisp
 (replace-regexp-and-return (from to))
@@ -1034,7 +970,7 @@ No docstring available: `todo`
 ### replace-thing-at-point-with
 
 Get the current thing at point.
-Replace with the return value of the function FN
+Replace with the return value of the function `fn`
 
 ```lisp
 (replace-thing-at-point-with (fn))
@@ -1070,7 +1006,7 @@ css-value to the hex color found.
 
 ### screencapture-mac
 
-Screencapture on macOS, interactive or supply `commandline` and `file`_`keyword`.
+Screencapture on macOS, interactive or supply `commandline` and `file_keyword`.
 
 ```lisp
 (screencapture-mac (&optional commandline file-keyword))
@@ -1094,7 +1030,7 @@ No docstring available: `todo`
 
 ### screencapture-mac--filename-generator
 
-Generate a filename for the screenshot at `path` with optional `ext` and `file`_`keyword`.
+Generate a filename for the screenshot at `path` with optional `ext` and `file_keyword`.
 
 ```lisp
 (screencapture-mac--filename-generator (path &optional ext file-keyword))
@@ -1160,11 +1096,11 @@ Reset the default commandline
 
 Search for a string backwards from the current point.
 
-Use the strings `wrap`_`start` and `wrap`_`end`, to match the start and
+Use the strings `wrap_start` and `wrap_end`, to match the start and
 end of the string.
 
-if `wrap`_`end` and `wrap`_`start` are equal, we first position the point
-at the beginning of the first `wrap`_`end` match, before the initial
+if `wrap_end` and `wrap_start` are equal, we first position the point
+at the beginning of the first `wrap_end` match, before the initial
 point.
 
 The string found between the two wrappers is returned.
@@ -1212,7 +1148,7 @@ Return an error if no buffer file.
 
 ### shell-command-on-region-replace
 
-Run `shell-command-on-region` `command` on the current region (`start`, `end`) replacing it with the result.
+Run `shell-command-on-region` replacing the selected region. `start` `end` `command`.
 
 ```lisp
 (shell-command-on-region-replace (start end command))
@@ -1245,7 +1181,7 @@ Comments stay with the code below.
 
 ### ssh-agent-env-fix
 
-Ensure `$`ssh`_`auth`_`sock`` is set correctly in the environment.
+Ensure $SSH_AUTH_SOCK is set correctly in the environment.
 
 ```lisp
 (ssh-agent-env-fix)
