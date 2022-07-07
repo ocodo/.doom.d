@@ -1,4 +1,4 @@
-# Ocodo's Doom Emacs Custom Key Bindings.
+# Ocodo's Emacs Key Bindings.
 
 ### General
 
