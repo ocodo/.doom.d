@@ -965,9 +965,9 @@ Syntax sugar to destructure `plist`, binding values to `args` named as keys. Acc
 For example:
 
 ```lisp
-(plist-bind (a c) ;; <- arg names match required keys.
+(plist-bind (a c)            ;; <- arg names match required keys.
   '(:a "foo" :b 13 :c "bar") ;; <- plist
-  (list a c)) ;; <- Body
+  (list a c))                ;; <- Body
 
 ;; => ("foo" "bar")
 ```
