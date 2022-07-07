@@ -241,10 +241,27 @@ Note: this won't turn off face properties in a font-locked buffer."
     (move-end-of-line 1)
     (kill-ring-save nil nil t)))
 
-(defun csv--to-lists (csv)
-  "Convert CSV to lists."
-  (mapcar (lambda (line) (split-string line ","))
-          (split-string (s-chomp csv) "\n")))
+(defun csv-to-lists (csv)
+  "Convert simple (very limited) CSV string to list of lists.
+
+Consider this a basic experiment, which won't be developed.
+
+Use `csv-mode` instead.
+
+For example:
+
+```lisp
+(let1 csv (format-multiline
+            \"|1, 2, 3, Words like this, #ffeeff
+            |2, 41, 414, 2002, Foo Bar\")
+  (csv-to-lists csv))
+
+;; => ((\"1\" \"2\" \"3\" \"Words like this\" \"#ffeeff\")
+;;     (\"2\" \"41\" \"414\" \"2002\" \"Foo Bar\"))
+```
+"
+ (mapcar (lambda (line) (split-string line ","))
+         (split-string (s-chomp csv) "\n")))
 
 (defun cua-rectangle-which-key-help ()
   "Display cua-rectangle-keymap in which-key."
