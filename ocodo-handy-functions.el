@@ -2,23 +2,21 @@
 ;;; Author: Jason Milkins <jasonm23@gmail.com>
 ;;; Commentary:
 ;;
-;;  A collection of miscellaneous functions, which are either
-;;  candidates to migrate to a minor mode, or will languish here in
-;;  perpetuity.
+;; A collection of miscellaneous functions and macros, which are either
+;; candidates to migrate to a minor mode, or will languish here in perpetuity.
 ;;
-;;  Peppered in here are a few gems, some redundancies and somethings I was just
-;;  playing with. They are auto-documented in this markdown document, using
-;;  `generate-markdown-page-of-buffer-defuns` defined in here.
+;; Peppered in here are a few gems, some redundancies and some stuff I was just
+;; playing with. They are auto-documented in this markdown document.
 ;;
-;;  Notable items are
-;;  - generate-markdown-page-of-buffer-defuns
-;;  - screencapture-mac
-;;  - ocodo-custom-bindings-markdown
+;; Items used often:...
 ;;
-;;  ```lisp
-;;  ;; some code...
-;;  (message "Oh hai")
-;;  ```
+;; - document-current-elisp-buffer-to-markdown (which generated this page.)
+;; - defun-pcase
+;; - plist-bind
+;; - *-and-replace
+;; - screencapture-mac
+;; - ocodo-custom-key-bindings-to-markdown
+;; - format-multiline
 ;;
 ;;; License:
 ;;  GPL3
@@ -37,13 +35,13 @@
 (require 'xr)
 (require 'time-stamp)
 
-(defvar ocodo-binding-groups '(("Markdown Soma" 1 "^Markdown soma")
-                               ("Smart Parens" 1 "^Sp ")
-                               ("Text Transforms" 0 "C-c t t")
-                               ("Color" 1 "[Cc]olor")
-                               ("ERT Testing" 1 "^Ert ")
-                               ("Debugging" 1 "[Dd]ebug")
-                               ("Windows" 1 "[Ww]indow"))
+(defvar ocodo-key-binding-groups '(("Markdown Soma" 1 "^Markdown soma")
+                                   ("Smart Parens" 1 "^Sp ")
+                                   ("Text Transforms" 0 "C-c t t")
+                                   ("Color" 1 "[Cc]olor")
+                                   ("ERT Testing" 1 "^Ert ")
+                                   ("Debugging" 1 "[Dd]ebug")
+                                   ("Windows" 1 "[Ww]indow"))
   "Key binding group filters")
 
 (defvar ocodo-key-bindings-lisp-files
@@ -72,13 +70,27 @@
   "screencapture")
 
 (defmacro *-and-replace (function-name evaluator)
-  "Build FUNCTION-NAME to use EVALUATOR on the current region, and replace it with the result."
-  `(defun ,function-name ()
-     (interactive)
-     (if (not (region-active-p))
-         (replace-thing-at-point-with ,evaluator)
-       ;; - else -
-       (replace-region-with ,evaluator))))
+ "A macro which creates a new command NAME using EVALUATOR.
+
+The new command will send the region string to the EVALUATOR, and replace it the result.
+
+For example:
+
+Using `shell-command-to-string', we can make a replace-region command with `*-and-replace'
+
+ ```lisp
+ (*-and-replace shell-command-eval-and-replace #'shell-command-to-string)
+
+;; =>
+;; (shell-command-eval-and-replace)
+ ```
+"
+ `(defun ,function-name ()
+    (interactive)
+    (if (not (region-active-p))
+        (replace-thing-at-point-with ,evaluator)
+      ;; - else -
+      (replace-region-with ,evaluator))))
 
 (*-and-replace calc-eval-replace-at-region-or-point #'calc-eval)
 (*-and-replace decimal-to-hex-at-point-or-region #'decimal-to-hex)
@@ -87,22 +99,47 @@
 (*-and-replace eval-regexp-to-rx-replace #'xr)
 
 (defmacro defun-pcase (name arglist &optional docstring &rest body)
-  "Define a pcase function called NAME with ARGLIST.
+ "Define a pcase function called NAME with ARGLIST.
 
-All `defun-pcase' should have a DOCSTRING.
+While `&optional' all `defun-pcase' should have a DOCSTRING.
 
-BODY is the form of the underlying `pcase-lambda'."
-  (declare (doc-string 3) (indent 2))
-  `(progn (defalias
-            (quote ,name)
-            (pcase-lambda ,arglist ,@body)
-            ,docstring)))
+BODY is the form of the underlying `pcase-lambda'.
+
+These are very useful for certain destructuring / cherry picking
+operations on lists / trees.
+
+For example:
+
+```lisp
+(defun-pcase pick-it (`(,_ ,_ (,_ ,it ,_)))
+    \"Select it\"
+   (format \"%s\" it))
+
+(my-pfun '(1 2 (1 \"this one\" 3)))
+;; => \"this one\"
+```
+"
+ (declare (doc-string 3) (indent 2))
+ `(progn (defalias
+           (quote ,name)
+           (pcase-lambda ,arglist ,@body)
+           ,docstring)))
 
 (defmacro let1 (var val &rest body) `(let ((,var ,val)) ,@body))
 
 (defmacro plist-bind (args expr &rest body)
-  ;; http://emacs.stackexchange.com/questions/22542
-  "A `destructuring-bind' without the boilerplate for plists."
+  "Syntax sugar to destructure PLIST, binding values to ARGS named as keys. Access them in the BODY form.
+
+For example:
+
+```lisp
+(plist-bind (a c)                ;; <- arg names match key names.
+  '(:a \"foo\" :b 13 :c \"bar\") ;; <- plist
+  (list a c))                    ;; <- Body
+
+;; => (\"foo\" \"bar\")
+```
+"
   `(cl-destructuring-bind
        (&key ,@args &allow-other-keys)
        ,expr
@@ -113,7 +150,23 @@ BODY is the form of the underlying `pcase-lambda'."
   (nth (random (length list)) list))
 
 (defun align-number-right (begin end)
-  "Align region to equal signs from BEGIN to END."
+  "Align columns of numbers right in the region (BEGIN, END).
+
+For example:
+
+```
+10 49 1123
+301 213 4111
+2134 4151 525235
+48912 522  19538
+
+;; =>
+;;     10    49     1123
+;;    301   213     4111
+;;   2134  4151   525235
+;;  48912   522    19538
+```
+"
   (interactive "r")
   (align-regexp begin end ".* \\([0-9]+\\).*" -1 1 nil))
 
@@ -916,18 +969,18 @@ Leave *scratch* and *Messages* alone too."
    (buffer-list))
   (delete-other-windows))
 
-(defun ocodo-make-binding-table-row (binding)
+(defun ocodo-make-key-binding-table-row (binding)
   "Make a table row from BINDING."
   (cl-destructuring-bind
       (keys command keymap)
       binding
    (format "| %s | %s | %s |" keys command keymap)))
 
-(defun ocodo-filter-bindings (filter index bindings)
+(defun ocodo-filter-key-bindings (filter index bindings)
   "Filter BINDINGS by FILTER on INDEX."
   (--filter (s-matches-p filter (nth-value index it)) bindings))
 
-(defun ocodo-ungrouped-bindings (bindings title groups)
+(defun ocodo-ungrouped-key-bindings (bindings title groups)
   "Collect BINDINGS and HEADINGS into GROUPS."
   (let ((bindings (ocodo-key-bindings-for-documentation))
         (predicates (--map
@@ -939,17 +992,17 @@ Leave *scratch* and *Messages* alone too."
                            (--map (funcall it b) predicates)))
        bindings))))
 
-(defun ocodo-make-binding-groups (bindings headings groups)
+(defun ocodo-make-key-binding-groups (bindings headings groups)
   "Collect BINDINGS and HEADINGS into GROUPS."
   (--map
    (cl-destructuring-bind (title index filter) it
     (list title
-      (ocodo-filter-bindings
+      (ocodo-filter-key-bindings
        filter index
        bindings)))
    groups))
 
-(defun ocodo-bindings-use-unicode-symbols (key-binding &optional white-arrows)
+(defun ocodo-key-bindings-use-unicode-symbols (key-binding &optional white-arrows)
   "KEY-BINDING string directions to unicode arrows.
 <up> <down> <left> <right> replaced with ↑ ↓ ← →.
 <return> replaced with ⮐.
@@ -969,12 +1022,12 @@ Setting WHITE-ARROWS to t, gives these replacements: ⇧ ⇩ ⇦ ⇨ and ⏎."
 
 (defun ocodo-key-bindings-for-documentation ()
   "Cleaned list of key bindings for documentation."
-  (ocodo-clean-bindings-for-documentation
+  (ocodo-clean-key-bindings-for-documentation
    (ocodo-collate-key-bindings-for-documentation)))
 
-(defun ocodo-clean-bindings-for-documentation (binding-list)
+(defun ocodo-clean-key-bindings-for-documentation (binding-list)
   "Prepare collated binding LIST for documentation."
-  (--map `(,(s-replace "|" "\\|" (ocodo-bindings-use-unicode-symbols (first it)))
+  (--map `(,(s-replace "|" "\\|" (ocodo-key-bindings-use-unicode-symbols (first it)))
            ,(s-capitalized-words (s-replace "#'" "" (format "%s"(second it))))
            ,(s-capitalized-words (s-replace-regexp "^nil$" "Global" (s-replace "'" "" (format "%s" (third it))))))
          (ocodo-collate-key-bindings-for-documentation)))
@@ -998,7 +1051,7 @@ Setting WHITE-ARROWS to t, gives these replacements: ⇧ ⇩ ⇦ ⇨ and ⏎."
                     (--map (s-split "\n" (f-read it 'utf-8))
                      ocodo-key-bindings-lisp-files))))))))))
 
-(defun ocodo-binding-groups-to-markdown (binding-groups headings)
+(defun ocodo-key-binding-groups-to-markdown (binding-groups headings)
   "Convert BINDING-GROUPS to string of markdown tables."
   (concat
    (format "# %s\n" ocodo-key-bindings-heading)
@@ -1014,24 +1067,24 @@ Setting WHITE-ARROWS to t, gives these replacements: ⇧ ⇩ ⇦ ⇨ and ⏎."
           headings
           (s-join "\n"
            (--map
-            (ocodo-make-binding-table-row it)
+            (ocodo-make-key-binding-table-row it)
             bindings))))
      (push
-      (ocodo-ungrouped-bindings (ocodo-key-bindings-for-documentation)
-        "General" ocodo-binding-groups)
+      (ocodo-ungrouped-key-bindings (ocodo-key-bindings-for-documentation)
+        "General" ocodo-key-binding-groups)
       binding-groups)))))
 
-(defun ocodo-custom-bindings-markdown (file)
+(defun ocodo-custom-key-bindings-markdown (file)
   "Generate markdown FILE with table of custom bindings"
   (interactive "f[Cusom Bindings] Save to markdown file: ")
   (let* ((table-heading ocodo-key-bindings-table-heading)
 
          (binding-list (ocodo-key-bindings-for-documentation))
 
-         (custom-bindings-markdown (ocodo-binding-groups-to-markdown
-                                    (ocodo-make-binding-groups binding-list table-heading ocodo-binding-groups)
-                                    table-heading)))
-    (f-write custom-bindings-markdown 'utf-8 file)
+         (custom-key-bindings-markdown (ocodo-key-binding-groups-to-markdown
+                                        (ocodo-make-key-binding-groups binding-list table-heading ocodo-key-binding-groups)
+                                        table-heading)))
+    (f-write custom-key-bindings-markdown 'utf-8 file)
     (message ": %s" file)
     (when (y-or-n-p (format "Generated %s, open it?" file)) (find-file file))))
 
@@ -1598,10 +1651,6 @@ Comments stay with the code below."
   "Insert UTC seconds."
   (interactive)
   (insert (format-time-string "%s")))
-
-(defun yank-repeat (&optional arg)
-  "Repeat yank n times ARG."
-  (interactive "*p"))
 
 (provide 'ocodo/handy-functions)
 
