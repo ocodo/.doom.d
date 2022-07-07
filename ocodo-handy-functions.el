@@ -92,6 +92,7 @@ Using `shell-command-to-string', we can make a replace-region command with `*-an
       ;; - else -
       (replace-region-with ,evaluator))))
 
+(*-and-replace replace-md-code-with-docstring-arg-in-region #'md-code-to-docstring-arg)
 (*-and-replace calc-eval-replace-at-region-or-point #'calc-eval)
 (*-and-replace decimal-to-hex-at-point-or-region #'decimal-to-hex)
 (*-and-replace hex-to-decimal-at-point-or-region #'hex-to-decimal)
@@ -125,7 +126,19 @@ For example:
            (pcase-lambda ,arglist ,@body)
            ,docstring)))
 
-(defmacro let1 (var val &rest body) `(let ((,var ,val)) ,@body))
+(defmacro let1 (var val &rest body)
+  "Syntax sugar for `let`. A single `var` `val` let over `body`.
+
+Example usage:
+
+```lisp
+(let1 my-var \"Hello World\"
+  (message \"%s\" my-var))
+
+=> \"Hello World\"
+```
+"
+  `(let ((,var ,val)) ,@body))
 
 (defmacro plist-bind (args expr &rest body)
   "Syntax sugar to destructure PLIST, binding values to ARGS named as keys. Access them in the BODY form.
@@ -947,6 +960,20 @@ If your're in the minibuffer it will use the other buffer file name."
           (mc/maybe-multiple-cursors-mode)))))
 
 (define-key cua--rectangle-keymap (kbd "C-. C-,") 'mc/cua-rectangle-to-multiple-cursors)
+
+(defun md-code-to-docstring-arg (string)
+  "Replace markdown inline code with docstring arg style in STRING.
+
+For example:
+
+```lisp
+(md-code-to-docstring-arg \"`code`\")
+;;  => CODE
+```
+"
+  (s-replace-regexp
+   (rx "`" (group (>= 1 (any alnum "_" "-"))) "`")
+   string t))
 
 (defun my-isearch-buffers ()
   "Incremental search through open buffers."
