@@ -363,13 +363,14 @@ When there is only one frame, kill the buffer."
   "transform DOCSTRING arguments to inline markdown `code` style."
   (let ((case-fold-search nil))
        (replace-regexp-in-string
-        (rx (group
+        (rx (>= 1 space)
+            (group
              (>= 1 upper-case)
              (>= 1 (any upper-case
                         num
                         "_"
                         "-"))))
-        (lambda (match) (downcase (format "`%s`" match)))
+        (lambda (match) (downcase (format " `%s`" (s-trim-left match))))
         docstring t)))
 
 (defun docstring-back-quoted-to-markdown-code (docstring)
@@ -1626,7 +1627,7 @@ Comments stay with the code below."
                         (delete-region (point) (marker-position end)))))))))
 
 (defun ssh-agent-env-fix ()
-  "Ensure ssh_auth_sock is set correctly in the environment."
+  "Ensure $SSH_AUTH_SOCK is set correctly in the environment."
   (interactive)
   (if (= (string-to-number (shell-command-to-string "pgrep ssh-agent | wc -l")) 1)
       (let ((private-sock (shell-command-to-string "lsof | grep ssh-agent | grep /private"))
