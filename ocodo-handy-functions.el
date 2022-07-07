@@ -350,7 +350,12 @@ When there is only one frame, kill the buffer."
   "transform DOCSTRING arguments to inline markdown `code` style."
   (let ((case-fold-search nil))
        (replace-regexp-in-string
-        (rx (group (>= 2 (any upper-case num "_" "-"))))
+        (rx (group
+             (>= 1 upper-case)
+             (>= 1 (any upper-case
+                        num
+                        "_"
+                        "-"))))
         (lambda (match) (downcase (format "`%s`" match)))
         docstring t)))
 
