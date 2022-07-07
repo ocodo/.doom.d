@@ -3,7 +3,7 @@
 ;; ert settings
 (use-package! ert
 
-  :config
+  :init
    (defun ert-run-all-tests ()
      "Run all tests available."
      (interactive)

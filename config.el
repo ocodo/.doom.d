@@ -48,13 +48,20 @@
 (global-hl-line-mode -1)
 
 ;; Font
-(setq doom-font
-      (font-spec
-       :family "SauceCodePro Nerd Font"
-       :weight 'light)
-      doom-variable-pitch-font
-      (font-spec
-       :family "Avenir Next"))
+(setq doom-modeline-height 1)
+(when (eq system-type 'darwin)
+  (setq doom-font
+        (font-spec
+         :family "SauceCodePro Nerd Font"
+         :weight 'light)
+        doom-variable-pitch-font
+        (font-spec
+         :family "Avenir Next"))
+
+ (custom-set-faces
+   '(mode-line ((t (:family "Avenir Next" :height 0.9))))
+   '(mode-line-active ((t (:family "Avenir Next" :height 0.9)))) ; For 29+
+   '(mode-line-inactive ((t (:family "Avenir Next" :height 0.9))))))
 
 (setq display-line-numbers-type nil)
 
