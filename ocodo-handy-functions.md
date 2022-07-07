@@ -1,3 +1,27 @@
+
+# Ocodo handy functions
+
+ A collection of miscellaneous functions, which are either
+ candidates to migrate to a minor mode, or will languish here in
+ perpetuity.
+
+ Peppered in here are a few gems, some redundancies and somethings I was just
+ playing with. They are auto-documented in this markdown document, using
+ `generate-markdown-page-of-buffer-defuns` defined in here.
+
+ Notable items are
+ - generate-markdown-page-of-buffer-defuns
+ - screencapture-mac
+ - ocodo-custom-bindings-markdown
+
+ ```lisp
+ ;; some code...
+ (message "Oh hai")
+ ```
+
+ - - -
+## Functions
+
 ### -sample
 
 Return a random element from the `list`.
@@ -274,6 +298,41 @@ Convert `val` of `width` to a binary string.
 (format-binary (val &optional width))
 ```
 
+### format-multiline
+
+Format a  multiline indented `format-string` with `args`.
+
+A multiline string can use leading `|` (pipe) characters to line
+up indentation.
+
+`args` passed will populate format template tokens in the
+`format-string`. Tokens are as defined in `(format ...)`
+
+For example:
+
+```
+(fomat-multiline "|- List...
+                  |  - Item %s
+                  |  - Item %#x
+                  |  - Item %x
+                  |
+                  |... %s
+                  |"
+  "one" 2 #xf "the end")
+
+=> "- List...
+  - Item one
+  - Item 0x2
+  - Item f
+
+... the end
+"
+```
+
+```lisp
+(format-multiline (format-string &rest args))
+```
+
 ### format-thousands-separators
 
 Format N to have thousand separators.
@@ -304,6 +363,16 @@ Generate markdown text of all defuns in buffer
 
 ```lisp
 (generate-markdown-list-of-buffer-defuns (buffer))
+```
+
+### generate-markdown-page-of-buffer-defuns
+
+Generate markdown page for all defun in `buffer`.
+
+`buffer` file name and commentary are used as the page heading.
+
+```lisp
+(generate-markdown-page-of-buffer-defuns (&optional buffer))
 ```
 
 ### generate-untitled-name
@@ -695,12 +764,10 @@ Collate all key bindings found in ocodo-key-bindings-lisp-files.
 
 ### ocodo-custom-bindings-markdown
 
-Generate markdown `file` with table of custom bindings, any prefix will `open` file.
-Prefix of 2 (e.g. `m-2` `m-`x ocodo-custom-bindings-markdown). Will use open arrow
-and return glyphs.
+Generate markdown `file` with table of custom bindings
 
 ```lisp
-(ocodo-custom-bindings-markdown (open))
+(ocodo-custom-bindings-markdown (file))
 ```
 
 ### ocodo-filter-bindings

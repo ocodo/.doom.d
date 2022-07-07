@@ -71,3 +71,20 @@ Align region to equal signs from `begin` to `end`.
                    (--map
                     (is-markdown-filename-p it)
                     filenames)))))
+
+(ert-deftest format-multiline ()
+  "Test multiline format."
+  (let ((input '("|Line %s
+                |  Line %i
+                |    Line %x : %x : %#X
+                |  Line %.2f
+                |    Line %s
+                |" "one" 2 3 255 255 4.23 "five"))
+        (expected "Line one
+  Line 2
+    Line 3 : ff : 0XFF
+  Line 4.23
+    Line five
+"))
+
+   (should (equal expected (apply 'format-multiline input)))))

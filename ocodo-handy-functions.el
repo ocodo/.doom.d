@@ -6,6 +6,20 @@
 ;;  candidates to migrate to a minor mode, or will languish here in
 ;;  perpetuity.
 ;;
+;;  Peppered in here are a few gems, some redundancies and somethings I was just
+;;  playing with. They are auto-documented in this markdown document, using
+;;  `generate-markdown-page-of-buffer-defuns` defined in here.
+;;
+;;  Notable items are
+;;  - generate-markdown-page-of-buffer-defuns
+;;  - screencapture-mac
+;;  - ocodo-custom-bindings-markdown
+;;
+;;  ```lisp
+;;  ;; some code...
+;;  (message "Oh hai")
+;;  ```
+;;
 ;;; License:
 ;;  GPL3
 ;;
@@ -188,7 +202,7 @@ Note: this won't turn off face properties in a font-locked buffer."
 (defun current-buffer-defuns-to-markdown (file)
   "Create a markdown FILE of all defuns in the current buffer."
   (interactive "FWrite List of defuns to Markdown File: ")
-  (f-write-text (generate-markdown-list-of-buffer-defuns (current-buffer)) 'utf-8 file)
+  (f-write (generate-markdown-page-of-buffer-defuns (current-buffer)) 'utf-8 file)
   (when (y-or-n-p (format "Open %s?" file))
     (find-file file)))
 
@@ -373,6 +387,41 @@ Use recentf-save-list to persist."
     (message "Width: %d" w)
    (s-pad-left w "0" binary)))
 
+(defun format-multiline (format-string &rest args)
+    "Format a  multiline indented FORMAT-STRING with ARGS.
+
+A multiline string can use leading `|` (pipe) characters to line
+up indentation.
+
+ARGS passed will populate format template tokens in the
+FORMAT-STRING. Tokens are as defined in `(format ...)`
+
+For example:
+
+```
+(fomat-multiline \"|- List...
+                  |  - Item %s
+                  |  - Item %#x
+                  |  - Item %x
+                  |
+                  |... %s
+                  |\"
+  \"one\" 2 #xf \"the end\")
+
+=> \"- List...
+  - Item one
+  - Item 0x2
+  - Item f
+
+... the end
+\"
+```"
+    (apply 'format
+      (s-join "\n"
+            (--map (s-replace-regexp "^[ ]*|" "" it)
+              (s-lines format-string)))
+      args))
+
 (defun format-thousands-separators (n)
   "Format N to have thousand separators."
   (let* ((parts (split-string (number-to-string n) "[.]"))
@@ -422,6 +471,23 @@ Use recentf-save-list to persist."
                           (d (symbol-name (first b))))
                       (string< c d)))
                   (get-defun-info (current-buffer))))))
+
+(defun generate-markdown-page-of-buffer-defuns (&optional buffer)
+  "Generate markdown page for all defun in BUFFER.
+
+BUFFER file name and commentary are used as the page heading."
+
+  (concat
+   (format-multiline "|
+                      |# %s
+                      |%s
+                      | - - -
+                      |## Functions
+                      |
+                      |"
+                     (s-capitalized-words (s-replace-regexp "[.]el$" ""(buffer-name buffer)))
+                     (lm-commentary (buffer-file-name)) buffer)
+   (generate-markdown-list-of-buffer-defuns buffer)))
 
 (defun generate-untitled-name ()
   "Generate a name with pattern untitled-n."
@@ -955,25 +1021,19 @@ Setting WHITE-ARROWS to t, gives these replacements: ⇧ ⇩ ⇦ ⇨ and ⏎."
         "General" ocodo-binding-groups)
       binding-groups)))))
 
-(defun ocodo-custom-bindings-markdown (open)
-  "Generate markdown FILE with table of custom bindings, any prefix will OPEN file.
-Prefix of 2 (e.g. M-2 M-x ocodo-custom-bindings-markdown). Will use open arrow
-and return glyphs."
-  (interactive "P")
+(defun ocodo-custom-bindings-markdown (file)
+  "Generate markdown FILE with table of custom bindings"
+  (interactive "f[Cusom Bindings] Save to markdown file: ")
   (let* ((table-heading ocodo-key-bindings-table-heading)
 
          (binding-list (ocodo-key-bindings-for-documentation))
 
          (custom-bindings-markdown (ocodo-binding-groups-to-markdown
                                     (ocodo-make-binding-groups binding-list table-heading ocodo-binding-groups)
-                                    table-heading))
-         (file (read-file-name
-                "[Cusom Bindings] Generate markdown file: "
-                nil "ocodo-custom-bindings.md" nil "*.md"
-                'is-markdown-filename-p)))
+                                    table-heading)))
     (f-write custom-bindings-markdown 'utf-8 file)
-    (message "Generated: %s" file)
-    (when open (find-file file))))
+    (message ": %s" file)
+    (when (y-or-n-p (format "Generated %s, open it?" file)) (find-file file))))
 
 (defun ocodo-sh-indent-rules ()
   "Try to set sh-mode indent rules."
