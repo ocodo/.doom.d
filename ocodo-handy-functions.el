@@ -1134,15 +1134,22 @@ Setting WHITE-ARROWS to t, gives these replacements: ⇧ ⇩ ⇦ ⇨ and ⏎."
 (defun ocodo-key-binding-groups-to-markdown (binding-groups headings)
   "Convert BINDING-GROUPS to string of markdown tables."
   (concat
-   (format "# %s\n" ocodo-key-bindings-heading)
+   (format-multiline "|# %s
+                      |
+                      |%s
+                      |
+                      |"
+                     ocodo-key-bindings-heading
+                     (lm-commentary "~/.doom.d/key-bindings.el"))
+
    (s-join "\n"
     (--map
      (cl-destructuring-bind (title bindings) it
-       (format "
-### %s
-
-%s
-%s"
+       (format-multiline "|
+                          |### %s
+                          |
+                          |%s
+                          |%s"
           title
           headings
           (s-join "\n"
@@ -1202,7 +1209,7 @@ Setting WHITE-ARROWS to t, gives these replacements: ⇧ ⇩ ⇦ ⇨ and ⏎."
   (sh-load-style "ocodo"))
 
 (defun open-line-above ()
-  "Open a newline above the current point."
+  "Open a newline above the current point, without moving."
   (interactive)
   (save-excursion
     (beginning-of-line)
@@ -1210,14 +1217,14 @@ Setting WHITE-ARROWS to t, gives these replacements: ⇧ ⇩ ⇦ ⇨ and ⏎."
     (forward-line -1)))
 
 (defun open-line-below ()
-  "Open a newline below the current point."
+  "Open a newline below the current point, without moving."
   (interactive)
   (end-of-line)
   (newline)
   (back-to-indentation))
 
-(defun open-this-in-intellij-idea-15-osx ()
-  "Open the current file in intellij IDEA 15 (OS X specific)."
+(defun open-this-in-intellij-idea-osx ()
+  "Open the current file in intellij IDEA (OS X specific)."
   (interactive)
   (when (file-exists-p (buffer-file-name))
     (start-process-shell-command "intellij-idea" nil
