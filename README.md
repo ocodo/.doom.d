@@ -2,11 +2,14 @@
 
 # .doom.d
 
-My attempt so far to discard [ocodo/.emacs.d](https://github.com/ocodo/.emacs.d)
+What happened after [ocodo/.emacs.d](https://github.com/ocodo/.emacs.d)
 
-FWIW I thoroughly recommend Doom Emacs.
+Well, long story short, I thoroughly recommend Doom Emacs.  Excellent community, unnaturally energetic and kind maintainer
+Henrik Lissner [hlissner](https://github.com/hlissner).  A joy to be doomed.
 
-- Migrated [`handy-functions.el` ⟶  `ocodo-handy-functions.el`](./ocodo-handy-functions.md)
+- Migrated 
+  - [`handy-functions.el` ⟶  `ocodo-handy-functions.el`](./ocodo-handy-functions.md)
+  - [Key bindings](./ocodo-custom-bindings.md)
 - Set font to SauceCodePro Nerd Font extra light
 - turn off hl-line mode when rainbow-mode is switched on
 
