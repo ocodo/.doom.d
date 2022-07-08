@@ -437,7 +437,7 @@ If UP is non-nil, duplicate and move point to the top."
     (message "Not a lisp file.")))
 
 (defun eval-and-replace ()
-  "Replace the preceding sexp with its value."
+  "Replace the preceding sexp with its result."
   (interactive)
   (backward-kill-sexp)
   (condition-case nil
@@ -457,8 +457,8 @@ If UP is non-nil, duplicate and move point to the top."
 
 (defun filter-recentf (pattern)
   "Remove entries matching PATTERN from recent files.
-This is operating on the recentf-list, in memory.
-Use recentf-save-list to persist."
+This is operating on the `recentf-list', in memory.
+Use `recentf-save-list' to persist."
   (interactive "MRemove recentf entries mathing pattern: ")
   (let ((temporary-recentf-list
          (--reject (s-matches-p pattern it) recentf-list)))
@@ -515,7 +515,15 @@ For example:
       args))
 
 (defun format-thousands-separators (n)
-  "Format N to have thousand separators."
+  "Format N to have thousand separators.
+
+For example:
+
+```lisp
+(format-thousands-separators 3032498000)
+;; => \"3,032,498,000\"
+```
+"
   (let* ((parts (split-string (number-to-string n) "[.]"))
          (characteristic (first parts))
          (separated
@@ -621,13 +629,27 @@ Returns a list with elements of the form (symbol args docstring)."
           result)))))
 
 (defun get-osx-display-resolution ()
-  "Get the current display resolution in OSX."
-  (--map (s-split "x" it)
-         (--filter (not (string= it ""))
-                   (s-split "\n" (shell-command-to-string
-                                  "system_profiler SPDisplaysDataType |\
-                                   grep Resolution |\
-                                   sed -e 's/Resolution: //' -e 's/ //g'")))))
+  "Get the current display resolution in OSX.
+
+Uses the mac system_profiler `SPDisplaysDataType' to lookup the
+current display resolution. This is then filtered out (using grep
+& perl) and formattted to a list of `(w h)'.
+
+For example:
+
+```lisp
+(get-osx-display-resolution)
+;; => (\"3840\" \"2160\")
+```
+"
+  (s-split "x"
+   (s-chomp
+    (shell-command-to-string
+        "system_profiler SPDisplaysDataType |\
+                            grep Resolution |\
+                            perl -pe \
+                            's/^ *Resolution: ([0-9]+? x [0-9]+?) .*$/\\1/' |\
+                            tr -d ' '"))))
 
 (defun get-position-of-nearest-matching (s &optional arg)
   "Get the position of nearest S.
@@ -666,7 +688,7 @@ when matches are equidistant from the current point."
     (if (not (string-match "^fatal: Not a git repo" git-modified-files))
         (let ((file-list (split-string git-modified-files "\n" t "[\r\n\t ]")))
           (mapc (lambda (file) (find-file file)) file-list))
-      (error "Not in a git repository"))))
+      (user-error "Not in a git repository"))))
 
 (defun git-open-changed-files ()
   "Use git ls-files to open changed files."
@@ -675,7 +697,7 @@ when matches are equidistant from the current point."
     (if (not (string-match "^fatal: Not a git repo" git-modified-files))
         (let ((file-list (split-string git-modified-files "\n" t "[\r\n\t ]")))
           (mapc (lambda (file) (find-file file)) file-list))
-      (error "Not in a git repository"))))
+      (user-error "Not in a git repository"))))
 
 (defun git-open-from-ls-files (git-ls-options)
   "Use GIT-LS-OPTIONS to open changed files."
@@ -684,7 +706,7 @@ when matches are equidistant from the current point."
     (if (not (string-match "^fatal: Not a git repo" git-modified-files))
         (let ((file-list (split-string git-modified-files "\n" t "[\r\n\t ]")))
           (mapc (lambda (file) (find-file file)) file-list))
-      (error "Not in a git repository"))))
+      (user-error "Not in a git repository"))))
 
 (defun git-open-ls-files (git-ls-options)
   "Use GIT-LS-OPTIONS to open changed files."
@@ -700,7 +722,7 @@ when matches are equidistant from the current point."
           (if (> 0 (length file-list))
               (mapc (lambda (file) (find-file file)) file-list)
             (message "No files to open")))
-      (error "Not in a git repository"))))
+      (user-error "Not in a git repository"))))
 
 (defun git-open-untracked-files ()
   "Use git ls-files to open untracked files.
@@ -711,7 +733,7 @@ when matches are equidistant from the current point."
     (if (not (string-match "^fatal: Not a git repo" git-untracked-files))
         (let ((file-list (split-string git-untracked-files "\n" t "[\r\n\t ]")))
           (mapc (lambda (file) (find-file file)) file-list))
-      (error "Not in a git repository"))))
+      (user-error "Not in a git repository"))))
 
 (defun github-browse-repo (repo)
   "Browse a github REPO by supplying the user/reponame."
