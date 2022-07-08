@@ -39,6 +39,7 @@
                                    ("Smart Parens" 1 "^Sp ")
                                    ("Text Transforms" 0 "C-c t t")
                                    ("Color" 1 "[Cc]olor")
+                                   ("Dired" 1 "[Dd]ired")
                                    ("ERT Testing" 1 "^Ert ")
                                    ("Debugging" 1 "[Dd]ebug")
                                    ("Windows" 1 "[Ww]indow"))
@@ -1027,7 +1028,7 @@ Leave *scratch* and *Messages* alone too."
   (cl-destructuring-bind
       (keys command keymap)
       binding
-   (format "| %s | %s | %s |" keys command keymap)))
+   (format "| <kbd>%s</kbd> | %s | %s |" keys command keymap)))
 
 (defun ocodo-filter-key-bindings (filter index bindings)
   "Filter BINDINGS by FILTER on INDEX."
@@ -1041,18 +1042,22 @@ Leave *scratch* and *Messages* alone too."
                          `(lambda (bind) (s-matches-p ,filter (nth ,index bind))))
                        groups)))
     (list title
-     (-filter (lambda (b) (--all? (eql nil it)
-                           (--map (funcall it b) predicates)))
-       bindings))))
+      (--sort
+          (string< (second it) (second other))
+        (-filter (lambda (b) (--all? (eql nil it)
+                              (--map (funcall it b) predicates)))
+          bindings)))))
 
 (defun ocodo-make-key-binding-groups (bindings headings groups)
   "Collect BINDINGS and HEADINGS into GROUPS."
   (--map
    (cl-destructuring-bind (title index filter) it
     (list title
-      (ocodo-filter-key-bindings
-       filter index
-       bindings)))
+      (--sort
+          (string< (second it) (second other))
+        (ocodo-filter-key-bindings
+          filter index
+          bindings))))
    groups))
 
 (defun ocodo-key-bindings-use-unicode-symbols (key-binding &optional white-arrows)
