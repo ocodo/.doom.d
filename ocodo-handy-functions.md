@@ -288,7 +288,7 @@ Insert the `elpa` package file ending string.
 
 ### eval-and-replace
 
-Replace the preceding sexp with its value.
+Replace the preceding sexp with its result.
 
 ```lisp
 (eval-and-replace)
@@ -305,8 +305,8 @@ Replace the preceding sexp with its value using prin1.
 ### filter-recentf
 
 Remove entries matching `pattern` from recent files.
-This is operating on the recentf-list, in memory.
-Use recentf-save-list to persist.
+This is operating on the `recentf-list`, in memory.
+Use `recentf-save-list` to persist.
 
 ```lisp
 (filter-recentf (pattern))
@@ -370,6 +370,14 @@ For example:
 
 Format N to have thousand separators.
 
+For example:
+
+```lisp
+(format-thousands-separators 3032498000)
+;; => "3,032,498,000"
+```
+
+
 ```lisp
 (format-thousands-separators (n))
 ```
@@ -428,6 +436,18 @@ Returns a list with elements of the form (symbol args docstring).
 ### get-osx-display-resolution
 
 Get the current display resolution in `osx`.
+
+Uses the mac system_profiler `SPDisplaysDataType` to lookup the
+current display resolution. This is then filtered out (using grep
+& perl) and formattted to a list of `(w h)`.
+
+For example:
+
+```lisp
+(get-osx-display-resolution)
+;; => ("3840" "2160")
+```
+
 
 ```lisp
 (get-osx-display-resolution)
