@@ -1,4 +1,3 @@
-
 # Ocodo handy functions
 
 A collection of miscellaneous functions and macros, which are either

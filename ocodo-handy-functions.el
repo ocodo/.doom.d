@@ -35,14 +35,14 @@
 (require 'xr)
 (require 'time-stamp)
 
-(defvar ocodo-key-binding-groups '(("Markdown Soma" 1 "^Markdown soma")
-                                   ("Smart Parens" 1 "^Sp ")
-                                   ("Text Transforms" 0 "C-c t t")
-                                   ("Color" 1 "[Cc]olor")
-                                   ("Dired" 1 "[Dd]ired")
-                                   ("ERT Testing" 1 "^Ert ")
-                                   ("Debugging" 1 "[Dd]ebug")
-                                   ("Windows" 1 "[Ww]indow"))
+(defvar ocodo-key-binding-documentation-groups '(("Markdown Soma" 1 "^Markdown soma")
+                                                 ("Smart Parens" 1 "^Sp ")
+                                                 ("Text Transforms" 0 "C-c t t")
+                                                 ("Color" 1 "[Cc]olor")
+                                                 ("Dired" 1 "[Dd]ired")
+                                                 ("ERT Testing" 1 "^Ert ")
+                                                 ("Debugging" 1 "[Dd]ebug")
+                                                 ("Windows" 1 "[Ww]indow"))
   "Key binding group filters")
 
 (defvar ocodo-key-bindings-lisp-files
@@ -1158,7 +1158,7 @@ Setting WHITE-ARROWS to t, gives these replacements: ⇧ ⇩ ⇦ ⇨ and ⏎."
             bindings))))
      (push
       (ocodo-ungrouped-key-bindings (ocodo-key-bindings-for-documentation)
-        "General" ocodo-key-binding-groups)
+        "General" ocodo-key-binding-documentation-groups)
       binding-groups)))))
 
 (defun ocodo-custom-key-bindings-markdown (file)
@@ -1169,7 +1169,7 @@ Setting WHITE-ARROWS to t, gives these replacements: ⇧ ⇩ ⇦ ⇨ and ⏎."
          (binding-list (ocodo-key-bindings-for-documentation))
 
          (custom-key-bindings-markdown (ocodo-key-binding-groups-to-markdown
-                                        (ocodo-make-key-binding-groups binding-list table-heading ocodo-key-binding-groups)
+                                        (ocodo-make-key-binding-groups binding-list table-heading ocodo-key-binding-documentation-groups)
                                         table-heading)))
     (f-write custom-key-bindings-markdown 'utf-8 file)
     (message ": %s" file)
@@ -1261,10 +1261,7 @@ Setting WHITE-ARROWS to t, gives these replacements: ⇧ ⇩ ⇦ ⇨ and ⏎."
 
 OSX specific."
   (interactive)
-  (shell-command "echo 'tell application \"Firefox\"
-                             reload active tab of window 1
-                        end tell' | osascript" nil nil)
-  (message "refreshed active Firefox tab"))
+  (shell-command "~/.doom.d/bin/reload-firefox.osa" nil nil))
 
 (defun reload-current-chrome-tab-osx ()
   "Run a simple applescript to reload the current Google Chrome tab.
