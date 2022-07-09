@@ -21,8 +21,8 @@
 5,4,3,2,1,Bar")
         (expected '(("1" "2" "3" "4" "5" "Foo")
                     ("5" "4" "3" "2" "1" "Bar"))))
-    (csv--to-lists csv)
-    (should (equal expected (csv--to-lists csv)))))
+    (csv-to-lists csv)
+    (should (equal expected (csv-to-lists csv)))))
 
 (ert-deftest decimal-to-hex ()
   "Test decimal to hex conversion (editor fn so all numbers are strings)."
@@ -97,3 +97,10 @@ Align region to equal signs from `begin` to `end`.
     (should (equal
               expected
               (md-code-to-docstring-arg input)))))
+
+(ert-deftest plist-bind ()
+  "Test plist-bind."
+  (let1 result (plist-bind (a c)
+                     '(:a 0 :b 1 :c 2 :d 3)
+                     `(,a ,c))
+    (should (equal result '(0 2)))))

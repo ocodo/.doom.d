@@ -35,14 +35,14 @@
 (require 'xr)
 (require 'time-stamp)
 
-(defvar ocodo-key-binding-documentation-groups '(("Markdown Soma" 1 "^Markdown soma")
-                                                 ("Smart Parens" 1 "^Sp ")
-                                                 ("Text Transforms" 0 "C-c t t")
-                                                 ("Color" 1 "[Cc]olor")
-                                                 ("Dired" 1 "[Dd]ired")
-                                                 ("ERT Testing" 1 "^Ert ")
-                                                 ("Debugging" 1 "[Dd]ebug")
-                                                 ("Windows" 1 "[Ww]indow"))
+(defvar ocodo-key-binding-groups '(("Markdown Soma" 1 "^Markdown soma")
+                                   ("Smart Parens" 1 "^Sp ")
+                                   ("Text Transforms" 0 "C-c t t")
+                                   ("Color" 1 "[Cc]olor")
+                                   ("Dired" 1 "[Dd]ired")
+                                   ("ERT Testing" 1 "^Ert ")
+                                   ("Debugging" 1 "[Dd]ebug")
+                                   ("Windows" 1 "[Ww]indow"))
   "Key binding group filters")
 
 (defvar ocodo-key-bindings-lisp-files
@@ -952,6 +952,33 @@ If your're in the minibuffer it will use the other buffer file name."
 ;; ;; 250°    260°    270°    280°    290°    300°    310°    320°    330°    340°    350°    360°
 ;; ;; #00030B #3905A3 #5405A3 #6E05A3 #8805A3 #A305A3 #A30588 #A3056E #A30554 #A30539 #A3051F #A30505
 
+(defun markdown-soma-window-arrangement-start ()
+  "Arrange windows for `markdown-soma-start'.
+
+Internally uses the script `~/.doom.d/bin/emacs-markdown-preview-layout.osa'."
+  (interactive)
+  (when (not markdown-soma-mode)
+    (shell-command "~/.doom.d/bin/emacs-markdown-preview-layout.osa" nil nil)))
+
+(defun markdown-soma-window-arrangement-stop ()
+  "Arrange windows for `markdown-soma-stop'.
+
+Internally uses the script `~/.doom.d/bin/emacs-markdown-preview-close.osa'."
+  (interactive)
+  (when markdown-soma-mode
+    (shell-command "~/.doom.d/bin/emacs-markdown-preview-close.osa" nil nil)))
+
+(advice-add #'markdown-soma-start
+            :before
+            #'markdown-soma-window-arrangement-start)
+
+(advice-add #'markdown-soma-stop
+            :before
+            #'markdown-soma-window-arrangement-stop)
+
+(advice-remove #'markdown-soma-start #'markdown-soma-window-arrangement-start)
+(advice-remove #'markdown-soma-stop #'markdown-soma-window-arrangement-stop)
+
 (defun mc/cua-rectangle-to-multiple-cursors ()
   "Switch from cua rectangle to multiple cursors."
   (interactive)
@@ -1158,7 +1185,7 @@ Setting WHITE-ARROWS to t, gives these replacements: ⇧ ⇩ ⇦ ⇨ and ⏎."
             bindings))))
      (push
       (ocodo-ungrouped-key-bindings (ocodo-key-bindings-for-documentation)
-        "General" ocodo-key-binding-documentation-groups)
+        "General" ocodo-key-binding-groups)
       binding-groups)))))
 
 (defun ocodo-custom-key-bindings-markdown (file)
@@ -1169,7 +1196,7 @@ Setting WHITE-ARROWS to t, gives these replacements: ⇧ ⇩ ⇦ ⇨ and ⏎."
          (binding-list (ocodo-key-bindings-for-documentation))
 
          (custom-key-bindings-markdown (ocodo-key-binding-groups-to-markdown
-                                        (ocodo-make-key-binding-groups binding-list table-heading ocodo-key-binding-documentation-groups)
+                                        (ocodo-make-key-binding-groups binding-list table-heading ocodo-key-binding-groups)
                                         table-heading)))
     (f-write custom-key-bindings-markdown 'utf-8 file)
     (message ": %s" file)
@@ -1746,6 +1773,6 @@ Comments stay with the code below."
   (interactive)
   (insert (format-time-string "%s")))
 
-(provide 'ocodo/handy-functions)
+(provide 'ocodo-handy-functions)
 
-;;; ocodo/handy-functions.el ends here
+;;; ocodo-handy-functions.el ends here
