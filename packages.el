@@ -38,6 +38,7 @@
   (:host github :repo "jasonm23/markdown-soma"))
 
 (package! corfu)
+(package! applescript-mode)
 (package! string-edit)
 
 ;; To install a package directly from a remote git repo, you must specify a
