@@ -100,6 +100,12 @@ Using `shell-command-to-string', we can make a replace-region command with `*-an
 (*-and-replace time-to-seconds-at-point-or-region #'time-to-seconds)
 (*-and-replace eval-regexp-to-rx-replace #'xr)
 
+(*-and-replace markdown-literate-wrap-exec-code
+               #'(lambda (input) (format-multiline "|``` @code
+                                                    |%s
+                                                    |```" input)))
+
+
 (defmacro defun-pcase (name arglist &optional docstring &rest body)
  "Define a pcase function called NAME with ARGLIST.
 
