@@ -3,6 +3,10 @@
 (require 'ocodo/handy-functions)
 (require 'ert)
 
+(ert-deftest let1 ()
+  "Test let1."
+  (should (equal 2 (let1 a 2 a))))
+
 (ert-deftest docstring-back-quoted-to-markdown-code ()
   "Convert doctring back quoted text to markdown `code`."
   (let ((docstring  "Convert DOCSTRING to markdown `code'")
