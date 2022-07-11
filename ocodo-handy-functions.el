@@ -99,7 +99,6 @@ Using `shell-command-to-string', we can make a replace-region command with `*-an
 (*-and-replace hex-to-decimal-at-point-or-region #'hex-to-decimal)
 (*-and-replace time-to-seconds-at-point-or-region #'time-to-seconds)
 (*-and-replace eval-regexp-to-rx-replace #'xr)
-
 (*-and-replace markdown-literate-wrap-exec-code
                #'(lambda (input) (format-multiline "|``` @code
                                                     |%s
@@ -500,18 +499,16 @@ For example:
                   |  - Item %#x
                   |  - Item %x
                   |
-                  |... %s
-                  |\"
+                  |... %s\"
   \"one\" 2 #xf \"the end\")
 
-;;=>
-;;\"- List...
-;;  - Item one
-;;  - Item 0x2
-;;  - Item f
-;;
-;;... the end
-;;\"
+=>
+\"- List...
+  - Item one
+  - Item 0x2
+  - Item f
+
+... the end\"
 ```
 "
     (apply 'format
@@ -560,7 +557,7 @@ For example:
                     "")))
            (when (string= nil docstring)
               (setq docstring "No docstring available: TODO"))
-           (format "### %s\n\n%s\n\n```lisp\n(%s)\n```\n"
+           (format "### %s\n\n%s\n\n```lisp\n(%s)\n```\n<sup>function signature</sup>\n- - -\n"
                    name
                    (docstring-back-quoted-to-markdown-code
                      (docstring-args-to-markdown-code
@@ -584,8 +581,7 @@ For example:
 BUFFER file name and commentary are used as the page heading."
 
   (concat
-   (format-multiline "|
-                      |# %s
+   (format-multiline "|# %s
                       |%s
                       | - - -
                       |## Functions
