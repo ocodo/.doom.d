@@ -90,7 +90,7 @@ Using `shell-command-to-string', we can make a replace-region command with `*-an
     (interactive)
     (if (not (region-active-p))
         (replace-thing-at-point-with ,evaluator)
-      ;; - else -
+
       (replace-region-with ,evaluator))))
 
 (*-and-replace replace-md-code-with-docstring-arg-in-region #'md-code-to-docstring-arg)
@@ -100,9 +100,9 @@ Using `shell-command-to-string', we can make a replace-region command with `*-an
 (*-and-replace time-to-seconds-at-point-or-region #'time-to-seconds)
 (*-and-replace eval-regexp-to-rx-replace #'xr)
 (*-and-replace markdown-literate-wrap-exec-code
-               #'(lambda (input) (format-multiline "|``` @code
+               #'(lambda (region) (format-multiline "|``` @code
                                                     |%s
-                                                    |```" input)))
+                                                    |```" region)))
 
 
 (defmacro defun-pcase (name arglist &optional docstring &rest body)
@@ -196,7 +196,26 @@ For example:
     (kill-new (buffer-file-name))))
 
 (defun change-number-at-point (func)
-  "Change the number at point using FUNC."
+  "Change the number at point using FUNC.
+
+It should be wrapped in an interactive function, and func should
+take a single numeric argument and return anything.
+
+For example:
+
+```lisp
+(defun round-number-at-point ()
+\"Round the number at point.\"
+  (interactive)
+  (change-number-at-point #'round))
+
+;; Or...
+
+(defun number-at-point-to-currency ()
+ \"Change the number at point to currency.\"
+  (format \"$%.2f\" (number-at-point))))
+```
+"
   (let ((number (number-at-point))
         (point (point)))
     (when number

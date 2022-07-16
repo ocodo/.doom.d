@@ -69,6 +69,25 @@ Save the buffer file name to the kill ring.
 
 Change the number at point using `func`.
 
+It should be wrapped in an interactive function, and func should
+take a single numeric argument and return anything.
+
+For example:
+
+```lisp
+(defun round-number-at-point ()
+"Round the number at point."
+  (interactive)
+  (change-number-at-point #'round))
+
+;; Or...
+
+(defun number-at-point-to-currency ()
+ "Change the number at point to currency."
+  (format "$%.2f" (number-at-point))))
+```
+
+
 ```lisp
 (change-number-at-point (func))
 ```
