@@ -34,6 +34,7 @@
 (require 'rx)
 (require 'xr)
 (require 'time-stamp)
+(require 'yasnippet)
 
 (defvar ocodo-key-binding-groups '(("Markdown Soma" 1 "^Markdown soma")
                                    ("Smart Parens" 1 "^Sp ")
@@ -972,6 +973,45 @@ If your're in the minibuffer it will use the other buffer file name."
 ;; ;; #05A31F #05A339 #05A354 #05A36E #05A388 #05A3A3 #0588A3 #056EA3 #0554A3 #0539A3 #051FA3 #0505A3
 ;; ;; 250°    260°    270°    280°    290°    300°    310°    320°    330°    340°    350°    360°
 ;; ;; #00030B #3905A3 #5405A3 #6E05A3 #8805A3 #A305A3 #A30588 #A3056E #A30554 #A30539 #A3051F #A30505
+
+
+
+
+(defun make-yas-from-region (begin end)
+  "Make a yasnippet from the current region BEGIN END.
+
+You should use standard snippet formatting in place, e.g. $1,
+${1:default value} and so on.  See the yasnippet docs for more info.
+
+You'll be prompted for a name, trigger key and when `prefix-arg' is
+specified, a snippet group."
+  (interactive "r")
+  (if (region-active-p)
+      (progn
+        ;; TODO make a new buffer with yas headers
+        ;; ask for a name
+        (let* ((name (read-from-minibuffer "Name: "))
+               (group (if current-prefix-arg
+                          (format "\n# group: %s\n" (read-from-minibuffer "Group: "))
+                        ""))
+               (key (read-from-minibuffer "Key: "))
+               (filename (format "%ssnippets/%s/%s" user-emacs-directory major-mode name))
+               (snippet (buffer-substring begin end))
+               (template (format "# -*- mode: snippet -*-
+# name: %s%s
+# key: %s
+# --
+%s
+"
+                                 name
+                                 group
+                                 key
+                                 snippet)))
+          (with-temp-buffer
+            (insert template)
+            (write-file filename)))
+        (yas-reload-all))
+      (error "An active region is needed to make a snippet")))
 
 (defun markdown-soma-window-arrangement-start ()
   "Arrange windows for `markdown-soma-start'.

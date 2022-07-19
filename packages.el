@@ -37,6 +37,9 @@
 (package! markdown-soma :recipe
   (:host github :repo "jasonm23/markdown-soma"))
 
+(package! emacs-theme-orangey-bits :recipe
+  (:host github :repo "emacsfodder/emacs-theme-orangey-bits"))
+
 (package! corfu)
 (package! applescript-mode)
 (package! string-edit)
