@@ -17,7 +17,7 @@
   (setq fancy-splash-image "~/.doom.d/doom-vapourwave.png")
   (add-hook! 'after-setting-font-hook (+doom-dashboard-reload 'force)))
 
-(setq doom-theme 'creamsody)
+(setq doom-theme 'orangey-bits)
 
 (setq doom-unreal-buffer-functions
       '(minibufferp))
