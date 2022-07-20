@@ -641,6 +641,43 @@ Browse a github `repo` by supplying the user/reponame.
 <sup>function signature</sup>
 - - -
 
+### google-en-to-thai
+
+Translate `text` from English to Thai.
+
+_Notes: For the moment it uses this Ruby function_
+
+```
+def google_translate(text)
+    encoded_text = `cgi`.escape text
+
+    sl = options[:sl]
+    tl = options[:tl]
+
+    url = `uri`("https://translate.googleapis.com/translate_a/single?client=gtx&sl=#{sl}&tl=#{tl}&dt=t&q=#{encoded_text}")
+    response = Net::HTTP.get url
+ `json`.parse(response).first.first.first
+end
+```
+
+This should be replpaced with an elisp implementation.
+
+```lisp
+(google-en-to-thai (text))
+```
+<sup>function signature</sup>
+- - -
+
+### google-en-to-thai-on-region
+
+Translate english in region (BEGIN `end`) to Thai.
+
+```lisp
+(google-en-to-thai-on-region (begin end))
+```
+<sup>function signature</sup>
+- - -
+
 ### hex-to-decimal
 
 Convert hex `num` to decimal.
@@ -891,6 +928,22 @@ Make a hue table from hex color at top of kill ring, no error checking.
 
 ```lisp
 (make-kurecolor-hue-table)
+```
+<sup>function signature</sup>
+- - -
+
+### make-yas-from-region
+
+Make a yasnippet from the current region `begin` `end`.
+
+You should use standard snippet formatting in place, e.g. $1,
+${1:default value} and so on.  See the yasnippet docs for more info.
+
+You'll be prompted for a name, trigger key and when `prefix-arg` is
+specified, a snippet group.
+
+```lisp
+(make-yas-from-region (begin end))
 ```
 <sup>function signature</sup>
 - - -

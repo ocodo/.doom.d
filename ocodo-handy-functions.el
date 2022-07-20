@@ -94,12 +94,13 @@ Using `shell-command-to-string', we can make a replace-region command with `*-an
 
       (replace-region-with ,evaluator))))
 
-(*-and-replace replace-md-code-with-docstring-arg-in-region #'md-code-to-docstring-arg)
 (*-and-replace calc-eval-replace-at-region-or-point #'calc-eval)
 (*-and-replace decimal-to-hex-at-point-or-region #'decimal-to-hex)
-(*-and-replace hex-to-decimal-at-point-or-region #'hex-to-decimal)
-(*-and-replace time-to-seconds-at-point-or-region #'time-to-seconds)
 (*-and-replace eval-regexp-to-rx-replace #'xr)
+(*-and-replace hex-to-decimal-at-point-or-region #'hex-to-decimal)
+(*-and-replace replace-md-code-with-docstring-arg-in-region #'md-code-to-docstring-arg)
+(*-and-replace time-to-seconds-at-point-or-region #'time-to-seconds)
+
 (*-and-replace markdown-literate-wrap-exec-code
                #'(lambda (region) (format-multiline "|``` @code
                                                     |%s
@@ -762,6 +763,36 @@ when matches are equidistant from the current point."
   (interactive "sGithub Repo [format: user/repo]: ")
   (browse-url (format "https://github.com/%s" repo)))
 
+(defun google-en-to-thai (text)
+ "Translate TEXT from English to Thai.
+
+_Notes: For the moment it uses this Ruby function_
+
+```
+def google_translate(text)
+    encoded_text = CGI.escape text
+
+    sl = options[:sl]
+    tl = options[:tl]
+
+    url = URI(\"https://translate.googleapis.com/translate_a/single?client=gtx&sl=#{sl}&tl=#{tl}&dt=t&q=#{encoded_text}\")
+    response = Net::HTTP.get url
+    JSON.parse(response).first.first.first
+end
+```
+
+This should be replpaced with an elisp implementation."
+  (interactive "sEnglish to translate: ")
+  (with-output-to-string
+    (shell-command (format "srt text \"%s\"" text))))
+
+(defun google-en-to-thai-on-region (begin end)
+ "Translate english in region (BEGIN END) to Thai."
+   (interactive "r")
+   (let* ((text (buffer-substring begin end))
+          (translated (google-en-to-thai text)))
+    text))
+  
 (defun hex-to-decimal (num)
   "Convert hex NUM to decimal."
   (format "%i" (string-to-number num 16)))
