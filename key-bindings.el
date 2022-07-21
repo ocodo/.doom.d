@@ -20,6 +20,8 @@
 (bind-key "C-c ;"          #'iedit-mode)
 (bind-key "C-c C-a s"      #'aya-create)
 (bind-key "C-c C-a e"      #'aya-expand)
+(bind-key "C-c C-a SPC"    #'aya-expand-from-history)
+(bind-key "C-c C-a d"      #'aya-delete-from-history)
 (bind-key "C-c ]"          #'embrace-commander)
 (bind-key "C-c f w"        #'write-region)
 (bind-key "C-c k H"        #'+rgb/kurecolor-hydra/body)
