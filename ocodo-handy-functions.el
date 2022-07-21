@@ -764,34 +764,20 @@ when matches are equidistant from the current point."
   (browse-url (format "https://github.com/%s" repo)))
 
 (defun google-en-to-thai (text)
- "Translate TEXT from English to Thai.
-
-_Notes: For the moment it uses this Ruby function_
-
-```
-def google_translate(text)
-    encoded_text = CGI.escape text
-
-    sl = options[:sl]
-    tl = options[:tl]
-
-    url = URI(\"https://translate.googleapis.com/translate_a/single?client=gtx&sl=#{sl}&tl=#{tl}&dt=t&q=#{encoded_text}\")
-    response = Net::HTTP.get url
-    JSON.parse(response).first.first.first
-end
-```
-
-This should be replpaced with an elisp implementation."
-  (interactive "sEnglish to translate: ")
-  (with-output-to-string
-    (shell-command (format "srt text \"%s\"" text))))
+ "Translate TEXT from English to Thai."
+  (let* ((response-json
+                 (shell-command-to-string
+                  (format "curl -s \"https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=th&dt=t&q=%s\""
+                   (url-hexify-string text))))
+         (translation (replace-regexp-in-string "\\[+\"\\(.*?\\)\".*$" "\\1" response-json)))
+   translation))
 
 (defun google-en-to-thai-on-region (begin end)
  "Translate english in region (BEGIN END) to Thai."
    (interactive "r")
    (let* ((text (buffer-substring begin end))
           (translated (google-en-to-thai text)))
-    text))
+    (message translated)))
   
 (defun hex-to-decimal (num)
   "Convert hex NUM to decimal."
