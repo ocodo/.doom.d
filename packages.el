@@ -26,6 +26,10 @@
 (package! try)
 (package! xr)
 
+(unpin! auto-yasnippet)
+(package! auto-yasnippet :recipe
+  (:host github :repo "emacsfodder/auto-yasnippet"))
+
 (unpin! kurecolor)
 (package! kurecolor :recipe
   (:host github :repo "emacsfodder/kurecolor"))
