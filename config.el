@@ -14,7 +14,7 @@
 (add-hook 'doom-load-theme-hook #'set-fancy-splash)
 
 (defun set-fancy-splash ()
-  (setq fancy-splash-image "~/.doom.d/doom-vapourwave.png")
+  (setq fancy-splash-image "~/.doom.d/doom-orangeybits.png")
   (add-hook! 'after-setting-font-hook (+doom-dashboard-reload 'force)))
 
 (setq doom-theme 'orangey-bits)
