@@ -35,6 +35,9 @@
 (require 'xr)
 (require 'time-stamp)
 (require 'yasnippet)
+(require 'f)
+(require 'lisp-mnt)
+(require 'subr-x)
 
 (defvar ocodo-key-binding-groups '(("Markdown Soma" 1 "^Markdown soma")
                                    ("Smart Parens" 1 "^Sp ")
@@ -448,19 +451,6 @@ If UP is non-nil, duplicate and move point to the top."
   "Duplicates the current line or region up ARG times."
   (interactive "p")
   (duplicate-current-line-or-region arg t))
-
-(defun elpa-package-insert-ends-here ()
-  "Insert the ELPA package file ending string.
-
-\(When it's missing\)"
-  (interactive)
-  (if (and buffer-file-name (string-match "emacs-lisp" (format "%s" major-mode)))
-      (let* ((filename (file-name-base))
-             (end-file-message (format  ";;; %s.el ends here" filename)))
-        (goto-char (point-max))
-        (unless (looking-back end-file-message nil)
-          (insert end-file-message)))
-    (message "Not a lisp file.")))
 
 (defun eval-and-replace ()
   "Replace the preceding sexp with its result."
@@ -1348,6 +1338,48 @@ Setting WHITE-ARROWS to t, gives these replacements: ⇧ ⇩ ⇦ ⇨ and ⏎."
                                          (buffer-file-name)))
     (start-process-shell-command "switch-to-xcode" nil
                                  "osascript -e 'activate application \"XCode\"'")))
+
+(defun package-insert-ends-here ()
+  "Insert the ELPA package file ending string.
+
+\(When it's missing\)"
+  (interactive)
+  (if (and buffer-file-name (string-match "emacs-lisp" (format "%s" major-mode)))
+      (let* ((filename (file-name-base))
+             (end-file-message (format  ";;; %s.el ends here" filename)))
+        (goto-char (point-max))
+        (unless (looking-back end-file-message nil)
+          (insert end-file-message)))
+    (message "Not a lisp file.")))
+
+(defun package-commentary-to-markdown (markdown-file)
+  "Write the current package commentary to MARKDOWN-FILE."
+  (interactive "fMarkdown file: ")
+  (unless (string-match "emacs-lisp" (format "%s" major-mode))
+    (user-error
+     "Error: can only use package-commentary-to-markdown from emacslisp files"))
+  (f-write-text (lm-commentary) 'utf-8 markdown-file))
+
+(defun package-markdown-to-commentary (markdown-file)
+  "Read MARKDOWN-FILE and insert it into the current emacslisp package
+Commentary: section."
+  (interactive "fMarkdown file: ")
+  (unless (string-match "emacs-lisp" (format "%s" major-mode))
+    (user-error
+     "Error: can only use package-markdown-to-commentary from emacslisp files"))
+  (let ((start (lm-commentary-start))
+        (end (lm-commentary-end))
+        (markdown-text (f-read-text markdown-file)))
+    (save-excursion
+      (delete-region start end)
+      (goto-char start)
+      (insert
+        ";;; Commentary:\n"
+        (string-join
+           (mapcar
+            (lambda (line)
+              (format ";; %s \n" line))
+            (split-string markdown-text "\n")))))))
 
 (defun pcre-regexp-from-list-of-words (words)
   "Insert a pcre regexp to match a list of WORDS."

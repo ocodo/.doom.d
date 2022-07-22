@@ -348,18 +348,6 @@ Duplicates the current line or region up `arg` times.
 <sup>function signature</sup>
 - - -
 
-### elpa-package-insert-ends-here
-
-Insert the `elpa` package file ending string.
-
-(When it's missing)
-
-```lisp
-(elpa-package-insert-ends-here)
-```
-<sup>function signature</sup>
-- - -
-
 ### eval-and-replace
 
 Replace the preceding sexp with its result.
@@ -644,23 +632,6 @@ Browse a github `repo` by supplying the user/reponame.
 ### google-en-to-thai
 
 Translate `text` from English to Thai.
-
-_Notes: For the moment it uses this Ruby function_
-
-```
-def google_translate(text)
-    encoded_text = `cgi`.escape text
-
-    sl = options[:sl]
-    tl = options[:tl]
-
-    url = `uri`("https://translate.googleapis.com/translate_a/single?client=gtx&sl=#{sl}&tl=#{tl}&dt=t&q=#{encoded_text}")
-    response = Net::HTTP.get url
- `json`.parse(response).first.first.first
-end
-```
-
-This should be replpaced with an elisp implementation.
 
 ```lisp
 (google-en-to-thai (text))
@@ -1202,6 +1173,39 @@ Open the current file in `xc`ode.
 
 ```lisp
 (open-this-in-xcode)
+```
+<sup>function signature</sup>
+- - -
+
+### package-commentary-to-markdown
+
+Write the current package commentary to `markdown-file`.
+
+```lisp
+(package-commentary-to-markdown (markdown-file))
+```
+<sup>function signature</sup>
+- - -
+
+### package-insert-ends-here
+
+Insert the `elpa` package file ending string.
+
+(When it's missing)
+
+```lisp
+(package-insert-ends-here)
+```
+<sup>function signature</sup>
+- - -
+
+### package-markdown-to-commentary
+
+Read `markdown-file` and insert it into the current emacslisp package
+Commentary: section.
+
+```lisp
+(package-markdown-to-commentary (markdown-file))
 ```
 <sup>function signature</sup>
 - - -
