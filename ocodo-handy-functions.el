@@ -10,13 +10,13 @@
 ;;
 ;; Items used often:...
 ;;
-;; - document-current-elisp-buffer-to-markdown (which generated this page.)
-;; - defun-pcase
-;; - plist-bind
-;; - *-and-replace
-;; - screencapture-mac
-;; - ocodo-custom-key-bindings-to-markdown
-;; - format-multiline
+;; - `current-buffer-defuns-to-markdown' (which generated this page.)
+;; - `defun-pcase'
+;; - `plist-bind'
+;; - `*-and-replace'
+;; - `screencapture-mac'
+;; - `ocodo-custom-key-bindings-to-markdown'
+;; - `format-multiline'
 ;;
 ;;; License:
 ;;  GPL3
@@ -981,9 +981,6 @@ If your're in the minibuffer it will use the other buffer file name."
 ;; ;; 250°    260°    270°    280°    290°    300°    310°    320°    330°    340°    350°    360°
 ;; ;; #00030B #3905A3 #5405A3 #6E05A3 #8805A3 #A305A3 #A30588 #A3056E #A30554 #A30539 #A3051F #A30505
 
-
-
-
 (defun make-yas-from-region (begin end)
   "Make a yasnippet from the current region BEGIN END.
 
@@ -1352,34 +1349,63 @@ Setting WHITE-ARROWS to t, gives these replacements: ⇧ ⇩ ⇦ ⇨ and ⏎."
           (insert end-file-message)))
     (message "Not a lisp file.")))
 
-(defun package-commentary-to-markdown (markdown-file)
-  "Write the current package commentary to MARKDOWN-FILE."
-  (interactive "fMarkdown file: ")
-  (unless (string-match "emacs-lisp" (format "%s" major-mode))
-    (user-error
-     "Error: can only use package-commentary-to-markdown from emacslisp files"))
-  (f-write-text (lm-commentary) 'utf-8 markdown-file))
+(defun package-commentary-to-markdown (markdown-file &optional emacslisp-file)
+  "Read the commentary from current emacslisp file and write it to MARKDOWN-FILE.
 
-(defun package-markdown-to-commentary (markdown-file)
-  "Read MARKDOWN-FILE and insert it into the current emacslisp package
-Commentary: section."
-  (interactive "fMarkdown file: ")
-  (unless (string-match "emacs-lisp" (format "%s" major-mode))
-    (user-error
-     "Error: can only use package-markdown-to-commentary from emacslisp files"))
-  (let ((start (lm-commentary-start))
-        (end (lm-commentary-end))
-        (markdown-text (f-read-text markdown-file)))
-    (save-excursion
-      (delete-region start end)
-      (goto-char start)
-      (insert
-        ";;; Commentary:\n"
-        (string-join
-           (mapcar
-            (lambda (line)
-              (format ";; %s \n" line))
-            (split-string markdown-text "\n")))))))
+Conversion is minimal and expects that most of the docstring is already formatted as
+markdown.  Quoted `items' will be converted to backquoted `items`."
+  (interactive "FMarkdown file: \ni")
+  (if (null emacslisp-file)
+      (when (string-match "emacs-lisp" (format "%s" major-mode))
+        (if (y-or-n-p (format "Use commentary in %s?" (f-base (buffer-file-name))))
+            (package-commentary-to-markdown markdown-file (buffer-file-name))
+          (let ((emacslisp-file (read-file-name "Emacslisp file: " nil nil t)))
+            (package-commentary-to-markdown markdown-file emacslisp-file))))
+    (let ((working-buffer (current-buffer)))
+      (save-excursion
+        (find-file emacslisp-file)
+        (f-write-text
+         (replace-regexp-in-string "`\\(.*?\\)'" "`\\1`" (lm-commentary))
+         'utf-8 markdown-file))
+      (if (y-or-n-p (format "Review changes to %s (y) or close? (n) " markdown-file))
+          (find-file markdown-file)
+        (switch-to-buffer (get-buffer working-buffer))))))
+
+(defun package-markdown-to-commentary (markdown-file &optional emacslisp-file)
+  "Read MARKDOWN-FILE and insert it into the EMACSLISP-FILE commentary.
+
+Conversion is minimal and assumes the the markdown is suitable for insertion as
+commentary.  Backquoted `code` will be converted to Emacs quoted `items'."
+  (interactive "fMarkdown file: \ni")
+  (if (null emacslisp-file)
+      (when (string-match "emacs-lisp" (format "%s" major-mode))
+        (if (y-or-n-p
+             (format "Insert %s into %s?"
+                     (f-base markdown-file)
+                     (f-base (buffer-file-name))))
+            (package-markdown-to-commentary markdown-file (buffer-file-name))
+          (let ((emacslisp-file (read-file-name "Emacslisp file: " nil nil t)))
+            (package-markdown-to-commentary markdown-file emacslisp-file))))
+    (let ((working-buffer (current-buffer)))
+      (save-excursion
+        (find-file emacslisp-file)
+        (let ((start (lm-commentary-start))
+              (end (lm-commentary-end))
+              (markdown-text (f-read-text markdown-file)))
+            (delete-region start end)
+            (goto-char start)
+            (insert
+              ";;; Commentary:\n"
+              (replace-regexp-in-string "`\\(.*?\\)`" "`\\1'"
+                (string-join
+                   (mapcar
+                    (lambda (line)
+                      (format ";; %s \n" line))
+                    (split-string markdown-text "\n")))))
+            (if (y-or-n-p (format "Review changes to %s (y) or close? (n) " emacslisp-file))
+                (message "Note: Changes not saved yet.")
+              (save-buffer t)
+              (switch-to-buffer working-buffer)))))))
 
 (defun pcre-regexp-from-list-of-words (words)
   "Insert a pcre regexp to match a list of WORDS."
