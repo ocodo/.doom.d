@@ -25,6 +25,7 @@
 (package! swiper)
 (package! try)
 (package! xr)
+(package! tblui)
 
 (unpin! auto-yasnippet)
 (package! auto-yasnippet :recipe

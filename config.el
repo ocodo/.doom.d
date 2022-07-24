@@ -33,10 +33,12 @@
     (config
      (directory-files "~/.doom.d/use/" t ".*el"))
     "Loading local use configs..."
-  (load-file config)
-  (sit-for 0.1))
-  ;; fake waiting...
-  ;remove when it actually takes time to run this!
+  (load-file config))
+
+(dolist-with-progress-reporter
+    (plugin (directory-files "~/.doom.d/plugins/" t ".*el"))
+    "Loading local plugins..."
+  (load-file plugin))
 
 ;; Config that is too small to break out a use-package / file...
 ;; Prettify symbols
