@@ -1,4 +1,4 @@
-(use-package lsp-sourcekit
+(use-package! lsp-sourcekit
   :after lsp-mode
   :config
   (setq lsp-sourcekit-executable

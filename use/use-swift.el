@@ -1,3 +1,3 @@
 
-(use-package swift-mode
+(use-package! swift-mode
   :hook (swift-mode . (lambda () (lsp))))
