@@ -42,6 +42,7 @@
 (defvar ocodo-key-binding-groups '(("Markdown Soma" 1 "^Markdown soma")
                                    ("Smart Parens" 1 "^Sp ")
                                    ("Text Transforms" 0 "C-c t t")
+                                   ("Auto Snippet" 0 "C-c C-a")
                                    ("Color" 1 "[Cc]olor")
                                    ("Dired" 1 "[Dd]ired")
                                    ("ERT Testing" 1 "^Ert ")
@@ -52,6 +53,7 @@
 (defvar ocodo-key-bindings-lisp-files
   '("~/.doom.d/key-bindings.el"
     "~/.doom.d/use/use-ert.el"
+    "~/.doom.d/use/use-auto-yasnippet.el"
     "~/.doom.d/use/use-markdown-mode.el")
   "List of emacs-lisp files which have personalised key bindings")
 
@@ -1229,7 +1231,6 @@ Setting WHITE-ARROWS to t, gives these replacements: ⇧ ⇩ ⇦ ⇨ and ⏎."
    (format-multiline "|# %s
                       |
                       |%s
-                      |
                       |"
                      ocodo-key-bindings-heading
                      (lm-commentary "~/.doom.d/key-bindings.el"))

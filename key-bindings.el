@@ -1,6 +1,5 @@
 ;;; Commentary:
 ;;  Customized key bindings for the global-key-map
-;;
 ;;; Code:
 
 ;; Unbind C-RET on global key map

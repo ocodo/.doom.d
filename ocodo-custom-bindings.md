@@ -1,5 +1,7 @@
 # Ocodo's Emacs Key Bindings.
 
+ Customized key bindings for the global-key-map
+
 ### General
 
 | Key(s)               | Command                             | keymap |
@@ -8,6 +10,7 @@
 | <kbd>C-x /</kbd>     | Align regexp                        | Global |
 | <kbd>C-%</kbd>       | Anzu query replace                  | Global |
 | <kbd>C-M-%</kbd>     | Anzu query replace regexp           | Global |
+| <kbd>s-&</kbd>       | Comint run                          | Global |
 | <kbd>C-⮐</kbd>       | Cua rectangle mark mode             | Global |
 | <kbd>C-?</kbd>       | Cua rectangle which key help        | Global |
 | <kbd>C-(</kbd>       | Decrement number at point           | Global |
@@ -77,6 +80,18 @@
 | <kbd>C-c t t t</kbd> | Titleized at point or region       | Global |
 | <kbd>C-c t t u</kbd> | Upper camelcase at point or region | Global |
 | <kbd>C-c t t U</kbd> | Url encode string at point         | Global |
+
+### Auto Snippet
+
+| Key(s)                 | Command                          | keymap |
+|:-----------------------|:---------------------------------|-------:|
+| <kbd>C-c C-a s</kbd>   | Aya create                       | Global |
+| <kbd>C-c C-a d</kbd>   | Aya delete from history          | Global |
+| <kbd>C-c C-a e</kbd>   | Aya expand                       | Global |
+| <kbd>C-c C-a SPC</kbd> | Aya expand from history          | Global |
+| <kbd>C-c C-a n</kbd>   | Aya next in history              | Global |
+| <kbd>C-c C-a w</kbd>   | Aya persist snippet from history | Global |
+| <kbd>C-c C-a p</kbd>   | Aya previous in history          | Global |
 
 ### Color
 
