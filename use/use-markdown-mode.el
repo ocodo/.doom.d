@@ -4,10 +4,8 @@
 (use-package! markdown-mode
   :config
   (use-package! markdown-soma
-    :config (setq markdown-soma-custom-css
-                  (markdown-soma--css-pathname-from-builtin-name "markdown-soma-dark-subtle")
-                  markdown-soma-highlight-theme
-                  "atelier-plateau.dark")
+    :config (setq markdown-soma-custom-css (markdown-soma--css-pathname-from-builtin-name "markdown-soma-dark-subtle")
+                  markdown-soma-highlight-theme "atelier-plateau.dark")
 
     (bind-key "C-c S b"   #'markdown-soma-select-builtin-css 'markdown-mode-map)
     (bind-key "C-c S c"   #'markdown-soma-select-css-file 'markdown-mode-map)

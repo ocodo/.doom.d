@@ -28,6 +28,7 @@
 (bind-key "C-c k x"        #'kurecolor-xcode-color-literal-at-point-or-region-to-hex-rgb)
 (bind-key "C-c l e i"      #'eval-print-last-sexp)
 (bind-key "C-c l h"        #'hl-line-mode)
+(bind-key "C-c q e"        #'edit-server-start)
 (bind-key "C-c r ."        #'sp-join-sexp)
 (bind-key "C-c r /"        #'sp-split-sexp)
 (bind-key "C-c r <down>"   #'sp-backward-barf-sexp)
