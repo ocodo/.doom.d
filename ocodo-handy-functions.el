@@ -42,17 +42,22 @@
 (defvar ocodo-key-binding-groups '(("Markdown Soma" 1 "^Markdown soma")
                                    ("Smart Parens" 1 "^Sp ")
                                    ("Text Transforms" 0 "C-c t t")
-                                   ("Auto Snippet" 0 "C-c C-a")
-                                   ("Color" 1 "[Cc]olor")
-                                   ("Dired" 1 "[Dd]ired")
+                                   ("Auto Snippet" 1 "^Aya")
+                                   ("Swiper" 1 "^Swiper")
+                                   ("Git Gutter" 1 "^Swiper")
+                                   ("Color" 1 "^Color")
+                                   ("Dired" 1 "^Dired")
                                    ("ERT Testing" 1 "^Ert ")
-                                   ("Debugging" 1 "[Dd]ebug")
-                                   ("Windows" 1 "[Ww]indow"))
+                                   ("Debugging" 1 "^Debug")
+                                   ("Windows" 1 "^Window"))
   "Key binding group filters")
-
+;; TODO merge these two. ^ v
 (defvar ocodo-key-bindings-lisp-files
   '("~/.doom.d/key-bindings.el"
     "~/.doom.d/use/use-ert.el"
+    "~/.doom.d/use/use-ruby.el"
+    "~/.doom.d/use/use-swiper.el"
+    "~/.doom.d/use/use-git-gutter.el"
     "~/.doom.d/use/use-auto-yasnippet.el"
     "~/.doom.d/use/use-markdown-mode.el")
   "List of emacs-lisp files which have personalised key bindings")
