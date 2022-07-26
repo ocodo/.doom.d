@@ -8,24 +8,29 @@
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror: (package! some-package)
 
 (package! ag)
-(package! creamsody-theme)
+(package! applescript-mode)
 (package! consult-spotify)
+(package! corfu)
+(package! creamsody-theme)
 (package! edit-server)
 (package! embrace)
 (package! flymake-shellcheck)
 (package! free-keys)
 (package! google-this)
+(package! hercules)
 (package! iedit)
 (package! kv)
 (package! lorem-ipsum)
 (package! lsp-sourcekit)
+(package! major-mode-hydra)
 (package! mpdel)
 (package! nameless)
 (package! rainbow-identifiers)
+(package! string-edit)
 (package! swiper)
+(package! tblui)
 (package! try)
 (package! xr)
-(package! tblui)
 
 (unpin! auto-yasnippet)
 (package! auto-yasnippet :recipe
@@ -44,9 +49,8 @@
 (package! emacs-theme-orangey-bits :recipe
   (:host github :repo "emacsfodder/emacs-theme-orangey-bits"))
 
-(package! corfu)
-(package! applescript-mode)
-(package! string-edit)
+(package! hydra-posframe :recipe 
+  (:host github :repo "ladicle/hydra-posframe"))
 
 ;; To install a package directly from a remote git repo, you must specify a
 ;; `:recipe'. You'll find documentation on what `:recipe' accepts here:
