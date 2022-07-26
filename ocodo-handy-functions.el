@@ -43,13 +43,14 @@
                                    ("Smart Parens" 1 "^Sp ")
                                    ("Text Transforms" 0 "C-c t t")
                                    ("Auto Snippet" 1 "^Aya")
+                                   ("Ruby" 1 "^Ruby")
                                    ("Swiper" 1 "^Swiper")
-                                   ("Git Gutter" 1 "^Swiper")
-                                   ("Color" 1 "^Color")
+                                   ("Git" 0 "C-x v ")
+                                   ("Color" 1 "[Cc]olor")
                                    ("Dired" 1 "^Dired")
                                    ("ERT Testing" 1 "^Ert ")
-                                   ("Debugging" 1 "^Debug")
-                                   ("Windows" 1 "^Window"))
+                                   ("Debugging" 1 "[Dd]ebug")
+                                   ("Windows" 1 "[Ww]indow"))
   "Key binding group filters")
 ;; TODO merge these two. ^ v
 (defvar ocodo-key-bindings-lisp-files

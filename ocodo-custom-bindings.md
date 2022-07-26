@@ -17,6 +17,7 @@
 | <kbd>s-w</kbd>       | Delete frame                        | Global |
 | <kbd>s-↓</kbd>       | Duplicate current line or region    | Global |
 | <kbd>s-↑</kbd>       | Duplicate current line or region up | Global |
+| <kbd>C-c q e</kbd>   | Edit server start                   | Global |
 | <kbd>C-c ]</kbd>     | Embrace commander                   | Global |
 | <kbd>C-x x .</kbd>   | Er expand region                    | Global |
 | <kbd>C-c s-e</kbd>   | Eval and replace                    | Global |
@@ -53,6 +54,7 @@
 |:-------------------|:-------------------------------------|------------------:|
 | <kbd>C-c S s</kbd> | Markdown soma mode                   | Markdown mode map |
 | <kbd>C-c S r</kbd> | Markdown soma restart                | Markdown mode map |
+| <kbd>C-c S b</kbd> | Markdown soma select builtin css     | Markdown mode map |
 | <kbd>C-c S c</kbd> | Markdown soma select css file        | Markdown mode map |
 | <kbd>C-c S h</kbd> | Markdown soma select highlight theme | Markdown mode map |
 
@@ -92,6 +94,29 @@
 | <kbd>C-c C-a n</kbd>   | Aya next in history              | Global |
 | <kbd>C-c C-a w</kbd>   | Aya persist snippet from history | Global |
 | <kbd>C-c C-a p</kbd>   | Aya previous in history          | Global |
+
+### Ruby
+
+| Key(s)               | Command          |        keymap |
+|:---------------------|:-----------------|--------------:|
+| <kbd>C-c l e d</kbd> | Ruby send block  | Ruby mode map |
+| <kbd>C-c l e b</kbd> | Ruby send buffer | Ruby mode map |
+| <kbd>C-c l e r</kbd> | Ruby send region | Ruby mode map |
+
+### Swiper
+
+| Key(s)             | Command    | keymap |
+|:-------------------|:-----------|-------:|
+| <kbd>C-c s w</kbd> | Swiper     | Global |
+| <kbd>C-c s a</kbd> | Swiper all | Global |
+
+### Git
+
+| Key(s)               | Command                      | keymap |
+|:---------------------|:-----------------------------|-------:|
+| <kbd>C-x v ← b</kbd> | Vc browse at remote homepage | Global |
+| <kbd>C-x v ← g</kbd> | Vc gutter hydra body         | Global |
+| <kbd>C-x v ← s</kbd> | Vc smerge hydra body         | Global |
 
 ### Color
 
