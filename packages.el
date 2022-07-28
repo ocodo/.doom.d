@@ -32,25 +32,13 @@
 (package! try)
 (package! xr)
 
-(unpin! auto-yasnippet)
-(package! auto-yasnippet :recipe
-  (:host github :repo "emacsfodder/auto-yasnippet"))
+(package! emacs-theme-orangey-bits :recipe (:host github :repo "emacsfodder/emacs-theme-orangey-bits"))
+(package! hydra-posframe :recipe (:host github :repo "ladicle/hydra-posframe"))
+(package! markdown-soma :recipe (:host github :repo "jasonm23/markdown-soma"))
+(package! text-transformers :recipe (:host github :repo "jasonm23/emacs-text-transformers"))
 
-(unpin! kurecolor)
-(package! kurecolor :recipe
-  (:host github :repo "emacsfodder/kurecolor"))
-
-(package! text-transformers :recipe
-  (:host github :repo "jasonm23/emacs-text-transformers"))
-
-(package! markdown-soma :recipe
-  (:host github :repo "jasonm23/markdown-soma"))
-
-(package! emacs-theme-orangey-bits :recipe
-  (:host github :repo "emacsfodder/emacs-theme-orangey-bits"))
-
-(package! hydra-posframe :recipe 
-  (:host github :repo "ladicle/hydra-posframe"))
+(unpin! auto-yasnippet)(package! auto-yasnippet :recipe (:host github :repo "emacsfodder/auto-yasnippet"))
+(unpin! kurecolor)(package! kurecolor :recipe (:host github :repo "emacsfodder/kurecolor"))
 
 ;; To install a package directly from a remote git repo, you must specify a
 ;; `:recipe'. You'll find documentation on what `:recipe' accepts here:
