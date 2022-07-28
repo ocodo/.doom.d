@@ -2,6 +2,7 @@
 
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
+
 (global-visual-line-mode -1)
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
@@ -44,11 +45,6 @@
 ;; Prettify symbols
 (global-prettify-symbols-mode t)
 
-;; Disable hl-mode
-(add-hook! 'rainbow-mode-hook
-  (hl-line-mode (if rainbow-mode -1 +1)))
-
-(global-hl-line-mode -1)
 
 ;; Font
 (setq doom-modeline-height 1)

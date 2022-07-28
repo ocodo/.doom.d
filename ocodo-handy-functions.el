@@ -52,15 +52,15 @@
                                    ("Debugging" 1 "[Dd]ebug")
                                    ("Windows" 1 "[Ww]indow"))
   "Key binding group filters")
-;; TODO merge these two. ^ v
+
 (defvar ocodo-key-bindings-lisp-files
-  '("~/.doom.d/key-bindings.el"
-    "~/.doom.d/use/use-ert.el"
-    "~/.doom.d/use/use-ruby.el"
-    "~/.doom.d/use/use-swiper.el"
-    "~/.doom.d/use/use-git-gutter.el"
-    "~/.doom.d/use/use-auto-yasnippet.el"
-    "~/.doom.d/use/use-markdown-mode.el")
+  (-concat
+   `(,(expand-file-name "~/.doom.d/key-bindings.el"))
+   (f-entries "~/.doom.d/use/"
+              (lambda (file)
+                 (let1 text
+                       (f-read file 'utf-8)
+                   (s-contains? "bind-key" text)))))
   "List of emacs-lisp files which have personalised key bindings")
 
 (defvar ocodo-key-bindings-heading
