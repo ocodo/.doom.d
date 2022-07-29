@@ -1,6 +1,6 @@
 ;;; ocodo-handy-functions-tests.el -*- lexical-binding: t; -*-
 
-(require 'ocodo/handy-functions)
+(require 'ocodo-handy-functions)
 (require 'ert)
 
 (ert-deftest let1 ()

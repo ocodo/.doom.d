@@ -39,48 +39,42 @@
 (require 'lisp-mnt)
 (require 'subr-x)
 
-(defvar ocodo-key-binding-groups '(("Markdown Soma" 1 "^Markdown soma")
-                                   ("Smart Parens" 1 "^Sp ")
-                                   ("Text Transforms" 0 "C-c t t")
-                                   ("Auto Snippet" 1 "^Aya")
-                                   ("Ruby" 1 "^Ruby")
-                                   ("Swiper" 1 "^Swiper")
-                                   ("Git" 0 "C-x v ")
-                                   ("Color" 1 "[Cc]olor")
-                                   ("Dired" 1 "^Dired")
-                                   ("ERT Testing" 1 "^Ert ")
-                                   ("Debugging" 1 "[Dd]ebug")
-                                   ("Windows" 1 "[Ww]indow"))
-  "Key binding group filters")
+(defmacro let1 (var val &rest body)
+  "Syntax sugar for LET. A single VAR VAL let over BODY.
 
-(defvar ocodo-key-bindings-lisp-files
-  (-concat
-   `(,(expand-file-name "~/.doom.d/key-bindings.el"))
-   (f-entries "~/.doom.d/use/"
-              (lambda (file)
-                 (let1 text
-                       (f-read file 'utf-8)
-                   (s-contains? "bind-key" text)))))
-  "List of emacs-lisp files which have personalised key bindings")
+Example usage:
 
-(defvar ocodo-key-bindings-heading
-  "Ocodo's Emacs Key Bindings."
-  "Key bindings page heading")
+```lisp
+(let1 my-var \"Hello World\"
+  (message \"%s\" my-var))
 
-(defvar ocodo-key-bindings-table-heading (concat
-                                          "| Key(s)  | Command | keymap  |\n"
-                                          "|:--------|:--------|--------:|")
-  "Markdown table heading for key binding documentation.")
+=> \"Hello World\"
+```
+"
+  `(let ((,var ,val)) ,@body))
 
-(defvar screencapture-mac-default-commandline nil
-  "Default command line with options.")
+(defmacro plist-bind (args expr &rest body)
+  "Syntax sugar to destructure PLIST, binding values to ARGS named as keys. Access them in the BODY form.
 
-(defvar screencapture-mac-default-file-location
-  (expand-file-name "~/Desktop/")
-  "Default location to save screen captures.")
+For example:
 
-(defvar screencapture-mac-default-file-keyword
-  "screencapture")
+```lisp
+(plist-bind (a c)                ;; <- arg names match key names.
+  '(:a \"foo\" :b 13 :c \"bar\") ;; <- plist
+  (list a c))                    ;; <- Body
+
+;; => (\"foo\" \"bar\")
+```
+"
+  `(cl-destructuring-bind
+       (&key ,@args &allow-other-keys)
+       ,expr
+     ,@body))
+
+(defun -sample (list)
+  "Return a random element from the LIST."
+  (nth (random (length list)) list))
+
 
 (defmacro *-and-replace (function-name evaluator)
  "A macro which creates a new command NAME using EVALUATOR.
@@ -145,41 +139,50 @@ For example:
            (pcase-lambda ,arglist ,@body)
            ,docstring)))
 
-(defmacro let1 (var val &rest body)
-  "Syntax sugar for LET. A single VAR VAL let over BODY.
 
-Example usage:
 
-```lisp
-(let1 my-var \"Hello World\"
-  (message \"%s\" my-var))
+(defvar ocodo-key-binding-groups '(("Markdown Soma" 1 "^Markdown soma")
+                                   ("Smart Parens" 1 "^Sp ")
+                                   ("Text Transforms" 0 "C-c t t")
+                                   ("Auto Snippet" 1 "^Aya")
+                                   ("Ruby" 1 "^Ruby")
+                                   ("Swiper" 1 "^Swiper")
+                                   ("Git" 0 "C-x v ")
+                                   ("Color" 1 "[Cc]olor")
+                                   ("Dired" 1 "^Dired")
+                                   ("ERT Testing" 1 "^Ert ")
+                                   ("Debugging" 1 "[Dd]ebug")
+                                   ("Windows" 1 "[Ww]indow"))
+  "Key binding group filters")
 
-=> \"Hello World\"
-```
-"
-  `(let ((,var ,val)) ,@body))
+(defvar ocodo-key-bindings-lisp-files
+  (-concat
+   `(,(expand-file-name "~/.doom.d/key-bindings.el"))
+   (f-entries "~/.doom.d/use/"
+              (lambda (file)
+                 (let1 text
+                       (f-read file 'utf-8)
+                   (s-contains? "bind-key" text)))))
+  "List of emacs-lisp files which have personalised key bindings")
 
-(defmacro plist-bind (args expr &rest body)
-  "Syntax sugar to destructure PLIST, binding values to ARGS named as keys. Access them in the BODY form.
+(defvar ocodo-key-bindings-heading
+  "Ocodo's Emacs Key Bindings."
+  "Key bindings page heading")
 
-For example:
+(defvar ocodo-key-bindings-table-heading (concat
+                                          "| Key(s)  | Command | keymap  |\n"
+                                          "|:--------|:--------|--------:|")
+  "Markdown table heading for key binding documentation.")
 
-```lisp
-(plist-bind (a c)                ;; <- arg names match key names.
-  '(:a \"foo\" :b 13 :c \"bar\") ;; <- plist
-  (list a c))                    ;; <- Body
+(defvar screencapture-mac-default-commandline nil
+  "Default command line with options.")
 
-;; => (\"foo\" \"bar\")
-```
-"
-  `(cl-destructuring-bind
-       (&key ,@args &allow-other-keys)
-       ,expr
-     ,@body))
+(defvar screencapture-mac-default-file-location
+  (expand-file-name "~/Desktop/")
+  "Default location to save screen captures.")
 
-(defun -sample (list)
-  "Return a random element from the LIST."
-  (nth (random (length list)) list))
+(defvar screencapture-mac-default-file-keyword
+  "screencapture")
 
 (defun align-number-right (begin end)
   "Align columns of numbers right in the region (BEGIN, END).

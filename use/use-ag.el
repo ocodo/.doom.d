@@ -14,7 +14,7 @@ _k_ : Ag Close all Ag buffers"
    ("k" ag-kill-buffers))
 
 (use-package ag
-  :init
+  :config
   (progn
     (add-to-list 'ag-arguments "--hidden")
     (setq ag-group-matches nil)
