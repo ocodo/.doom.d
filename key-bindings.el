@@ -54,6 +54,7 @@
 (bind-key "C-c t t s"      #'time-to-seconds-at-point-or-region)
 (bind-key "C-c t t t"      #'titleized-at-point-or-region)
 (bind-key "C-c t t u"      #'upper-camelcase-at-point-or-region)
+(bind-key "C-c t t TAB"    #'tabify)
 
 (bind-key "C-x /"          #'align-regexp)
 

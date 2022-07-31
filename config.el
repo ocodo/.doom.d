@@ -7,6 +7,8 @@
 (load-file "~/.doom.d/ocodo-handy-functions.el")
 (load-file "~/.doom.d/key-bindings.el")
 
+(setq initial-major-mode 'lisp-interaction-mode)
+
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets. It is optional.
 (setq user-full-name "Jason M23"
@@ -42,7 +44,6 @@
 ;; Config that is too small to break out a use-package / file...
 ;; Prettify symbols
 (global-prettify-symbols-mode t)
-
 
 ;; Font
 (setq doom-modeline-height 1)
