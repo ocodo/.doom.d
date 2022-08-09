@@ -33,6 +33,9 @@
 (package! xr)
 
 (package! emacs-theme-orangey-bits :recipe (:host github :repo "emacsfodder/emacs-theme-orangey-bits"))
+(package! emacs-theme-sahasrara :recipe (:host github :repo "emacsfodder/emacs-theme-sahasrara"))
+(package! emacs-theme-cyanometric :recipe (:host github :repo "emacsfodder/emacs-theme-cyanometric"))
+
 (package! hydra-posframe :recipe (:host github :repo "ladicle/hydra-posframe"))
 (package! markdown-soma :recipe (:host github :repo "jasonm23/markdown-soma"))
 (package! text-transformers :recipe (:host github :repo "jasonm23/emacs-text-transformers"))
