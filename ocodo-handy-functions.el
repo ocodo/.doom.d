@@ -403,16 +403,16 @@ When there is only one frame, kill the buffer."
 (defun docstring-args-to-markdown-code (docstring)
   "transform DOCSTRING arguments to inline markdown `code` style."
   (let ((case-fold-search nil))
-       (replace-regexp-in-string
-        (rx (>= 1 space)
-            (group
-             (>= 1 upper-case)
-             (>= 1 (any upper-case
-                        num
-                        "_"
-                        "-"))))
-        (lambda (match) (downcase (format " `%s`" (s-trim-left match))))
-        docstring t)))
+    (replace-regexp-in-string
+     (rx (>= 1 space)
+         (group
+          (>= 1 upper-case)
+          (>= 1 (any upper-case
+                     num
+                     "_"
+                     "-"))))
+     (lambda (match) (downcase (format " `%s`" (s-trim-left match))))
+     docstring t)))
 
 (defun docstring-back-quoted-to-markdown-code (docstring)
   "transform back-quoted docstring elements to inline markdown `code` style."
@@ -502,10 +502,10 @@ Use `recentf-save-list' to persist."
   (let* ((w (or width 8))
          (binary (int-to-binary-string val)))
     (message "Width: %d" w)
-   (s-pad-left w "0" binary)))
+    (s-pad-left w "0" binary)))
 
 (defun format-multiline (format-string &rest args)
-    "Format a  multiline indented FORMAT-STRING with ARGS.
+  "Format a multiline indented FORMAT-STRING with ARGS.
 
 A multiline string can use leading `|` (pipe) characters to line
 up indentation.
@@ -533,11 +533,9 @@ For example:
 ... the end\"
 ```
 "
-    (apply 'format
-      (s-join "\n"
-            (--map (s-replace-regexp "^[ ]*|" "" it)
-              (s-lines format-string)))
-      args))
+  (apply 'format
+         (s-join "\n" (--map (s-replace-regexp "^\s*|" "" it) (s-lines format-string)))
+         args))
 
 (defun format-thousands-separators (n)
   "Format N to have thousand separators.
@@ -572,19 +570,16 @@ For example:
 (defun generate-markdown-defun-entry (fn)
   "Generate a markdown entry for FN."
   (cl-destructuring-bind (name args docstring) fn
-       (let
-           ((name (format "%s" name))
-            (args (if args
-                      (format " %s" args)
-                    "")))
-           (when (string= nil docstring)
-              (setq docstring "No docstring available: TODO"))
-           (format "### %s\n\n%s\n\n```lisp\n(%s)\n```\n<sup>function signature</sup>\n- - -\n"
-                   name
-                   (docstring-back-quoted-to-markdown-code
-                     (docstring-args-to-markdown-code
-                      docstring))
-                   (format "%s%s" name args)))))
+   (let ((name (format "%s" name))
+         (args (if args (format " %s" args) "")))
+       (when (string= nil docstring)
+         (setq docstring "No docstring available: TODO"))
+       (format "### %s\n\n%s\n\n<sup>function signature</sup>\n```lisp\n(%s)\n```\n\n- - -\n"
+               name
+               (docstring-back-quoted-to-markdown-code
+                (docstring-args-to-markdown-code
+                 docstring))
+               (format "%s%s" name args)))))
 
 (defun generate-markdown-list-of-buffer-defuns (buffer)
   "Generate markdown text of all defuns in buffer"
@@ -609,8 +604,8 @@ BUFFER file name and commentary are used as the page heading."
                       |## Functions
                       |
                       |"
-                     (s-capitalized-words (s-replace-regexp "[.]el$" ""(buffer-name buffer)))
-                     (lm-commentary (buffer-file-name)) buffer)
+                     (s-capitalized-words (s-replace-regexp "[.]el$" "" (buffer-name buffer)))
+                     (docstring-back-quoted-to-markdown-code (lm-commentary (buffer-file-name))))
    (generate-markdown-list-of-buffer-defuns buffer)))
 
 (defun generate-untitled-name ()

@@ -53,15 +53,18 @@
     (should (= expected (time-to-seconds time)))))
 
 (ert-deftest generate-markdown-defun-entry ()
-  "Test markdownm generation from defun info."
-  (let ((expected "### align-number-right
-
-Align region to equal signs from `begin` to `end`.
-
-```lisp
-(align-number-right (begin end))
-```
-")
+  "Test markdown generation from defun info."
+  (let ((expected (format-multiline "|### align-number-right
+                                     |
+                                     |Align region to equal signs from `begin` to `end`.
+                                     |
+                                     |<sup>function signature</sup>
+                                     |```lisp
+                                     |(align-number-right (begin end))
+                                     |```
+                                     |
+                                     |- - -
+                                     |"))
         (info '(align-number-right (begin end) "Align region to equal signs from BEGIN to END.")))
    (should (string= expected (generate-markdown-defun-entry info)))))
 
