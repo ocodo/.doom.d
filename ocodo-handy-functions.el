@@ -108,8 +108,8 @@ Using `shell-command-to-string', we can make a replace-region command with `*-an
 
 (*-and-replace markdown-literate-wrap-exec-code
                #'(lambda (region) (format-multiline "|``` @code
-                                                    |%s
-                                                    |```" region)))
+                                                |%s
+                                                |```" region)))
 
 
 (defmacro defun-pcase (name arglist &optional docstring &rest body)
@@ -416,7 +416,7 @@ When there is only one frame, kill the buffer."
 
 (defun docstring-back-quoted-to-markdown-code (docstring)
   "transform back-quoted docstring elements to inline markdown `code` style."
-  (s-replace-regexp
+  (replace-regexp-in-string
    (rx "`" (group (*? not-newline)) "'")
    "`\\1`"
    docstring))
@@ -576,9 +576,9 @@ For example:
          (setq docstring "No docstring available: TODO"))
        (format "### %s\n\n%s\n\n<sup>function signature</sup>\n```lisp\n(%s)\n```\n\n- - -\n"
                name
-               (docstring-back-quoted-to-markdown-code
-                (docstring-args-to-markdown-code
-                 docstring))
+               (docstring-args-to-markdown-code
+                (docstring-back-quoted-to-markdown-code
+                  docstring))
                (format "%s%s" name args)))))
 
 (defun generate-markdown-list-of-buffer-defuns (buffer)
