@@ -323,13 +323,6 @@ For example:
   (which-key-show-keymap 'cua--rectangle-keymap
            cua--rectangle-keymap))
 
-(defun current-buffer-defuns-to-markdown (file)
-  "Create a markdown FILE of all defuns in the current buffer."
-  (interactive "FWrite List of defuns to Markdown File: ")
-  (f-write (generate-markdown-page-of-buffer-defuns (current-buffer)) 'utf-8 file)
-  (when (y-or-n-p (format "Open %s?" file))
-    (find-file file)))
-
 (defun decimal-to-hex (num)
   "Convert NUM to hex."
   (format "%X" (string-to-number num)))
@@ -399,27 +392,6 @@ When there is only one frame, kill the buffer."
   (interactive "M")
   (dired (file-name-as-directory
           (file-name-directory (find-library-name libraryname)))))
-
-(defun docstring-args-to-markdown-code (docstring)
-  "transform DOCSTRING arguments to inline markdown `code` style."
-  (let ((case-fold-search nil))
-    (replace-regexp-in-string
-     (rx (>= 1 space)
-         (group
-          (>= 1 upper-case)
-          (>= 1 (any upper-case
-                     num
-                     "_"
-                     "-"))))
-     (lambda (match) (downcase (format " `%s`" (s-trim-left match))))
-     docstring t)))
-
-(defun docstring-back-quoted-to-markdown-code (docstring)
-  "transform back-quoted docstring elements to inline markdown `code` style."
-  (replace-regexp-in-string
-   (rx "`" (group (*? not-newline)) "'")
-   "`\\1`"
-   docstring))
 
 (defun duplicate-current-line-or-region (arg &optional up)
   ;; Originally swiped from rejeep's emacs.d rejeep-defuns.el.
@@ -567,47 +539,6 @@ For example:
   (interactive "nDenomiator:")
   (insert (format "%s" (/ (* float-pi 2) denominator))))
 
-(defun generate-markdown-defun-entry (fn)
-  "Generate a markdown entry for FN."
-  (cl-destructuring-bind (name args docstring) fn
-   (let ((name (format "%s" name))
-         (args (if args (format " %s" args) "")))
-       (when (string= nil docstring)
-         (setq docstring "No docstring available: TODO"))
-       (format "### %s\n\n%s\n\n<sup>function signature</sup>\n```lisp\n(%s)\n```\n\n- - -\n"
-               name
-               (docstring-args-to-markdown-code
-                (docstring-back-quoted-to-markdown-code
-                  docstring))
-               (format "%s%s" name args)))))
-
-(defun generate-markdown-list-of-buffer-defuns (buffer)
-  "Generate markdown text of all defuns in buffer"
-  (s-join "\n"
-          (mapcar
-           #'generate-markdown-defun-entry
-           (-sort (lambda (a b)
-                    (let ((c (symbol-name (first a)))
-                          (d (symbol-name (first b))))
-                      (string< c d)))
-                  (get-defun-info (current-buffer))))))
-
-(defun generate-markdown-page-of-buffer-defuns (&optional buffer)
-  "Generate markdown page for all defun in BUFFER.
-
-BUFFER file name and commentary are used as the page heading."
-
-  (concat
-   (format-multiline "|# %s
-                      |%s
-                      | - - -
-                      |## Functions
-                      |
-                      |"
-                     (s-capitalized-words (s-replace-regexp "[.]el$" "" (buffer-name buffer)))
-                     (docstring-back-quoted-to-markdown-code (lm-commentary (buffer-file-name))))
-   (generate-markdown-list-of-buffer-defuns buffer)))
-
 (defun generate-untitled-name ()
   "Generate a name with pattern untitled-n."
   (let ((n 1))
@@ -619,33 +550,6 @@ BUFFER file name and commentary are used as the page heading."
 
       (setq n (+ n 1)))
     (format "untitled-%i" n)))
-
-(defun get-defun-info (buffer)
-  "Get information about all `defun' top-level sexps in a BUFFER.
-Returns a list with elements of the form (symbol args docstring)."
-  (with-current-buffer buffer
-    (save-excursion
-      (save-restriction
-        (widen)
-        (goto-char (point-min))
-        (let (result)
-          ;; keep going while reading succeeds
-          (while (condition-case nil
-                     (progn
-                       (read (current-buffer))
-                       (forward-sexp -1)
-                       t)
-                   (error nil))
-            (let ((form (read (current-buffer))))
-              (cond
-               ((not (listp form))      ; if it's not a list, skip it
-                nil)
-               ((eq (nth 0 form) 'defun) ; if it's a defun, collect info
-                (let ((sym (nth 1 form))
-                      (args (nth 2 form))
-                      (doc (when (stringp (nth 3 form)) (nth 3 form))))
-                  (push (list sym args doc) result))))))
-          result)))))
 
 (defun get-osx-display-resolution ()
   "Get the current display resolution in OSX.

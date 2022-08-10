@@ -7,45 +7,6 @@
   "Test let1."
   (should (equal 2 (let1 a 2 a))))
 
-(ert-deftest docstring-back-quoted-to-markdown-code ()
-  "Convert doctring back quoted text to markdown `code`."
-  (let ((docstring  "Convert DOCSTRING to markdown `code'")
-        (expected  "Convert DOCSTRING to markdown `code`"))
-    (should (string=
-             expected
-             (docstring-back-quoted-to-markdown-code docstring)))
-    (should (string=
-             "Change a HEX color's brightness VAL, amount values from 0.0-1.0.
-returns a 6 digit hex color."
-             (docstring-back-quoted-to-markdown-code "Change a HEX color's brightness VAL, amount values from 0.0-1.0.
-returns a 6 digit hex color.")))))
-
-(ert-deftest test-docstring-to-markdown ()
-  "Test ensure that the combination of arg and back quoted conversion to markdown doesn't do anything unexpected."
-  (let* ((input "Change a HEX color's brightness VAL, amount values from 0.0-1.0.
-returns a 6 digit hex color.")
-         (expected "Change a `hex` color's brightness `val`, amount values from 0.0-1.0.
-returns a 6 digit hex color."))
-    (should (equal
-             (docstring-args-to-markdown-code
-              (docstring-back-quoted-to-markdown-code
-                  input))
-             expected))))
-
-(ert-deftest docstring-args-to-markdown-code ()
-  "Transform DOCSTRING arguments to inline markdown `code` document style."
-    (should (string=
-             (docstring-args-to-markdown-code "Change a HEX color's brightness VAL, amount values from 0.0-1.0.
-returns a 6 digit hex color.")
-             "Change a `hex` color's brightness `val`, amount values from 0.0-1.0.
-returns a 6 digit hex color."))
-    (should (string= "This is an $ENV. This is an `arg`."
-                     (docstring-args-to-markdown-code
-                      "This is an $ENV. This is an ARG.")))
-    (should (string= "Convert `h` `s` `v` to a 6 digit hex color."
-                     (docstring-args-to-markdown-code
-                      "Convert H S V to a 6 digit hex color."))))
-
 (ert-deftest csv-to-lists ()
   "Test csv-to-lists."
   (let ((csv "1,2,3,4,5,Foo
