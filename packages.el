@@ -11,7 +11,6 @@
 (package! applescript-mode)
 (package! consult-spotify)
 (package! corfu)
-(package! creamsody-theme)
 (package! edit-server)
 (package! embrace)
 (package! flymake-shellcheck)
@@ -31,17 +30,34 @@
 (package! tblui)
 (package! try)
 (package! xr)
+(package! speed-type)
 
-(package! emacs-theme-orangey-bits :recipe (:host github :repo "emacsfodder/emacs-theme-orangey-bits"))
-(package! emacs-theme-sahasrara :recipe (:host github :repo "emacsfodder/emacs-theme-sahasrara"))
-(package! emacs-theme-cyanometric :recipe (:host github :repo "emacsfodder/emacs-theme-cyanometric"))
+(package! hydra-posframe
+  :recipe (:host github :repo "ladicle/hydra-posframe"))
+(package! markdown-soma
+  :recipe (:host github :repo "jasonm23/markdown-soma"))
+(package! text-transformers
+  :recipe (:host github :repo "jasonm23/emacs-text-transformers"))
 
-(package! hydra-posframe :recipe (:host github :repo "ladicle/hydra-posframe"))
-(package! markdown-soma :recipe (:host github :repo "jasonm23/markdown-soma"))
-(package! text-transformers :recipe (:host github :repo "jasonm23/emacs-text-transformers"))
+;; Themes
 
-(unpin! auto-yasnippet)(package! auto-yasnippet :recipe (:host github :repo "emacsfodder/auto-yasnippet"))
-(unpin! kurecolor)(package! kurecolor :recipe (:host github :repo "emacsfodder/kurecolor"))
+(package! darktooth-theme)
+(package! creamsody-theme)
+(package! gruvbox-theme)
+
+(package! emacs-theme-orangey-bits
+  :recipe (:host github :repo "emacsfodder/emacs-theme-orangey-bits"))
+(package! emacs-theme-cyanometric
+  :recipe (:host github :repo "emacsfodder/emacs-theme-cyanometric"))
+(package! emacs-theme-sakura
+  :recipe (:host github :repo "emacsfodder/emacs-theme-sakura"))
+(package! emacs-theme-vegetative
+  :recipe (:host github :repo "emacsfodder/emacs-theme-vegetative"))
+
+(package! auto-yasnippet
+  :recipe (:host github :repo "emacsfodder/auto-yasnippet"))
+(package! kurecolor
+  :recipe (:host github :repo "emacsfodder/kurecolor"))
 
 ;; To install a package directly from a remote git repo, you must specify a
 ;; `:recipe'. You'll find documentation on what `:recipe' accepts here:

@@ -22,8 +22,8 @@
 (bind-key "C-c ;"          #'iedit-mode)
 
 (bind-key "C-c ]"          #'embrace-commander)
-(bind-key "C-c q e"        #'edit-server-start)
 
+(bind-key "C-c f i"        #'insert-file)
 (bind-key "C-c k H"        #'+rgb/kurecolor-hydra/body)
 (bind-key "C-c k X"        #'kurecolor-xcode-color-literal-at-point-or-region-to-hex-rgba)
 (bind-key "C-c k c"        #'kurecolor-cssrgb-at-point-or-region-to-hex)
@@ -31,6 +31,8 @@
 (bind-key "C-c k h r"      #'kurecolor-hexcolor-at-point-or-region-to-css-rgb)
 (bind-key "C-c k s"        #'search-for-nearest-hex-color)
 (bind-key "C-c k x"        #'kurecolor-xcode-color-literal-at-point-or-region-to-hex-rgb)
+
+(bind-key "C-c q e"        #'edit-server-start)
 
 (bind-key "C-c r ."        #'sp-join-sexp)
 (bind-key "C-c r /"        #'sp-split-sexp)

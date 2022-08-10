@@ -19,10 +19,10 @@
 (add-hook 'doom-load-theme-hook #'set-fancy-splash)
 
 (defun set-fancy-splash ()
-  (setq fancy-splash-image "~/.doom.d/doom-orangeybits.png")
+  (setq fancy-splash-image "~/.doom.d/doom-creamsody.png")
   (add-hook! 'after-setting-font-hook (+doom-dashboard-reload 'force)))
 
-(setq doom-theme 'orangey-bits)
+(setq doom-theme 'cyanometric)
 
 (setq doom-unreal-buffer-functions
       '(minibufferp))
@@ -30,13 +30,13 @@
 (ssh-agent-env-fix)
 
 ;; load use-package configs
-(dolist-with-progress-reporter
+(dolist
     (config
      (directory-files "~/.doom.d/use/" t ".*el"))
     "Loading local use configs..."
   (load-file config))
 
-(dolist-with-progress-reporter
+(dolist
     (plugin (directory-files "~/.doom.d/plugins/" t ".*el"))
     "Loading local plugins..."
   (load-file plugin))
