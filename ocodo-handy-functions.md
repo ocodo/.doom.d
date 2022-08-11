@@ -8,13 +8,13 @@ playing with. They are auto-documented in this markdown document.
 
 Items used often:...
 
-- document-current-elisp-buffer-to-markdown (which generated this page.)
-- defun-pcase
-- plist-bind
-- *-and-replace
-- screencapture-mac
-- ocodo-custom-key-bindings-to-markdown
-- format-multiline
+- `current-buffer-defuns-to-markdown` (which generated this page.)
+- `defun-pcase`
+- `plist-bind`
+- `*-and-replace`
+- `screencapture-mac`
+- `ocodo-custom-key-bindings-to-markdown`
+- `format-multiline`
 
  - - -
 ## Functions
@@ -23,15 +23,16 @@ Items used often:...
 
 Return a random element from the `list`.
 
+<sup>function signature</sup>
 ```lisp
 (-sample (list))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### align-number-right
+### align-number-right [command]
 
-Align columns of numbers right in the region (BEGIN, `end`).
+Align columns of numbers right in the region (`begin`, `end`).
 
 For example:
 
@@ -49,20 +50,22 @@ For example:
 ```
 
 
+<sup>function signature</sup>
 ```lisp
 (align-number-right (begin end))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### buffer-file-name-to-kill-ring
+### buffer-file-name-to-kill-ring [command]
 
 Save the buffer file name to the kill ring.
 
+<sup>function signature</sup>
 ```lisp
 (buffer-file-name-to-kill-ring)
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### change-number-at-point
@@ -88,23 +91,25 @@ For example:
 ```
 
 
+<sup>function signature</sup>
 ```lisp
 (change-number-at-point (func))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### cleanup-buffer
+### cleanup-buffer [command]
 
 Perform a cleanup operations on a buffer, tabs to spaces, re-indent, trim whitespace.
 
+<sup>function signature</sup>
 ```lisp
 (cleanup-buffer)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### clear-buffer-text-properties
+### clear-buffer-text-properties [command]
 
 Clear all text face properties in the buffer.
 This is somewhat useful when dealing with text pasted from a
@@ -112,50 +117,55 @@ propertied buffer.
 
 Note: this won't turn off face properties in a font-locked buffer.
 
+<sup>function signature</sup>
 ```lisp
 (clear-buffer-text-properties)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### comment-or-uncomment-current-line-or-region
+### comment-or-uncomment-current-line-or-region [command]
 
 Comments or uncomments the current line or all the lines in region.
 
+<sup>function signature</sup>
 ```lisp
 (comment-or-uncomment-current-line-or-region)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### copy-region-or-rest-of-line-to-other-window
+### copy-region-or-rest-of-line-to-other-window [command]
 
 Copy the current region to the other window.
 
+<sup>function signature</sup>
 ```lisp
 (copy-region-or-rest-of-line-to-other-window)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### copy-rest-of-line
+### copy-rest-of-line [command]
 
 Copy from cursor to end the current line to the kill ring.
 
+<sup>function signature</sup>
 ```lisp
 (copy-rest-of-line)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### copy-whole-line
+### copy-whole-line [command]
 
 Copy the current line to the kill ring.
 
+<sup>function signature</sup>
 ```lisp
 (copy-whole-line)
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### csv-to-lists
@@ -179,215 +189,203 @@ For example:
 ```
 
 
+<sup>function signature</sup>
 ```lisp
 (csv-to-lists (csv))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### cua-rectangle-which-key-help
+### cua-rectangle-which-key-help [command]
 
 Display cua-rectangle-keymap in which-key.
 
+<sup>function signature</sup>
 ```lisp
 (cua-rectangle-which-key-help)
 ```
-<sup>function signature</sup>
-- - -
 
-### current-buffer-defuns-to-markdown
-
-Create a markdown `file` of all defuns in the current buffer.
-
-```lisp
-(current-buffer-defuns-to-markdown (file))
-```
-<sup>function signature</sup>
 - - -
 
 ### decimal-to-hex
 
 Convert `num` to hex.
 
+<sup>function signature</sup>
 ```lisp
 (decimal-to-hex (num))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### decrease-default-font-height
+### decrease-default-font-height [command]
 
-Adjust the default font :height by 10, universal argument is M (to set by multiples).
+Adjust the default font :height by 10, universal argument is `m` (to set by multiples).
 
+<sup>function signature</sup>
 ```lisp
 (decrease-default-font-height (m))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### decrement-number-at-point
+### decrement-number-at-point [command]
 
 Decrement number at point like vim's Ctrl x.
 
+<sup>function signature</sup>
 ```lisp
 (decrement-number-at-point)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### delete-frame-or-window-dwim
+### delete-frame-or-window-dwim [command]
 
 Delete the current frame or buffer.
 When there is only one frame, kill the buffer.
 
+<sup>function signature</sup>
 ```lisp
 (delete-frame-or-window-dwim)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### delete-this-buffer-and-file
+### delete-this-buffer-and-file [command]
 
 Delete the file connected to this buffer and kill it, `force` is universal argument.
 
+<sup>function signature</sup>
 ```lisp
 (delete-this-buffer-and-file (force))
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### describe-thing-at-point
 
-No docstring available: `todo`
+No docstring available: TODO
 
+<sup>function signature</sup>
 ```lisp
 (describe-thing-at-point)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### dired-find-file-other-window-and-back
+### dired-find-file-other-window-and-back [command]
 
 In Dired, visit this file or directory in another window and remain in first window.
 
+<sup>function signature</sup>
 ```lisp
 (dired-find-file-other-window-and-back)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### dired-menu
+### dired-menu [command]
 
 Go to one of the currently open dired buffers (if there is one).
 
+<sup>function signature</sup>
 ```lisp
 (dired-menu)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### dired-osx-open-this-file
+### dired-osx-open-this-file [command]
 
-Use the `osx` `open` command to launch the current dired file at point.
+Use the OSX `open` command to launch the current dired file at point.
 
+<sup>function signature</sup>
 ```lisp
 (dired-osx-open-this-file)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### dired-visit-library
+### dired-visit-library [command]
 
 Open directory with dired which contain the given `libraryname`.
 
+<sup>function signature</sup>
 ```lisp
 (dired-visit-library (libraryname))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### docstring-args-to-markdown-code
-
-transform `docstring` arguments to inline markdown `code` style.
-
-```lisp
-(docstring-args-to-markdown-code (docstring))
-```
-<sup>function signature</sup>
-- - -
-
-### docstring-back-quoted-to-markdown-code
-
-transform back-quoted docstring elements to inline markdown `code` style.
-
-```lisp
-(docstring-back-quoted-to-markdown-code (docstring))
-```
-<sup>function signature</sup>
-- - -
-
-### duplicate-current-line-or-region
+### duplicate-current-line-or-region [command]
 
 Duplicates the current line or region `arg` times.
 
 If `up` is non-nil, duplicate and move point to the top.
 
+<sup>function signature</sup>
 ```lisp
 (duplicate-current-line-or-region (arg &optional up))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### duplicate-current-line-or-region-up
+### duplicate-current-line-or-region-up [command]
 
 Duplicates the current line or region up `arg` times.
 
+<sup>function signature</sup>
 ```lisp
 (duplicate-current-line-or-region-up (arg))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### eval-and-replace
+### eval-and-replace [command]
 
 Replace the preceding sexp with its result.
 
+<sup>function signature</sup>
 ```lisp
 (eval-and-replace)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### eval-and-replace-prin1
+### eval-and-replace-prin1 [command]
 
 Replace the preceding sexp with its value using prin1.
 
+<sup>function signature</sup>
 ```lisp
 (eval-and-replace-prin1)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### filter-recentf
+### filter-recentf [command]
 
 Remove entries matching `pattern` from recent files.
 This is operating on the `recentf-list`, in memory.
 Use `recentf-save-list` to persist.
 
+<sup>function signature</sup>
 ```lisp
 (filter-recentf (pattern))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### flush-blank-lines
+### flush-blank-lines [command]
 
 Flush blank lines.
 
+<sup>function signature</sup>
 ```lisp
 (flush-blank-lines)
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### format-binary
@@ -395,21 +393,22 @@ Flush blank lines.
 Convert `val` of `width` to a binary string.
 &optional `width` will default to 8.
 
+<sup>function signature</sup>
 ```lisp
 (format-binary (val &optional width))
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### format-multiline
 
-Format a  multiline indented `format-string` with `args`.
+Format a multiline indented `format-string` with `args`.
 
 A multiline string can use leading `|` (pipe) characters to line
 up indentation.
 
-ARGS passed will populate format template tokens in the
-FORMAT-STRING. Tokens are as defined in `(format ...)`
+`args` passed will populate format template tokens in the
+`format-string`. Tokens are as defined in `(format ...)`
 
 For example:
 
@@ -432,15 +431,16 @@ For example:
 ```
 
 
+<sup>function signature</sup>
 ```lisp
 (format-multiline (format-string &rest args))
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### format-thousands-separators
 
-Format N to have thousand separators.
+Format `n` to have thousand separators.
 
 For example:
 
@@ -450,78 +450,38 @@ For example:
 ```
 
 
+<sup>function signature</sup>
 ```lisp
 (format-thousands-separators (n))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### fraction-radian
+### fraction-radian [command]
 
 Fraction `denominator` of circle to radians.
 
+<sup>function signature</sup>
 ```lisp
 (fraction-radian (denominator))
 ```
-<sup>function signature</sup>
-- - -
 
-### generate-markdown-defun-entry
-
-Generate a markdown entry for `fn`.
-
-```lisp
-(generate-markdown-defun-entry (fn))
-```
-<sup>function signature</sup>
-- - -
-
-### generate-markdown-list-of-buffer-defuns
-
-Generate markdown text of all defuns in buffer
-
-```lisp
-(generate-markdown-list-of-buffer-defuns (buffer))
-```
-<sup>function signature</sup>
-- - -
-
-### generate-markdown-page-of-buffer-defuns
-
-Generate markdown page for all defun in `buffer`.
-
-BUFFER file name and commentary are used as the page heading.
-
-```lisp
-(generate-markdown-page-of-buffer-defuns (&optional buffer))
-```
-<sup>function signature</sup>
 - - -
 
 ### generate-untitled-name
 
 Generate a name with pattern untitled-n.
 
+<sup>function signature</sup>
 ```lisp
 (generate-untitled-name)
 ```
-<sup>function signature</sup>
-- - -
 
-### get-defun-info
-
-Get information about all `defun` top-level sexps in a `buffer`.
-Returns a list with elements of the form (symbol args docstring).
-
-```lisp
-(get-defun-info (buffer))
-```
-<sup>function signature</sup>
 - - -
 
 ### get-osx-display-resolution
 
-Get the current display resolution in `osx`.
+Get the current display resolution in OSX.
 
 Uses the mac system_profiler `SPDisplaysDataType` to lookup the
 current display resolution. This is then filtered out (using grep
@@ -535,23 +495,25 @@ For example:
 ```
 
 
+<sup>function signature</sup>
 ```lisp
 (get-osx-display-resolution)
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### get-position-of-nearest-matching
 
-Get the position of nearest S.
+Get the position of nearest `s`.
 
 optional `arg` when less than zero, default to the before match
 when matches are equidistant from the current point.
 
+<sup>function signature</sup>
 ```lisp
 (get-position-of-nearest-matching (s &optional arg))
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### get-position-of-nearest-regexp-match
@@ -561,349 +523,383 @@ Get the position of nearest `regexp` match.
 optional `arg` when less than zero, default to the before match
 when matches are equidistant from the current point.
 
+<sup>function signature</sup>
 ```lisp
 (get-position-of-nearest-regexp-match (regexp &optional arg))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### git-open-changed-and-new-files
+### git-open-changed-and-new-files [command]
 
 Use git ls-files to open changed files.
 
+<sup>function signature</sup>
 ```lisp
 (git-open-changed-and-new-files)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### git-open-changed-files
+### git-open-changed-files [command]
 
 Use git ls-files to open changed files.
 
+<sup>function signature</sup>
 ```lisp
 (git-open-changed-files)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### git-open-from-ls-files
+### git-open-from-ls-files [command]
 
 Use `git-ls-options` to open changed files.
 
+<sup>function signature</sup>
 ```lisp
 (git-open-from-ls-files (git-ls-options))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### git-open-ls-files
+### git-open-ls-files [command]
 
 Use `git-ls-options` to open changed files.
 
+<sup>function signature</sup>
 ```lisp
 (git-open-ls-files (git-ls-options))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### git-open-untracked-files
+### git-open-untracked-files [command]
 
 Use git ls-files to open untracked files.
 
     Open any untracked file in the repo (unless it's been .gitignored)
 
+<sup>function signature</sup>
 ```lisp
 (git-open-untracked-files)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### github-browse-repo
+### github-browse-repo [command]
 
 Browse a github `repo` by supplying the user/reponame.
 
+<sup>function signature</sup>
 ```lisp
 (github-browse-repo (repo))
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### google-en-to-thai
 
 Translate `text` from English to Thai.
 
+<sup>function signature</sup>
 ```lisp
 (google-en-to-thai (text))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### google-en-to-thai-on-region
+### google-en-to-thai-on-region [command]
 
-Translate english in region (BEGIN `end`) to Thai.
+Translate english in region (`begin` `end`) to Thai.
 
+<sup>function signature</sup>
 ```lisp
 (google-en-to-thai-on-region (begin end))
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### hex-to-decimal
 
 Convert hex `num` to decimal.
 
+<sup>function signature</sup>
 ```lisp
 (hex-to-decimal (num))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### increase-default-font-height
+### increase-default-font-height [command]
 
-Adjust the default font :height by 10, universal argument is M (to set by multiples).
+Adjust the default font :height by 10, universal argument is `m` (to set by multiples).
 
+<sup>function signature</sup>
 ```lisp
 (increase-default-font-height (m))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### increment-number-at-point
+### increment-number-at-point [command]
 
 Increment number at point like vim's Ctrl a.
 
+<sup>function signature</sup>
 ```lisp
 (increment-number-at-point)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### increment-number-binary
+### increment-number-binary [command]
 
 Increment the number forward from point by `arg`.
 
+<sup>function signature</sup>
 ```lisp
 (increment-number-binary (&optional arg))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### indent-buffer
+### indent-buffer [command]
 
 Indent the current buffer.
 
+<sup>function signature</sup>
 ```lisp
 (indent-buffer)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### insert-buffer-base-filename
+### insert-buffer-base-filename [command]
 
 Insert the base filename for the current buffer.
 
 If your're in the minibuffer it will use the other buffer file name.
 
+<sup>function signature</sup>
 ```lisp
 (insert-buffer-base-filename)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### insert-buffer-filename
+### insert-buffer-filename [command]
 
 Insert the filename for the current buffer.
 
 If your're in the minibuffer it will use the other buffer file name.
 
+<sup>function signature</sup>
 ```lisp
 (insert-buffer-filename)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### insert-iso8601-date
+### insert-iso8601-date [command]
 
 Insert `date`.
 
+<sup>function signature</sup>
 ```lisp
 (insert-iso8601-date (&optional date))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### insert-kill
+### insert-kill [command]
 
 Insert `string` and copy to the kill ring.
 
+<sup>function signature</sup>
 ```lisp
 (insert-kill (string))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### insert-random-in-range
+### insert-random-in-range [command]
 
 Insert a random number within the range of `start` and `end`.
 
+<sup>function signature</sup>
 ```lisp
 (insert-random-in-range (start end))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### insert-random-radian
+### insert-random-radian [command]
 
 Insert a radian value from 0 to 6.28318 (2PI : 360 deg).
 
+<sup>function signature</sup>
 ```lisp
 (insert-random-radian)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### insert-sample
+### insert-sample [command]
 
 Insert a random item from a list of `strings`.
 
+<sup>function signature</sup>
 ```lisp
 (insert-sample (strings))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### insert-time-now
+### insert-time-now [command]
 
 Insert current time.
 
+<sup>function signature</sup>
 ```lisp
 (insert-time-now)
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### int-to-binary-string
 
 convert an integer into it's binary representation in string format
 
+<sup>function signature</sup>
 ```lisp
 (int-to-binary-string (i))
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### is-markdown-filename-p
 
 Is the `filename` markdown.
 
+<sup>function signature</sup>
 ```lisp
 (is-markdown-filename-p (filename))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### join-line-from-below
+### join-line-from-below [command]
 
 Join line from below.
 
+<sup>function signature</sup>
 ```lisp
 (join-line-from-below)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### join-line-or-lines-in-region
+### join-line-or-lines-in-region [command]
 
 Join this line or the lines in the selected region.
 
+<sup>function signature</sup>
 ```lisp
 (join-line-or-lines-in-region)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### kill-untitled-buffers
+### kill-untitled-buffers [command]
 
 Kill untitled buffers.
 
+<sup>function signature</sup>
 ```lisp
 (kill-untitled-buffers)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### kill-whole-word
+### kill-whole-word [command]
 
 Kill the current word at point.
 
+<sup>function signature</sup>
 ```lisp
 (kill-whole-word)
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### macos-get-list-of-windowids
 
 Get a list of macOS windowids.
 
+<sup>function signature</sup>
 ```lisp
 (macos-get-list-of-windowids)
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### macos-get-window-id-of
 
 Get the windowid of `app`.
 
+<sup>function signature</sup>
 ```lisp
 (macos-get-window-id-of (app))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### macos-get-window-id-of-app
+### macos-get-window-id-of-app [command]
 
 Get the windowid of `app`.
 
+<sup>function signature</sup>
 ```lisp
 (macos-get-window-id-of-app (app))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### magit-just-amend
+### magit-just-amend [command]
 
 Just git commit --amend.
 
+<sup>function signature</sup>
 ```lisp
 (magit-just-amend)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### make-kurecolor-24bit-hue-table
+### make-kurecolor-24bit-hue-table [command]
 
 Make a 24bit color table using Kurecolor.
 
+<sup>function signature</sup>
 ```lisp
 (make-kurecolor-24bit-hue-table (color))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### make-kurecolor-hue-table
+### make-kurecolor-hue-table [command]
 
 Make a hue table from hex color at top of kill ring, no error checking.
 
+<sup>function signature</sup>
 ```lisp
 (make-kurecolor-hue-table)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### make-yas-from-region
+### make-yas-from-region [command]
 
 Make a yasnippet from the current region `begin` `end`.
 
@@ -913,44 +909,48 @@ ${1:default value} and so on.  See the yasnippet docs for more info.
 You'll be prompted for a name, trigger key and when `prefix-arg` is
 specified, a snippet group.
 
+<sup>function signature</sup>
 ```lisp
 (make-yas-from-region (begin end))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### markdown-soma-window-arrangement-start
+### markdown-soma-window-arrangement-start [command]
 
 Arrange windows for `markdown-soma-start`.
 
 Internally uses the script `~/.doom.d/bin/emacs-markdown-preview-layout.osa`.
 
+<sup>function signature</sup>
 ```lisp
 (markdown-soma-window-arrangement-start)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### markdown-soma-window-arrangement-stop
+### markdown-soma-window-arrangement-stop [command]
 
 Arrange windows for `markdown-soma-stop`.
 
 Internally uses the script `~/.doom.d/bin/emacs-markdown-preview-close.osa`.
 
+<sup>function signature</sup>
 ```lisp
 (markdown-soma-window-arrangement-stop)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### mc/cua-rectangle-to-multiple-cursors
+### mc/cua-rectangle-to-multiple-cursors [command]
 
 Switch from cua rectangle to multiple cursors.
 
+<sup>function signature</sup>
 ```lisp
 (mc/cua-rectangle-to-multiple-cursors)
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### md-code-to-docstring-arg
@@ -961,337 +961,374 @@ For example:
 
 ```lisp
 (md-code-to-docstring-arg "`code`")
-;;  => `code`
+;;  => CODE
 ```
 
 
+<sup>function signature</sup>
 ```lisp
 (md-code-to-docstring-arg (string))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### my-isearch-buffers
+### my-isearch-buffers [command]
 
 Incremental search through open buffers.
 
+<sup>function signature</sup>
 ```lisp
 (my-isearch-buffers)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### my-multi-occur-in-matching-buffers
+### my-multi-occur-in-matching-buffers [command]
 
 Show all lines matching `regexp` in all buffers.
 Optionally check `allbufs`.
 
+<sup>function signature</sup>
 ```lisp
 (my-multi-occur-in-matching-buffers (regexp &optional allbufs))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### new-untitled-buffer
+### new-untitled-buffer [command]
 
 Open a new buffer called untitled-n.
 
+<sup>function signature</sup>
 ```lisp
 (new-untitled-buffer)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### nuke-all-buffers
+### nuke-all-buffers [command]
 
 Kill all buffers, leaving *scratch* only.
 
+<sup>function signature</sup>
 ```lisp
 (nuke-all-buffers)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### nuke-all-buffers-execept-current
+### nuke-all-buffers-execept-current [command]
 
 Kill all the open buffers except the current one.
 Leave *scratch* and *Messages* alone too.
 
+<sup>function signature</sup>
 ```lisp
 (nuke-all-buffers-execept-current)
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### ocodo-clean-key-bindings-for-documentation
 
-Prepare collated binding `list` for documentation.
+Prepare collated binding LIST for documentation.
 
+<sup>function signature</sup>
 ```lisp
 (ocodo-clean-key-bindings-for-documentation (binding-list))
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### ocodo-collate-key-bindings-for-documentation
 
 Collate all key bindings found in ocodo-key-bindings-lisp-files.
 
+<sup>function signature</sup>
 ```lisp
 (ocodo-collate-key-bindings-for-documentation)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### ocodo-custom-key-bindings-markdown
+### ocodo-custom-key-bindings-markdown [command]
 
 Generate markdown `file` with table of custom bindings
 
+<sup>function signature</sup>
 ```lisp
 (ocodo-custom-key-bindings-markdown (file))
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### ocodo-filter-key-bindings
 
 Filter `bindings` by `filter` on `index`.
 
+<sup>function signature</sup>
 ```lisp
 (ocodo-filter-key-bindings (filter index bindings))
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### ocodo-key-binding-groups-to-markdown
 
 Convert `binding-groups` to string of markdown tables.
 
+<sup>function signature</sup>
 ```lisp
 (ocodo-key-binding-groups-to-markdown (binding-groups headings))
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### ocodo-key-bindings-for-documentation
 
 Cleaned list of key bindings for documentation.
 
+<sup>function signature</sup>
 ```lisp
 (ocodo-key-bindings-for-documentation)
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### ocodo-key-bindings-use-unicode-symbols
 
-KEY-BINDING string directions to unicode arrows.
+`key-binding` string directions to unicode arrows.
 <up> <down> <left> <right> replaced with ↑ ↓ ← →.
 <return> replaced with ⮐.
 
 Setting `white-arrows` to t, gives these replacements: ⇧ ⇩ ⇦ ⇨ and ⏎.
 
+<sup>function signature</sup>
 ```lisp
 (ocodo-key-bindings-use-unicode-symbols (key-binding &optional white-arrows))
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### ocodo-make-key-binding-groups
 
 Collect `bindings` and `headings` into `groups`.
 
+<sup>function signature</sup>
 ```lisp
 (ocodo-make-key-binding-groups (bindings headings groups))
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### ocodo-make-key-binding-table-row
 
 Make a table row from `binding`.
 
+<sup>function signature</sup>
 ```lisp
 (ocodo-make-key-binding-table-row (binding))
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### ocodo-sh-indent-rules
 
 Set up shell script indenation rules engines.
 
+<sup>function signature</sup>
 ```lisp
 (ocodo-sh-indent-rules)
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### ocodo-ungrouped-key-bindings
 
-Collect `bindings` and `headings` into `groups`.
+Collect `bindings` and HEADINGS into `groups`.
 
+<sup>function signature</sup>
 ```lisp
 (ocodo-ungrouped-key-bindings (bindings title groups))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### open-line-above
+### open-line-above [command]
 
 Open a newline above the current point, without moving.
 
+<sup>function signature</sup>
 ```lisp
 (open-line-above)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### open-line-below
+### open-line-below [command]
 
 Open a newline below the current point, without moving.
 
+<sup>function signature</sup>
 ```lisp
 (open-line-below)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### open-this-in-intellij-idea-osx
+### open-this-in-intellij-idea-osx [command]
 
-Open the current file in intellij `idea` (OS X specific).
+Open the current file in intellij IDEA (OS X specific).
 
+<sup>function signature</sup>
 ```lisp
 (open-this-in-intellij-idea-osx)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### open-this-in-xcode
+### open-this-in-xcode [command]
 
-Open the current file in `xc`ode.
+Open the current file in XCode.
 
+<sup>function signature</sup>
 ```lisp
 (open-this-in-xcode)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### package-commentary-to-markdown
+### package-commentary-to-markdown [command]
 
-Write the current package commentary to `markdown-file`.
+Read the commentary from current emacslisp file and write it to `markdown-file`.
 
+Conversion is minimal and expects that most of the docstring is already formatted as
+markdown.  Quoted `items` will be converted to backquoted `items`.
+
+<sup>function signature</sup>
 ```lisp
-(package-commentary-to-markdown (markdown-file))
+(package-commentary-to-markdown (markdown-file &optional emacslisp-file))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### package-insert-ends-here
+### package-insert-ends-here [command]
 
-Insert the `elpa` package file ending string.
+Insert the ELPA package file ending string.
 
 (When it's missing)
 
+<sup>function signature</sup>
 ```lisp
 (package-insert-ends-here)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### package-markdown-to-commentary
+### package-markdown-to-commentary [command]
 
-Read `markdown-file` and insert it into the current emacslisp package
-Commentary: section.
+Read `markdown-file` and insert it into the `emacslisp-file` commentary.
 
+Conversion is minimal and assumes the the markdown is suitable for insertion as
+commentary.  Backquoted `code` will be converted to Emacs quoted `items`.
+
+<sup>function signature</sup>
 ```lisp
-(package-markdown-to-commentary (markdown-file))
+(package-markdown-to-commentary (markdown-file &optional emacslisp-file))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### pcre-regexp-from-list-of-words
+### pcre-regexp-from-list-of-words [command]
 
 Insert a pcre regexp to match a list of `words`.
 
+<sup>function signature</sup>
 ```lisp
 (pcre-regexp-from-list-of-words (words))
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### random-in-range
 
 Return a random number in range `start` to `end`.
 
+<sup>function signature</sup>
 ```lisp
 (random-in-range (start end))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### reload-current-chrome-tab-osx
+### reload-current-chrome-tab-osx [command]
 
 Run a simple applescript to reload the current Google Chrome tab.
 
 OSX specific.
 
+<sup>function signature</sup>
 ```lisp
 (reload-current-chrome-tab-osx)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### reload-current-firefox-tab-osx
+### reload-current-firefox-tab-osx [command]
 
 Run a simple applescript to reload the current Google Chrome tab.
 
 OSX specific.
 
+<sup>function signature</sup>
 ```lisp
 (reload-current-firefox-tab-osx)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### rename-this-buffer-and-file
+### rename-this-buffer-and-file [command]
 
 Renames current buffer and file it is visiting.
 
+<sup>function signature</sup>
 ```lisp
 (rename-this-buffer-and-file)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### replace-pretty-quotes
+### replace-pretty-quotes [command]
 
 Replace pretty quotes with standard quotes.
 
+<sup>function signature</sup>
 ```lisp
 (replace-pretty-quotes)
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### replace-regexp-and-return
 
 Replace regexp `from` to `to` and return cursor to point.
 
+<sup>function signature</sup>
 ```lisp
 (replace-regexp-and-return (from to))
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### replace-region-with
 
-No docstring available: `todo`
+No docstring available: TODO
 
+<sup>function signature</sup>
 ```lisp
 (replace-region-with (fn))
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### replace-thing-at-point-with
@@ -1299,20 +1336,22 @@ No docstring available: `todo`
 Get the current thing at point.
 Replace with the return value of the function `fn`
 
+<sup>function signature</sup>
 ```lisp
 (replace-thing-at-point-with (fn))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### revert-buffer-instant
+### revert-buffer-instant [command]
 
 Revert buffer without prompting.
 
+<sup>function signature</sup>
 ```lisp
 (revert-buffer-instant)
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### s-squeeze
@@ -1320,133 +1359,146 @@ Revert buffer without prompting.
 Squeeze the occurences of `char` in `string`.
 This works the same as `tr -s `char``.
 
+<sup>function signature</sup>
 ```lisp
 (s-squeeze (char string))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### sass-hex-color-to-var
+### sass-hex-color-to-var [command]
 
 Find a hex color, and replace it with a newly created variable name.
 Place the created variable at the top of the file.  Name it based
-on the property being set, and its `css` selector, and set its
+on the property being set, and its CSS selector, and set its
 css-value to the hex color found.
 
+<sup>function signature</sup>
 ```lisp
 (sass-hex-color-to-var)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### screencapture-mac
+### screencapture-mac [command]
 
-Screencapture on macOS, interactive or supply `commandline` and `file_keyword`.
+Screencapture on macOS, interactive or supply `commandline` and FILE_KEYWORD.
 
+<sup>function signature</sup>
 ```lisp
 (screencapture-mac (&optional commandline file-keyword))
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### screencapture-mac--complete-arguments-for-option
 
 Do completeing read for arguments of option.
 
+<sup>function signature</sup>
 ```lisp
 (screencapture-mac--complete-arguments-for-option (plist))
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### screencapture-mac--entry-from-summaries
 
-No docstring available: `todo`
+No docstring available: TODO
 
+<sup>function signature</sup>
 ```lisp
 (screencapture-mac--entry-from-summaries (summaries))
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### screencapture-mac--filename-generator
 
-Generate a filename for the screenshot at `path` with optional `ext` and `file_keyword`.
+Generate a filename for the screenshot at `path` with optional `ext` and FILE_KEYWORD.
 
+<sup>function signature</sup>
 ```lisp
 (screencapture-mac--filename-generator (path &optional ext file-keyword))
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### screencapture-mac--get-option
 
 Fetch the option from `summary`
 
+<sup>function signature</sup>
 ```lisp
 (screencapture-mac--get-option (summary))
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### screencapture-mac--options
 
 Command line options for screencapture (macOS).
 
+<sup>function signature</sup>
 ```lisp
 (screencapture-mac--options)
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### screencapture-mac--options-summary
 
-No docstring available: `todo`
+No docstring available: TODO
 
+<sup>function signature</sup>
 ```lisp
 (screencapture-mac--options-summary (plist))
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### screencapture-mac--run
 
 Execute the shell `command` with `filename`.
 
+<sup>function signature</sup>
 ```lisp
 (screencapture-mac--run (command filename))
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### screencapture-mac--summary-list
 
 Summarized list of screencapture mac options
 
+<sup>function signature</sup>
 ```lisp
 (screencapture-mac--summary-list)
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### screencapture-mac--windowid-helper
 
 Get the windowid from a completing-read list.
 
+<sup>function signature</sup>
 ```lisp
 (screencapture-mac--windowid-helper)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### screencapture-mac-reset-default-commandline
+### screencapture-mac-reset-default-commandline [command]
 
 Reset the default commandline
 
+<sup>function signature</sup>
 ```lisp
 (screencapture-mac-reset-default-commandline)
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### search-backward-wrapped-string
@@ -1465,181 +1517,199 @@ The string found between the two wrappers is returned.
 This is useful for naive finding of symbols previously defined in
 the buffer.
 
+<sup>function signature</sup>
 ```lisp
 (search-backward-wrapped-string (wrap_start wrap_end))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### search-for-nearest-hex-color
+### search-for-nearest-hex-color [command]
 
 Search to the nearest hex color.
-Use negative prefix P to go backward.
+Use negative prefix `p` to go backward.
 
+<sup>function signature</sup>
 ```lisp
 (search-for-nearest-hex-color (p))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### set-default-font-height
+### set-default-font-height [command]
 
-Set the default font :height P (prefix arg) or enter in minibuffer.
+Set the default font :height `p` (prefix arg) or enter in minibuffer.
 
+<sup>function signature</sup>
 ```lisp
 (set-default-font-height (p))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### set-internal-border
+### set-internal-border [command]
 
-Set or reset the internal border width N of the selected frame.
+Set or reset the internal border width `n` of the selected frame.
 
+<sup>function signature</sup>
 ```lisp
 (set-internal-border (n))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### shell-command-on-buffer-file
+### shell-command-on-buffer-file [command]
 
 Run a shell command, using the file of current buffer as input.
 Return an error if no buffer file.
 
+<sup>function signature</sup>
 ```lisp
 (shell-command-on-buffer-file)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### shell-command-on-region-replace
+### shell-command-on-region-replace [command]
 
-Run `shell-command-on-region` replacing the selected region. `start` `end` `command`.
+Run `shell-command-on-region` replacing the selected region.  `start` `end` `command`.
 
+<sup>function signature</sup>
 ```lisp
 (shell-command-on-region-replace (start end command))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### smart-beginning-of-line
+### smart-beginning-of-line [command]
 
 Move point to first non-whitespace character or `beginning-of-line`.
 
+<sup>function signature</sup>
 ```lisp
 (smart-beginning-of-line)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### snippy-comment
+### snippy-comment [command]
 
 Insert a snip line `- - 8< - - -` comment.
 
+<sup>function signature</sup>
 ```lisp
 (snippy-comment)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### sort-sexps
+### sort-sexps [command]
 
 Sort sexps in region.
 Comments stay with the code below.
 
+<sup>function signature</sup>
 ```lisp
 (sort-sexps (beg end))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### ssh-agent-env-fix
+### ssh-agent-env-fix [command]
 
 Ensure $SSH_AUTH_SOCK is set correctly in the environment.
 
+<sup>function signature</sup>
 ```lisp
 (ssh-agent-env-fix)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### switch-to-message-buffer
+### switch-to-message-buffer [command]
 
 Switch to the message buffer.
 
+<sup>function signature</sup>
 ```lisp
 (switch-to-message-buffer)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### switch-to-minibuffer-window
+### switch-to-minibuffer-window [command]
 
 Switch to minibuffer window (if active).
 
+<sup>function signature</sup>
 ```lisp
 (switch-to-minibuffer-window)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### switch-to-scratch
+### switch-to-scratch [command]
 
 Switch to scratch, grab the region if it's active.
 
+<sup>function signature</sup>
 ```lisp
 (switch-to-scratch)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### time-now
+### time-now [command]
 
 current time.
 
+<sup>function signature</sup>
 ```lisp
 (time-now)
 ```
-<sup>function signature</sup>
+
 - - -
 
 ### time-to-seconds
 
 Convert `time` `hh:mm:ss` into seconds.
 
+<sup>function signature</sup>
 ```lisp
 (time-to-seconds (time))
 ```
-<sup>function signature</sup>
+
 - - -
 
-### toggle-window-split
+### toggle-window-split [command]
 
 Toggle the current window split.
 
+<sup>function signature</sup>
 ```lisp
 (toggle-window-split)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### untabify-buffer
+### untabify-buffer [command]
 
 Untabify the current buffer.
 
+<sup>function signature</sup>
 ```lisp
 (untabify-buffer)
 ```
-<sup>function signature</sup>
+
 - - -
 
-### utc-seconds
+### utc-seconds [command]
 
-Insert `utc` seconds.
+Insert UTC seconds.
 
+<sup>function signature</sup>
 ```lisp
 (utc-seconds)
 ```
-<sup>function signature</sup>
+
 - - -
