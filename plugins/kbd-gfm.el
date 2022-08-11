@@ -61,7 +61,7 @@ Uses `kbd-gfm-modifier-list' to define long form."
 
 ;;;###autoload
 (defun kbd-gfm-string-to-gfm (string &optional long-modifiers)
-  "Convert a kbd binding STRING to github flavored markdown <kbd></kbd> style.
+  "Convert a kbd binding STRING to github flavored markdown `<kbd></kbd>' style.
 if LONG-MODIFIERS is non-nil expand modifier using `kbd-gfm-expanded-emacs-modifier'"
   (let* ((groups (s-split " " string))
          (keys (--map (s-split "-" it) groups)))
@@ -83,10 +83,10 @@ When OVERRIDE-PREFIX is non-nil, return it instead of the true prefix."
   `(,@(if (region-active-p)
           (list (region-beginning) (region-end))
         (let ((bounds (bounds-of-thing-at-point 'sexp)))
-                (if bounds
-                    (list (car bounds) (cdr bounds))
-                  '(nil nil))))
-        ,(or override-prefix current-prefix-arg)))
+             (if bounds
+                 (list (car bounds) (cdr bounds))
+               '(nil nil))))
+      ,(or override-prefix current-prefix-arg)))
 
 (defun kbd-gfm-replace-with-gfm-kdb (begin end long)
   "Replace the region or sexp (BEGIN END) with the gfm kbd version.

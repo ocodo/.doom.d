@@ -71,8 +71,12 @@ This would become:
 (defun segments-ok-p (left-string right-string)
   "Check the LEFT-STRING and RIGHT-STRING."
   (declare (side-effect-free t))
-  (let ((a  (substring (reverse left-string) 0 1))
-        (b  (substring right-string 0 1)))
+  (let ((a  (if (length> left-string 1)
+                (substring (reverse left-string) 0 1)
+                left-string))
+        (b  (if (length> right-string 1)
+                (substring right-string 0 1)
+                right-string)))
     (not (s-matches?
           segment-not-ok-regexp
           (concat a b)))))
@@ -103,7 +107,6 @@ This would become:
 ```"
   (declare (side-effect-free t)))
  
-
 (defun docstring-back-quoted-to-markdown-code (docstring)
   "transform back-quoted docstring elements to inline markdown `code` style."
   (declare (side-effect-free t))

@@ -5,7 +5,7 @@
 
 ### buffer-defuns-to-markdown
 
-Create markdown for the defuns in `buffer` and save to `file`.
+Parse all defuns in `buffer` and save to markdown `file`.
 
 <sup>function signature</sup>
 ```lisp
@@ -14,7 +14,7 @@ Create markdown for the defuns in `buffer` and save to `file`.
 
 - - -
 
-### current-buffer-defuns-to-markdown
+### current-buffer-defuns-to-markdown [command]
 
 Create a markdown `file` of all defuns in the current buffer.
 
@@ -43,6 +43,57 @@ transform back-quoted docstring elements to inline markdown `code` style.
 <sup>function signature</sup>
 ```lisp
 (docstring-back-quoted-to-markdown-code (docstring))
+```
+
+- - -
+
+### docstring-to-text-and-code
+
+Split `docstring` into text and code sections.
+
+```
+(setq docstring (format-multiline "|Split `docstring` into text and code blocks
+                                   |
+                                   |Example:
+                                   |
+                                   |```
+                                   |(docstring-to-text-and-code docstring)
+                                   |```
+                                   |
+                                   |Also indented code blocks...
+                                   |
+                                   |    (docstring-to-text-and-code docstring)
+                                   |")
+
+# docstring split into text and code
+'((:text "Split `docstring` into text and code blocks
+
+Example:
+
+")
+  (:code "(docstring-to-text-and-code docstring)"))
+  (:text "
+
+Also indented code blocks...
+
+"))
+  (:code "(docstring-to-text-and-code docstring)"))
+```
+
+<sup>function signature</sup>
+```lisp
+(docstring-to-text-and-code (docstring))
+```
+
+- - -
+
+### elisp-file-defuns-to-markdown [command]
+
+Parse all defuns in `elisp-file` and save to `markdown-file`.
+
+<sup>function signature</sup>
+```lisp
+(elisp-file-defuns-to-markdown (elisp-file markdown-file))
 ```
 
 - - -
@@ -96,7 +147,7 @@ Returns a list with elements of the form (symbol args docstring).
 
 ### order-substring-matches
 
-Order a set of `raw`-`substring`-`matches`.
+Order a set of `raw-substring-matches`.
 
 Ordered substrings can then be used to perform replacements
 on the original source string.
@@ -126,7 +177,7 @@ This would become:
 
 ### segments-ok-p
 
-Check the `left`-`string` and `right`-`string`.
+Check the `left-string` and `right-string`.
 
 <sup>function signature</sup>
 ```lisp
