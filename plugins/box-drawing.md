@@ -17,8 +17,6 @@ Hydra powers the UI.
 ╰──────────────────────────────────────────────────[ insert  ]╯
 [i]  insert  .
 ```
-Using DVORAK layout...
-
 
 ## Setup
 
@@ -27,3 +25,17 @@ Place this file in the Emacs lisp load-path
 ```
 M-x load-library RET box-drawing
 ```
+ - - -
+## Functions
+
+### box-drawing--insert [command]
+
+Insert `char`.
+If `box-drawing--overwrite` is non-nil, insert with overwrite.
+
+<sup>function signature</sup>
+```lisp
+(box-drawing--insert (char))
+```
+
+- - -
