@@ -71,10 +71,11 @@ This would become:
 
 (defun docstring-back-quoted-to-markdown-code (docstring)
   "transform back-quoted docstring elements to inline markdown `code` style."
-  (replace-regexp-in-string
-   (rx "`" (group (*? not-newline)) "'")
-   "`\\1`"
-   docstring))
+  (if (or (null docstring)(string-empty-p docstring)) ""
+    (replace-regexp-in-string
+      (rx "`" (group (*? not-newline)) "'")
+      "`\\1`"
+      docstring)))
 
 (defun generate-markdown-defun-entry (fn)
   "Generate a markdown entry for FN."
@@ -152,7 +153,7 @@ BUFFER file name and commentary are used as the page heading."
     (find-file file)))
 
 (defun buffer-defuns-to-markdown (buffer file)
-  "Create markdown for the defuns in BUFFER and save to FILE."
+  "Parse all defuns in BUFFER and save to markdown FILE."
   (interactive "bSelect Buffer: \nFWrite List of defuns to Markdown File: ")
   (f-write (generate-markdown-page-of-buffer-defuns (get-buffer buffer)) 'utf-8 file)
   (when (y-or-n-p (format "Open %s?" file))
