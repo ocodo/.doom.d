@@ -21,54 +21,61 @@ This would become:
       (\"s2\" (15 . 17)))
       (\"s1\" (10 . 13)))
 "
-  (--sort
-     (> (car (car (cdr it)))
-        (car (car (cdr other))))
-   (cl-reduce (lambda (acc entry)
-                (let* ((indexes (car (cdr entry)))
-                       (str (car entry))
-                       (mapped (--map
-                                `(,str ,it)
-                                indexes)))
-                 (seq-concatenate 'list acc mapped)))
-              raw-substring-matches
-              :initial-value '())))
+  (declare (side-effect-free t))
+  (sort (cl-reduce (lambda (acc entry)
+                     (let* ((indexes (cadr entry))
+                            (str (car entry))
+                            (mapped (mapcar (lambda (it) (list str it)) indexes)))
+                      (seq-concatenate 'list acc mapped)))
+                   raw-substring-matches
+                   :initial-value '())
+        (lambda (it other)
+          (> (caadr it)
+             (caadr other)))))
 
 (defun docstring-args-to-markdown-code (args docstring)
   "Using ARGS transform DOCSTRING arguments to inline markdown `code` style."
+  (declare (side-effect-free t))
   (let ((case-fold-search nil))
-   (let* ((replacements '(("(" . "")
-                          (")" . "")
-                          ("&rest" . "")
-                          ("&optional" . "")))
-          (arg-list     (s-split-words (upcase (s-trim (s-replace-all replacements args)))))
-          (doc-matches  (--map
-                         `(,it ,(reverse
-                                 (s-matched-positions-all
-                                  it
-                                  docstring)))
-                         arg-list))
-          (edit-list    (order-substring-matches doc-matches)))
-     (cl-reduce (lambda (doc match)
-                  (let* ((name (car match))
-                         (a (caadr match))
-                         (b (cdadr match))
-                         (left (substring doc 0 a))
-                         (right (substring doc b)))
-                     (if (segments-ok-p left right)
-                       (format "%s`%s`%s" left (downcase name) right)
-                      doc)))
-                edit-list
-                :initial-value docstring))))
+    (let* ((replacements '(("(" . "")
+                           (")" . "")
+                           ("&rest" . "")
+                           ("&optional" . "")))
+           (arg-list     (split-string (upcase
+                                        (string-trim
+                                         (s-replace-all replacements args)))
+                                       " "
+                                       t)) ;; omit-nulls
+           (doc-matches  (mapcar
+                          (lambda (it)
+                            `(,it ,(s-matched-positions-all
+                                    it
+                                    docstring)))
+                          arg-list))
+           (edit-list    (order-substring-matches doc-matches)))
+      (cl-reduce (lambda (doc match)
+                   (let* ((name (car match))
+                          (a (caadr match))
+                          (b (cdadr match))
+                          (left (substring doc 0 a))
+                          (right (substring doc b)))
+                      (if (segments-ok-p left right)
+                        (format "%s`%s`%s" left (downcase name) right)
+                       doc)))
+                 edit-list
+                 :initial-value docstring))))
+
+(defvar segment-not-ok-regexp "[A-Za-z]"
+  "Regexp to check on unwanted chars at the left and right around a matched argument candidate")
 
 (defun segments-ok-p (left-string right-string)
   "Check the LEFT-STRING and RIGHT-STRING."
+  (declare (side-effect-free t))
   (let ((a  (substring (reverse left-string) 0 1))
         (b  (substring right-string 0 1)))
     (not (s-matches?
-          "[A-Za-z]"
+          segment-not-ok-regexp
           (concat a b)))))
-
 
 ;; TODO: Write a test for this function stub
 (defun docstring-to-text-and-code (docstring)
@@ -93,10 +100,13 @@ This would become:
   (:code \"(docstring-to-text-and-code docstring)\"))
   (:text \"\n\nAlso indented code blocks...\n\n\"))
   (:code \"(docstring-to-text-and-code docstring)\"))
-```")
+```"
+  (declare (side-effect-free t)))
+ 
 
 (defun docstring-back-quoted-to-markdown-code (docstring)
   "transform back-quoted docstring elements to inline markdown `code` style."
+  (declare (side-effect-free t))
   (if (null docstring)
       ""
     (replace-regexp-in-string
@@ -106,6 +116,7 @@ This would become:
 
 (defun generate-markdown-defun-entry (fn)
   "Generate a markdown entry for FN."
+  (declare (side-effect-free t))
   (cl-destructuring-bind (name args docstring is-interactive) fn
    (let ((name (format "%s" name))
          (args (if args (format " %s" args) "")))
@@ -165,7 +176,6 @@ Returns a list with elements of the form (symbol args docstring)."
   "Generate markdown page for all defun in BUFFER.
 
 BUFFER file name and commentary are used as the page heading."
-
   (concat
    (format-multiline "|# %s
                       |%s
@@ -180,13 +190,16 @@ BUFFER file name and commentary are used as the page heading."
 (defun current-buffer-defuns-to-markdown (file)
   "Create a markdown FILE of all defuns in the current buffer."
   (interactive "FWrite List of defuns to Markdown File: ")
-  (f-write (generate-markdown-page-of-buffer-defuns (current-buffer)) 'utf-8 file)
-  (when (y-or-n-p (format "Open %s?" file))
-    (find-file file)))
+  (buffer-defuns-to-markdown (current-buffer) file))
 
 (defun buffer-defuns-to-markdown (buffer file)
   "Parse all defuns in BUFFER and save to markdown FILE."
-  (interactive "bSelect Buffer: \nFWrite List of defuns to Markdown File: ")
-  (f-write (generate-markdown-page-of-buffer-defuns (get-buffer buffer)) 'utf-8 file)
+  (f-write  (generate-markdown-page-of-buffer-defuns buffer) 'utf-8 file)
   (when (y-or-n-p (format "Open %s?" file))
     (find-file file)))
+
+(defun elisp-file-defuns-to-markdown (elisp-file markdown-file)
+  "Parse all defuns in ELISP-FILE and save to MARKDOWN-FILE."
+  (interactive "fSelect Elisp: \nFWrite to Markdown File: ")
+  (find-file elisp-file)
+  (buffer-defuns-to-markdown (current-buffer) markdown-file))

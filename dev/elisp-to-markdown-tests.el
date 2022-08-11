@@ -1,9 +1,6 @@
 ;;; dev/elisp-to-markdown-tests.el -*- lexical-binding: t; -*-
 
-(load-file
- (format "%s%s"
-  doom-private-dir
-  "dev/elisp-to-markdown.el"))
+(load-file "~/.doom.d/dev/elisp-to-markdown.el")
 
 (ert-deftest docstring-back-quoted-to-markdown-code ()
   "Convert doctring back quoted text to markdown `code`."
@@ -37,6 +34,9 @@ returns a 6 digit hex color."))
 returns a 6 digit hex color.")
              "Change a `hex` color's brightness `val`, amount values from 0.0-1.0.
 returns a 6 digit hex color."))
+    (should (string= "Can handle args with dashes `like-this`."
+                     (docstring-args-to-markdown-code " (like-this)"
+                      "Can handle args with dashes LIKE-THIS.")))
     (should (string= "This is an $ENV. This is an `arg`."
                      (docstring-args-to-markdown-code " (arg)"
                       "This is an $ENV. This is an ARG.")))
