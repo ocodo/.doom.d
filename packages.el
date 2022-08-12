@@ -42,7 +42,7 @@
 ;; Themes
 
 (package! darktooth-theme)
-(package! creamsody-theme)
+(package! creamsody-theme :recipe (:branch "variations"))
 (package! gruvbox-theme)
 
 (package! emacs-theme-orangey-bits
