@@ -31,14 +31,14 @@
 
 ;; load private plugins
 (dolist
-    (plugin (directory-files "~/.doom.d/plugins/" t ".*el"))
+    (plugin (directory-files "~/.doom.d/plugins/" t ".*el$"))
     "Loading local plugins..."
   (load-file plugin))
 
 ;; load use-package configs
 (dolist
     (config
-     (directory-files "~/.doom.d/use/" t ".*el"))
+     (directory-files "~/.doom.d/use/" t ".*el$"))
     "Loading local use configs..."
   (load-file config))
 

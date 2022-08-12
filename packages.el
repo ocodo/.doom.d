@@ -54,6 +54,9 @@
 (package! emacs-theme-vegetative
   :recipe (:host github :repo "emacsfodder/emacs-theme-vegetative"))
 
+(package! penumbra-theme
+  :recipe (:host github :repo "vollcheck/penumbra-theme"))
+
 (package! auto-yasnippet
   :recipe (:host github :repo "emacsfodder/auto-yasnippet"))
 (package! kurecolor
