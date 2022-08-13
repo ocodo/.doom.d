@@ -1,85 +1,25 @@
 ;;; plugins/elisp-to-markdown.el -*- lexical-binding: t; -*-
 
-(defun order-substring-matches (raw-substring-matches)
-  "Order a set of RAW-SUBSTRING-MATCHES.
-
-Ordered substrings can then be used to perform replacements
-on the original source string.
-
-The list is sorted last to first, so that string replacements
-don't invalidate replacements using subsequent substring indexes.
-
-Raw substring matches are in the form:
-
-    '((\"s1\" ((10 . 12) (30 . 32) ...))...)
-      (\"s2\" ((15 . 17) (20 . 22) ...))...)
-
-This would become:
-
-    '((\"s1\" (30 . 33)))
-      (\"s2\" (20 . 22)))
-      (\"s2\" (15 . 17)))
-      (\"s1\" (10 . 13)))
-"
-  (declare (side-effect-free t))
-  (sort (cl-reduce (lambda (acc entry)
-                     (let* ((indexes (cadr entry))
-                            (str (car entry))
-                            (mapped (mapcar (lambda (it) (list str it)) indexes)))
-                      (seq-concatenate 'list acc mapped)))
-                   raw-substring-matches
-                   :initial-value '())
-        (lambda (it other)
-          (> (caadr it)
-             (caadr other)))))
-
 (defun docstring-args-to-markdown-code (args docstring)
   "Using ARGS transform DOCSTRING arguments to inline markdown `code` style."
   (declare (side-effect-free t))
   (let ((case-fold-search nil))
-    (let* ((replacements '(("(" . "")
-                           (")" . "")
-                           ("&rest" . "")
-                           ("&optional" . "")))
-           (arg-list     (split-string (upcase
-                                        (string-trim
-                                         (s-replace-all replacements args)))
-                                       " "
-                                       t)) ;; omit-nulls
-           (doc-matches  (mapcar
-                          (lambda (it)
-                            `(,it ,(s-matched-positions-all
-                                    it
-                                    docstring)))
-                          arg-list))
-           (edit-list    (order-substring-matches doc-matches)))
-      (cl-reduce (lambda (doc match)
-                   (let* ((name (car match))
-                          (a (caadr match))
-                          (b (cdadr match))
-                          (left (substring doc 0 a))
-                          (right (substring doc b)))
-                      (if (segments-ok-p left right)
-                        (format "%s`%s`%s" left (downcase name) right)
-                       doc)))
-                 edit-list
-                 :initial-value docstring))))
-
-(defvar segment-not-ok-regexp "[A-Za-z]"
-  "Regexp to check on unwanted chars at the left and right around a matched argument candidate")
-
-(defun segments-ok-p (left-string right-string)
-  "Check the LEFT-STRING and RIGHT-STRING."
-  (declare (side-effect-free t))
-  (let ((a  (if (length> left-string 1)
-                (substring (reverse left-string) 0 1)
-                left-string))
-        (b  (if (length> right-string 1)
-                (substring right-string 0 1)
-                right-string)))
-    (not (s-matches?
-          segment-not-ok-regexp
-          (concat a b)))))
+    (let* ((arg-replacements '(("(" . "") (")" . "")
+                               ("&rest" . "")
+                               ("&optional" . "")))
+           (docstring-replacements (--map (cons (word-search-regexp it)
+                                                (format "`%s`" (downcase it)))
+                                          (split-string
+                                           (upcase
+                                            (string-trim
+                                             (s-replace-all arg-replacements args)))
+                                           " " t))))
+      (--reduce-from
+       (s-replace-regexp
+        (car it) (cdr it)
+        acc t)
+       docstring
+       docstring-replacements))))
 
 ;; TODO: Write a test for this function stub
 (defun docstring-to-text-and-code (docstring)
