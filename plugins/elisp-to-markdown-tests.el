@@ -1,6 +1,6 @@
 ;;; dev/elisp-to-markdown-tests.el -*- lexical-binding: t; -*-
 
-(load-file "~/.doom.d/dev/elisp-to-markdown.el")
+(require 'elisp-to-markdown)
 
 (ert-deftest docstring-back-quoted-to-markdown-code ()
   "Convert doctring back quoted text to markdown `code`."

@@ -101,3 +101,5 @@
 
 (bind-key "s-y"            #'yank-from-kill-ring)
 (bind-key "s-T"            #'treemacs)
+
+(provide 'key-bindings)

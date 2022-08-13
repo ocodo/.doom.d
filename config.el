@@ -4,8 +4,10 @@
 ;; sync' after modifying this file!
 
 ;; Load non-doom stuff
-(load-file "~/.doom.d/ocodo-handy-functions.el")
-(load-file "~/.doom.d/key-bindings.el")
+(add-to-list 'load-path "~/.doom.d/")
+(add-to-list 'load-path "~/.doom.d/plugins/")
+(require 'ocodo-handy-functions)
+(require 'key-bindings)
 
 (setq initial-major-mode 'lisp-interaction-mode)
 

@@ -41,7 +41,7 @@
 
 ;; Themes
 
-(package! darktooth-theme)
+(package! darktooth-theme :recipe (:branch "variations"))
 (package! creamsody-theme :recipe (:branch "variations"))
 (package! gruvbox-theme)
 
