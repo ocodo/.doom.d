@@ -46,27 +46,3 @@ returns a 6 digit hex color."))
     (should (string= "Convert `h` `s` `v` to a 6 digit hex color."
                      (docstring-args-to-markdown-code " (h &optional s &rest v)"
                       "Convert H S V to a 6 digit hex color."))))
-
-(ert-deftest test-order-substring-matches ()
-  "Test order-substring-matches."
-  (should (equal (order-substring-matches
-                  '(("h" ((35 . 36) (27 . 28) (8 . 9)))
-                    ("s" ((10 . 11)))
-                    ("v" ((12 . 13)))))
-           '(("h" (35 . 36))
-             ("h" (27 . 28))
-             ("v" (12 . 13))
-             ("s" (10 . 11))
-             ("h" (8 . 9)))))
-
- (ert-deftest test-segments-ok-p ()
-   "Test segments ok predicate."
-   (let ((left-string "")
-         (right-string ""))
-     (should (equal (segments-ok-p left-string right-string) t)))
-   (let ((left-string "A")
-         (right-string "B"))
-     (should (equal (segments-ok-p left-string right-string) nil)))
-   (let ((left-string "A")
-         (right-string " "))
-     (should (equal (segments-ok-p left-string right-string) nil)))))
