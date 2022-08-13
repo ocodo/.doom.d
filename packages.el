@@ -57,8 +57,11 @@
 (package! penumbra-theme
   :recipe (:host github :repo "vollcheck/penumbra-theme"))
 
+(unpin! auto-yasnippet)
 (package! auto-yasnippet
   :recipe (:host github :repo "emacsfodder/auto-yasnippet"))
+
+(unpin! kurecolor)
 (package! kurecolor
   :recipe (:host github :repo "emacsfodder/kurecolor"))
 
