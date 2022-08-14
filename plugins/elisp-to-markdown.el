@@ -5,47 +5,19 @@
   "Using ARGS transform DOCSTRING arguments to inline markdown `code` style."
   (declare (side-effect-free t))
   (let ((case-fold-search nil))
-    (let* ((arg-replacements '(("(" . "") (")" . "")
-                               ("&rest" . "")
-                               ("&optional" . "")))
-           (docstring-replacements (--map (list (word-search-regexp it)
-                                                (format "`%s`" (downcase it)))
-                                          (split-string
-                                           (upcase
-                                            (string-trim
-                                             (s-replace-all arg-replacements args)))
-                                           " " t))))
-      (--reduce-from
-       (s-replace-regexp ,@it acc t)
-       docstring
-       docstring-replacements))))
+    (let* ((arg-cleaner  (rx  (or "(" ")" "&rest" "&optional")))
+           (docstring-replacements (--map
+                                    (cons (word-search-regexp it)
+                                          (format "`%s`" (downcase it)))
+                                    (split-string
+                                     (upcase (replace-regexp-in-string
+                                              arg-cleaner "" args))
+                                     " " t " "))))
 
-;; TODO: Write a test for this function stub
-(defun docstring-to-text-and-code (docstring)
-  "Split DOCSTRING into text and code sections.
+      (--reduce-from (replace-regexp-in-string (car it) (cdr it) acc t)
 
-```
-(setq docstring (format-multiline \"|Split DOCSTRING into text and code blocks
-                                   |
-                                   |Example:
-                                   |
-                                   |```
-                                   |(docstring-to-text-and-code docstring)
-                                   |```
-                                   |
-                                   |Also indented code blocks...
-                                   |
-                                   |    (docstring-to-text-and-code docstring)
-                                   |\")
+       docstring docstring-replacements))))
 
-# docstring split into text and code
-'((:text \"Split DOCSTRING into text and code blocks\n\nExample:\n\n\")
-  (:code \"(docstring-to-text-and-code docstring)\"))
-  (:text \"\n\nAlso indented code blocks...\n\n\"))
-  (:code \"(docstring-to-text-and-code docstring)\"))
-```"
-  (declare (side-effect-free t)))
- 
 (defun docstring-back-quoted-to-markdown-code (docstring)
   "transform back-quoted docstring elements to inline markdown `code` style."
   (declare (side-effect-free t))

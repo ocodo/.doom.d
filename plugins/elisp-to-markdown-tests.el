@@ -43,6 +43,6 @@ returns a 6 digit hex color."))
     (should (string= "Convert `h` `s` `v` to a 6 digit hex color."
                      (docstring-args-to-markdown-code " (h s v)"
                       "Convert H S V to a 6 digit hex color.")))
-    (should (string= "Convert `h` `s` `v` to a 6 digit hex color."
+    (should (string= "Convert `h` `s` `v` to a 6 digit Hex color."
                      (docstring-args-to-markdown-code " (h &optional s &rest v)"
-                      "Convert H S V to a 6 digit hex color."))))
+                      "Convert H S V to a 6 digit Hex color."))))
