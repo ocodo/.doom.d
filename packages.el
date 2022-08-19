@@ -31,6 +31,8 @@
 (package! try)
 (package! xr)
 (package! speed-type)
+(package! vertico-posframe)
+(package! buttercup)
 
 (package! hydra-posframe
   :recipe (:host github :repo "ladicle/hydra-posframe"))
@@ -41,18 +43,16 @@
 
 ;; Themes
 
-(package! darktooth-theme :recipe (:branch "variations"))
-(package! creamsody-theme :recipe (:branch "variations"))
+(package! darktooth-theme)
+(package! creamsody-theme)
+(package! soothe-theme)
+(package! clues-theme)
+(package! bubbleberry-theme)
 (package! gruvbox-theme)
-
-(package! emacs-theme-orangey-bits
-  :recipe (:host github :repo "emacsfodder/emacs-theme-orangey-bits"))
-(package! emacs-theme-cyanometric
-  :recipe (:host github :repo "emacsfodder/emacs-theme-cyanometric"))
-(package! emacs-theme-sakura
-  :recipe (:host github :repo "emacsfodder/emacs-theme-sakura"))
-(package! emacs-theme-vegetative
-  :recipe (:host github :repo "emacsfodder/emacs-theme-vegetative"))
+(package! orangey-bits-theme)
+(package! cyanometric-theme)
+(package! sakura-theme)
+(package! vegetative-theme)
 
 (package! penumbra-theme
   :recipe (:host github :repo "vollcheck/penumbra-theme"))
