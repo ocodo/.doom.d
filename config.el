@@ -29,8 +29,6 @@
 (setq doom-unreal-buffer-functions
       '(minibufferp))
 
-(ssh-agent-env-fix)
-
 ;; load private plugins
 (dolist
     (plugin (directory-files "~/.doom.d/plugins/" t ".*el$"))
