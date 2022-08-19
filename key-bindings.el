@@ -2,12 +2,16 @@
 ;;  Customized key bindings for the global-key-map
 ;;; Code:
 
-;; Unbind C-RET on global key map
 (map!
+;; Unbind C-RET on global key map
    "C-RET"      nil
    [C-return]   nil
    "C-S-RET"    nil
-   [C-S-return] nil)
+   [C-S-return] nil
+;; unbind load theme
+   "C-H t" nil)
+
+(bind-key "C-H t" #'load-theme)
 
 (bind-key "s-q"            #'kill-emacs)
 
