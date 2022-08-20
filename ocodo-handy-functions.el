@@ -365,6 +365,36 @@ When there is only one frame, kill the buffer."
      ((fboundp thing) (describe-function thing))
      ((boundp thing) (describe-variable thing)))))
 
+(defun describe-char-here-untouched ()
+  "Describe the char at point, but first move the point away.
+
+Move back to point after describing the char."
+  (interactive)
+  (let ((p (point)))
+    (if (= (point-min) p)
+        (goto-char (point-max))
+      (goto-char (point-min)))
+    (describe-char p)
+    (goto-char p)))
+
+(defun describe-char-next (prefix)
+  "Describe the char next to point (+1).
+
+Universal PREFiX can be used to describe char
+at N positons from `point'."
+  (interactive "p")
+  (let ((p (point)))
+    (describe-char (+ p prefix))))
+
+(defun describe-char-previous (prefix)
+  "Describe the char previous from point (-1).
+
+Universal PREFIX can be used to describe char
+at N positons from `point'."
+  (interactive "p")
+  (let ((p (point)))
+    (describe-char (- p prefix))))
+
 (defun dired-find-file-other-window-and-back ()
   "In Dired, visit this file or directory in another window and remain in first window."
   (interactive)
