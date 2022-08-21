@@ -24,7 +24,7 @@
   (setq fancy-splash-image "~/.doom.d/doom-creamsody.png")
   (add-hook! 'after-setting-font-hook (+doom-dashboard-reload 'force)))
 
-(setq doom-theme 'cyanometric)
+(setq doom-theme 'soothe)
 
 (setq doom-unreal-buffer-functions
       '(minibufferp))
