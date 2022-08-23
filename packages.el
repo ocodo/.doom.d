@@ -54,12 +54,8 @@
 (package! sakura-theme)
 (package! vegetative-theme)
 
-(package! penumbra-theme
-  :recipe (:host github :repo "vollcheck/penumbra-theme"))
-
-(unpin! auto-yasnippet)
-(package! auto-yasnippet
-  :recipe (:host github :repo "emacsfodder/auto-yasnippet"))
+(package! ayah
+  :recipe (:host github :repo "emacsfodder/ayah"))
 
 (unpin! kurecolor)
 (package! kurecolor
