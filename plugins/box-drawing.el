@@ -13,7 +13,7 @@
 ;; ╭───────────────────────────────────────────────────[ESC quit]╮
 ;; │ Box Drawing                                                 │
 ;; ├─────────────────────────────────────────────────────────────┤
-;; │ r ─         R ═         v │         V ║                     │
+;; │ r ─         R ═         v │         V ║         [space]     │
 ;; │ q ┌ w ┬ e ┐ Q ╒ W ╤ E ╕ t ╔ y ╦ u ╗ T ╓ Y ╥ U ╖ C-q ╭ C-w ╮ │
 ;; │ a ├ s ┼ d ┤ A ╞ S ╪ D ╡ g ╠ h ╬ j ╣ G ╟ H ╫ J ╢ C-a ╰ C-s ╯ │
 ;; │ z └ x ┴ c ┘ Z ╘ X ╧ C ╛ b ╚ n ╩ m ╝ B ╙ N ╨ M ╜             │
@@ -66,6 +66,7 @@ If `box-drawing--overwrite' is non-nil, insert with overwrite."
                        ("B" (box-drawing--insert "╙")) ("N" (box-drawing--insert "╨")) ("M" (box-drawing--insert "╜"))
                        ("r" (box-drawing--insert "─")) ("R" (box-drawing--insert "═"))
                        ("v" (box-drawing--insert "│")) ("V" (box-drawing--insert "║"))
+                       ("SPC" (box-drawing--insert " "))
                        ("C-q" (box-drawing--insert "╭")) ("C-w" (box-drawing--insert "╮"))
                        ("C-a" (box-drawing--insert "╰")) ("C-s" (box-drawing--insert "╯"))
                        ("i" (setq box-drawing--overwrite (not box-drawing--overwrite))
