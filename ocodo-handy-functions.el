@@ -1077,8 +1077,64 @@ Leave *scratch* and *Messages* alone too."
    (buffer-list))
   (delete-other-windows))
 
+(defun ocodo/straight-remove-packages (&optional packages no-confirm)
+  "Remove PACKAGES from straight."
+  (interactive)
+  (let* ((straight-absolute-build-dir (format "%s%s%s"
+                                              straight-base-dir
+                                              "straight/"
+                                              straight-build-dir))
+         (straight-packages (--reject (or (string= "." it)
+                                          (string= ".." it))
+                             (directory-files straight-absolute-build-dir nil)))
+         (packages (or packages (completing-read-multiple "Select package: " straight-packages)))
+         (library-elcs (--map (locate-library it) packages))
+         (build-dirs (--map (file-name-directory it) library-elcs))
+         (source-els (--map (file-truename (s-replace ".elc" ".el" it)) library-elcs))
+         (source-dirs (--map (file-name-directory it) source-els))
+         (deletions (-zip packages source-dirs build-dirs))
+         (confirmed (if no-confirm
+                        t
+                      (y-or-n-p
+                       (format "%s\nConfirm delete: "
+                               (s-join
+                                "\n"
+                                (--map
+                                 (format
+                                  "%s [%s]"
+                                  (car it)
+                                  (s-replace
+                                   straight-base-dir ""
+                                   (cadr it)))
+                                 deletions)))))))
+    (when confirmed (ocodo/straight--removed-packages deletions))))
+
+(defun ocodo/straight--removed-packages (deletions)
+  "Internal func perform DELETIONS and display status."
+  (let ((buffer (get-buffer-create
+                  (generate-new-buffer-name
+                   "*ocodo/straight-remove-packages*"))))
+    (switch-to-buffer buffer)
+    (with-current-buffer buffer
+      (insert "Removing packages:\n")
+      (--each deletions
+       (cl-destructuring-bind (package source-dir build-dir) it
+         (delete-directory build-dir t t)
+         (delete-directory source-dir t t)
+         (insert
+          (format-multiline
+           "%1$s
+           |  [%4$s] %5$s: %2$s
+           |             : %3$s
+           |"
+           package build-dir source-dir
+           (propertize "x" 'face 'warning)
+           (propertize "deleted" 'face 'warning)))))
+      (insert (propertize "Done" 'face 'success))
+      (read-only-mode))))
+
 (defun ocodo-make-key-binding-table-row (binding)
-  "Make a table row from BINDING."
+  "Make a markdown table row from BINDING."
   (cl-destructuring-bind
       (keys command keymap)
       binding
@@ -1097,9 +1153,11 @@ Leave *scratch* and *Messages* alone too."
                        groups)))
     (list title
       (--sort
-          (string< (second it) (second other))
-        (-filter (lambda (b) (--all? (eql nil it)
-                              (--map (funcall it b) predicates)))
+          (string< (second it)
+                   (second other))
+        (-filter (lambda (b)
+                   (--all? (eql nil it)
+                    (--map (funcall it b) predicates)))
           bindings)))))
 
 (defun ocodo-make-key-binding-groups (bindings headings groups)
