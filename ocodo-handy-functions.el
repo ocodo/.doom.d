@@ -1077,8 +1077,14 @@ Leave *scratch* and *Messages* alone too."
    (buffer-list))
   (delete-other-windows))
 
+(defun ocodo/doom-upgrade-packages (&optional packages no-confirm)
+  "Upgrade PACKAGES, (unattended NO-CONFIRM = t)"
+  (interactive)
+  (ocodo/straight-remove-packages packages no-confirm)
+  (doom/reload))
+
 (defun ocodo/straight-remove-packages (&optional packages no-confirm)
-  "Remove PACKAGES from straight."
+  "Remove PACKAGES, (unattended NO-CONFIRM = t)"
   (interactive)
   (let* ((straight-absolute-build-dir (format "%s%s%s"
                                               straight-base-dir
@@ -1131,7 +1137,9 @@ Leave *scratch* and *Messages* alone too."
            (propertize "x" 'face 'warning)
            (propertize "deleted" 'face 'warning)))))
       (insert (propertize "Done" 'face 'success))
-      (read-only-mode))))
+      (read-only-mode)
+      deletions)))
+
 
 (defun ocodo-make-key-binding-table-row (binding)
   "Make a markdown table row from BINDING."
