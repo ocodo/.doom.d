@@ -1080,8 +1080,8 @@ Leave *scratch* and *Messages* alone too."
 (defun ocodo/doom-upgrade-packages (&optional packages no-confirm)
   "Upgrade PACKAGES, (unattended NO-CONFIRM = t)"
   (interactive)
-  (ocodo/straight-remove-packages packages no-confirm)
-  (doom/reload))
+  (when (ocodo/straight-remove-packages packages no-confirm)
+    (doom/reload)))
 
 (defun ocodo/straight-remove-packages (&optional packages no-confirm)
   "Remove PACKAGES, (unattended NO-CONFIRM = t)"
@@ -1090,9 +1090,7 @@ Leave *scratch* and *Messages* alone too."
                                               straight-base-dir
                                               "straight/"
                                               straight-build-dir))
-         (straight-packages (--reject (or (string= "." it)
-                                          (string= ".." it))
-                             (directory-files straight-absolute-build-dir nil)))
+         (straight-packages (cddr (directory-files straight-absolute-build-dir nil)))
          (packages (or packages (completing-read-multiple "Select package: " straight-packages)))
          (library-elcs (--map (locate-library it) packages))
          (build-dirs (--map (file-name-directory it) library-elcs))
@@ -1113,7 +1111,9 @@ Leave *scratch* and *Messages* alone too."
                                    straight-base-dir ""
                                    (cadr it)))
                                  deletions)))))))
-    (when confirmed (ocodo/straight--removed-packages deletions))))
+    (if confirmed
+        (ocodo/straight--removed-packages deletions)
+      nil)))
 
 (defun ocodo/straight--removed-packages (deletions)
   "Internal func perform DELETIONS and display status."
@@ -1139,7 +1139,6 @@ Leave *scratch* and *Messages* alone too."
       (insert (propertize "Done" 'face 'success))
       (read-only-mode)
       deletions)))
-
 
 (defun ocodo-make-key-binding-table-row (binding)
   "Make a markdown table row from BINDING."
