@@ -1115,6 +1115,10 @@ Leave *scratch* and *Messages* alone too."
         (ocodo/straight--removed-packages deletions)
       nil)))
 
+(defun ocodo/reload-config ()
+  "Reload config.el."
+  (load-file (concat doom-user-dir "config.el")))
+
 (defun ocodo/straight--removed-packages (deletions)
   "Internal func perform DELETIONS and display status."
   (let ((buffer (get-buffer-create
@@ -1185,17 +1189,15 @@ Leave *scratch* and *Messages* alone too."
 <return> replaced with ⮐.
 
 Setting WHITE-ARROWS to t, gives these replacements: ⇧ ⇩ ⇦ ⇨ and ⏎."
-  (s-replace
-   "<return>" (or (and white-arrows "⏎") "⮐")
-   (s-replace
-    "<up>"    (or (and white-arrows "⇧"  ) "↑")
-    (s-replace
-     "<down>"  (or (and white-arrows "⇩"  ) "↓")
-     (s-replace
-      "<left>"  (or (and white-arrows "⇦"  ) "←")
-      (s-replace
-       "<right>" (or (and white-arrows "⇨"  ) "→")
-       key-binding))))))
+ (let ((key-to-arrow '(("<return>" ("⏎" . "⮐"))
+                       ("<up>"     ("⇧" . "↑"))
+                       ("<down>"   ("⇩" . "↓"))
+                       ("<left>"   ("⇦" . "←"))
+                       ("<right>"  ("⇨" . "→"))))
+       (fn (or (and white-arrows 'cdar) 'cddr)))
+   (cl-reduce (lambda (text it)
+                (s-replace (car it) (funcall fn it) text))
+       key-binding)))
 
 (defun ocodo-key-bindings-for-documentation ()
   "Cleaned list of key bindings for documentation."
