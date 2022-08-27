@@ -22,8 +22,13 @@
      (eval-buffer (current-buffer))
      (ert-run-all-tests))
 
+   (defun ert-clear-all-tests ()
+     "Eval current buffer and run all tests."
+     (interactive)
+     (ert-delete-all-tests))
+
    (bind-key "C-c / t"   #'ert-run-tests-interactively   'emacs-lisp-mode-map)
    (bind-key "C-c / l"   #'ert-load-file-run-all-tests   'emacs-lisp-mode-map)
    (bind-key "C-c / b"   #'ert-eval-buffer-run-all-tests 'emacs-lisp-mode-map)
    (bind-key "C-c / /"   #'ert-run-all-tests             'emacs-lisp-mode-map)
-   (bind-key "C-c / c"   #'ert-delete-all-tests          'emacs-lisp-mode-map))
+   (bind-key "C-c / c"   #'ert-clear-all-tests           'emacs-lisp-mode-map))
