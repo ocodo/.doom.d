@@ -1117,6 +1117,7 @@ Leave *scratch* and *Messages* alone too."
 
 (defun ocodo/reload-config ()
   "Reload config.el."
+  (interactive)
   (load-file (concat doom-user-dir "config.el")))
 
 (defun ocodo/straight--removed-packages (deletions)
