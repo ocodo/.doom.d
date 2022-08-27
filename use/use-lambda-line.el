@@ -7,7 +7,7 @@
   (lambda-line-prefix t) ;; use a prefix symbol
   (lambda-line-prefix-padding t) ;; no extra space for prefix
   (lambda-line-status-invert nil)  ;; no invert colors
-  (lambda-line-gui-ro-symbol  "  ⊖ ") ;; symbols
+  (lambda-line-gui-ro-symbol  "  ⦿ ") ;; symbols
   (lambda-line-gui-mod-symbol "  ⦿ ")
   (lambda-line-gui-rw-symbol  "  ⦿ ")
   (lambda-line-vc-symbol  "   ")

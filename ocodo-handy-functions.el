@@ -1120,6 +1120,11 @@ Leave *scratch* and *Messages* alone too."
   (interactive)
   (load-file (concat doom-user-dir "config.el")))
 
+(defun ocodo/reload-keys ()
+  "Reload key-bindings.el."
+  (interactive)
+  (load-file (concat doom-user-dir "key-bindings.el")))
+
 (defun ocodo/straight--removed-packages (deletions)
   "Internal func perform DELETIONS and display status."
   (let ((buffer (get-buffer-create
