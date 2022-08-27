@@ -16,10 +16,10 @@
      (find-file-other-window file)
      (ert-run-all-tests))
 
-   (defun ert-eval-buffer-run-all-tests (buffer)
-     "Eval BUFFER and run all tests."
-     (interactive "bSelect tests buffer: ")
-     (eval-buffer buffer)
+   (defun ert-eval-buffer-run-all-tests ()
+     "Eval current buffer and run all tests."
+     (interactive)
+     (eval-buffer (current-buffer))
      (ert-run-all-tests))
 
    (bind-key "C-c / t"   #'ert-run-tests-interactively   'emacs-lisp-mode-map)
