@@ -75,7 +75,6 @@ For example:
   "Return a random element from the LIST."
   (nth (random (length list)) list))
 
-
 (defmacro *-and-replace (function-name evaluator)
  "A macro which creates a new command NAME using EVALUATOR.
 
@@ -913,13 +912,13 @@ If your're in the minibuffer it will use the other buffer file name."
                       (insert (format " %s" (kurecolor-hex-set-hue color (/ (* i 10) 360.0)))))
              (newline-and-indent))))
 
-;; Generated from: #A30905 (use Rainbow-mode for niceness)
-;; ;; 10°     20°     30°     40°     50°     60°     70°     80°     90°     100°    110°    120°
-;; ;; #A31F05 #A33905 #A35405 #A36E05 #A38805 #A3A305 #88A305 #6EA305 #54A305 #39A305 #1FA305 #05A305
-;; ;; 130°    140°    150°    160°    170°    180°    190°    200°    210°    220°    230°    240°
-;; ;; #05A31F #05A339 #05A354 #05A36E #05A388 #05A3A3 #0588A3 #056EA3 #0554A3 #0539A3 #051FA3 #0505A3
-;; ;; 250°    260°    270°    280°    290°    300°    310°    320°    330°    340°    350°    360°
-;; ;; #00030B #3905A3 #5405A3 #6E05A3 #8805A3 #A305A3 #A30588 #A3056E #A30554 #A30539 #A3051F #A30505
+;; Generated from: #FF0000 (use Rainbow-mode for niceness)
+;; 10°     20°     30°     40°     50°     60°     70°     80°     90°     100°    110°    120°
+;; #FF2A00 #FF5400 #FF7F00 #FFAA00 #FFD400 #FFFF00 #D4FF00 #AAFF00 #7FFF00 #54FF00 #2AFF00 #00FF00
+;; 130°    140°    150°    160°    170°    180°    190°    200°    210°    220°    230°    240°
+;; #00FF2A #00FF55 #00FF7F #00FFA9 #00FFD4 #00FFFF #00D4FF #00A9FF #007FFF #0054FF #002AFF #0000FF
+;; 250°    260°    270°    280°    290°    300°    310°    320°    330°    340°    350°    360°
+;; #2A00FF #5400FF #7F00FF #AA00FF #D400FF #FF00FF #FF00D4 #FF00AA #FF007F #FF0055 #FF002A #FF0000
 
 (defun make-yas-from-region (begin end)
   "Make a yasnippet from the current region BEGIN END.
