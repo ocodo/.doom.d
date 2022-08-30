@@ -47,20 +47,35 @@
 (global-prettify-symbols-mode t)
 
 ;; Font
+;; "Input Mono"
+;; 'semi-light
+;;
+;; "PFDinMono-Thin"
+;; 'normal
+;;
+;; "PFDinMono-XThin"
+;; 'normal
+;;
+;; "APL385\ Unicode"
+;; 'normal
+;;
+;; "IBM\ Plex\ Mono"
+;; 'ultra-light
+;;
 (setq doom-modeline-height 1)
 (when (eq system-type 'darwin)
   (setq doom-font
         (font-spec
-         :family "IBM Plex Mono"
-         :weight 100)
+         :family "PFDINMono-XThin"
+         :weight 'normal)
         doom-variable-pitch-font
         (font-spec
          :family "Avenir Next"))
 
  (custom-set-faces
-   '(mode-line ((t (:family "Avenir Next" :height 0.9))))
-   '(mode-line-active ((t (:family "Avenir Next" :height 0.9)))) ; For 29+
-   '(mode-line-inactive ((t (:family "Avenir Next" :height 0.9))))))
+   '(mode-line ((t (:family "Avenir Next"))))
+   '(mode-line-active ((t (:family "Avenir Next"))))
+   '(mode-line-inactive ((t (:family "Avenir Next"))))))
 
 (setq display-line-numbers-type nil)
 
