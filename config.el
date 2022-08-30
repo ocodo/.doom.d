@@ -51,8 +51,8 @@
 (when (eq system-type 'darwin)
   (setq doom-font
         (font-spec
-         :family "SauceCodePro Nerd Font"
-         :weight 'light)
+         :family "IBM Plex Mono"
+         :weight 100)
         doom-variable-pitch-font
         (font-spec
          :family "Avenir Next"))

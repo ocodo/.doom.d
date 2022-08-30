@@ -32,6 +32,7 @@
 (package! speed-type)
 (package! vertico-posframe)
 (package! buttercup)
+(package! fontify-face)
 
 (package! hydra-posframe
   :recipe (:host github :repo "ladicle/hydra-posframe"))
