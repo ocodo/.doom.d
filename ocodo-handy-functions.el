@@ -940,12 +940,12 @@ specified, a snippet group."
                (key (read-from-minibuffer "Key: "))
                (filename (format "%ssnippets/%s/%s" user-emacs-directory major-mode name))
                (snippet (buffer-substring begin end))
-               (template (format "# -*- mode: snippet -*-
-# name: %s%s
-# key: %s
-# --
-%s
-"
+               (template (format-multiline "# -*- mode: snippet -*-
+                                           |# name: %s%s
+                                           |# key: %s
+                                           |# --
+                                           |%s
+                                           |"
                                  name
                                  group
                                  key
