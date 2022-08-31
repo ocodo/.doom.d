@@ -66,16 +66,21 @@
 (when (eq system-type 'darwin)
   (setq doom-font
         (font-spec
-         :family "PFDINMono-XThin"
+         :family "PFDinMono-XThin"
          :weight 'normal)
         doom-variable-pitch-font
         (font-spec
-         :family "Avenir Next"))
+         :family "Helvetica Neue"
+         :weight 'ultra-light))
+  (doom/reload-font)
 
  (custom-set-faces
-   '(mode-line ((t (:family "Avenir Next"))))
-   '(mode-line-active ((t (:family "Avenir Next"))))
-   '(mode-line-inactive ((t (:family "Avenir Next"))))))
+   '(mode-line ((t (:family "Helvetica Neue"
+                    :weight ultra-light))))
+   '(mode-line-active ((t (:family "Helvetica Neue"
+                           :weight ultra-light))))
+   '(mode-line-inactive ((t (:family "Helvetica Neue"
+                             :weight ultra-light))))))
 
 (setq display-line-numbers-type nil)
 
