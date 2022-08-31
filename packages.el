@@ -33,6 +33,7 @@
 (package! vertico-posframe)
 (package! buttercup)
 (package! fontify-face)
+(package! svg-clock)
 
 (package! hydra-posframe
   :recipe (:host github :repo "ladicle/hydra-posframe"))
@@ -61,7 +62,8 @@
 (package! kurecolor
   :recipe (:host github :repo "emacsfodder/kurecolor"))
 
-(package! lambda-line :recipe (:host github :repo "Lambda-Emacs/lambda-line"))
+(package! lambda-line
+  :recipe (:host github :repo "Lambda-Emacs/lambda-line"))
 
 ;; To install a package directly from a remote git repo, you must specify a
 ;; `:recipe'. You'll find documentation on what `:recipe' accepts here:
