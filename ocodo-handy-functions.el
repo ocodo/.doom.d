@@ -544,6 +544,11 @@ For example:
   (yank)
   (yank))
 
+(defun kill-save-sexp (arg)
+  (interactive "p")
+  (kill-sexp arg)
+  (yank))
+
 (defun format-thousands-separators (n)
   "Format N to have thousand separators.
 
