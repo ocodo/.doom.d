@@ -539,12 +539,14 @@ For example:
          args))
 
 (defun duplicate-sexp (arg)
+  "Duplicate sexp, follows the ARG rules of `kill-sexp'."
   (interactive "p")
   (kill-sexp arg)
   (yank)
   (yank))
 
 (defun kill-save-sexp (arg)
+  "Save sexp to kill-ring, follows the ARG rules of `kill-sexp'."
   (interactive "p")
   (kill-sexp arg)
   (yank))
