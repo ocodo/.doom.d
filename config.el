@@ -46,6 +46,20 @@
 ;; Prettify symbols
 (global-prettify-symbols-mode t)
 
+;; (advice-remove
+;;  'mac-handle-font-selection
+;;  'ocodo/mac-log-handle-font-selection)
+
+(advice-add
+ 'mac-handle-font-selection
+ :before
+ 'ocodo/mac-log-handle-font-selection)
+
+(defun ocodo/mac-log-handle-font-selection (event)
+  (let* ((ae (mac-event-ae event))
+         (font-spec (cdr (mac-ae-parameter ae 'font-spec))))
+   (when font-spec (message "Font Selected: %S" font-spec))))
+
 ;; Font
 ;; "Input Mono"
 ;; 'semi-light
