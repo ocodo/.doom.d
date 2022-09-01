@@ -578,6 +578,7 @@ For example:
 
 (defun ocodo/font-favorites ()
   "Set default and variable-pitch fonts from favorites."
+  (interactive)
   (let* ((m-favorites '(("PFDin Mono XThin" . (:family "PFDinMono-XThin" :weight 'normal))
                         ("PFDin Mono Thin" . (:family "PFDinMono-Thin" :weight 'normal))
                         ("PFDin Mono Light" . (:family "PFDinMono-Light" :weight 'normal))
