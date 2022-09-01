@@ -50,6 +50,9 @@
 (bind-key "C-c s-e"        #'eval-and-replace)
 (bind-key "C-c l e i"      #'eval-print-last-sexp)
 
+(bind-key "C-c l h"        #'hl-line-mode)
+(bind-key "C-c l v"        #'vline-mode)
+
 (bind-key "C-c t t -"      #'dasherise-at-point-or-region)
 (bind-key "C-c t t ."      #'hex-to-decimal-at-point-or-region)
 (bind-key "C-c t t /"      #'decimal-to-hex-at-point-or-region)

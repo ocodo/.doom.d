@@ -54,6 +54,7 @@
 (package! cyanometric-theme)
 (package! sakura-theme)
 (package! vegetative-theme)
+(package! vline)
 
 (package! ayah
   :recipe (:host github :repo "emacsfodder/ayah"))

@@ -45,7 +45,6 @@
 ;; Config that is too small to break out a use-package / file...
 ;; Prettify symbols
 (global-prettify-symbols-mode t)
-
 ;; (advice-remove
 ;;  'mac-handle-font-selection
 ;;  'ocodo/mac-log-handle-font-selection)
@@ -60,23 +59,9 @@
          (font-spec (cdr (mac-ae-parameter ae 'font-spec))))
    (when font-spec (message "Font Selected: %S" font-spec))))
 
-;; Font
-;; "Input Mono"
-;; 'semi-light
-;;
-;; "PFDinMono-Thin"
-;; 'normal
-;;
-;; "PFDinMono-XThin"
-;; 'normal
-;;
-;; "APL385\ Unicode"
-;; 'normal
-;;
-;; "IBM\ Plex\ Mono"
-;; 'ultra-light
-;;
-(setq doom-modeline-height 1)
+(setq doom-modeline-height 0.9)
+
+;; Set doom font.
 (when (eq system-type 'darwin)
   (setq doom-font
         (font-spec
