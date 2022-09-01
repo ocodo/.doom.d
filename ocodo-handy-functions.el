@@ -538,6 +538,12 @@ For example:
          (s-join "\n" (--map (s-replace-regexp "^\s*|" "" it) (s-lines format-string)))
          args))
 
+(defun duplicate-sexp (arg)
+  (interactive "p")
+  (kill-sexp arg)
+  (yank)
+  (yank))
+
 (defun format-thousands-separators (n)
   "Format N to have thousand separators.
 
