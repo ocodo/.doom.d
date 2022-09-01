@@ -576,6 +576,41 @@ For example:
         separated
       (format "%s.%s" separated (second parts)))))
 
+(defun ocodo/font-favorites ()
+  "Set default and variable-pitch fonts from favorites."
+  (let* ((m-favorites '(("PFDin Mono XThin" . (:family "PFDinMono-XThin" :weight 'normal))
+                        ("PFDin Mono Thin" . (:family "PFDinMono-Thin" :weight 'normal))
+                        ("PFDin Mono Light" . (:family "PFDinMono-Light" :weight 'normal))
+                        ("SauceCodePro Nerd ExtraLight" . (:family "SauceCodePro Nerd Font" :weight 'light))
+                        ("SauceCodePro Nerd Light" . (:family "SauceCodePro Nerd Font" :weight 'semi-light))
+                        ("SauceCodePro Nerd Regular" . (:family "SauceCodePro Nerd Font" :weight 'normal))
+                        ("Input Mono Regular" . (:family "Input Mono" :weight 'normal))
+                        ("Input Mono Light" . (:family "Input Mono" :weight 'semi-light))
+                        ("APL385 Unicode" . (:family "APL385 Unicode" :weight 'normal))
+                        ("IBM Plex Mono Thin" . (:family "IBM Plex Mono" :weight 'ultra-light))
+                        ("IBM Plex Mono ExtraLight" . (:family "IBM Plex Mono" :weight 'light))
+                        ("IBM Plex Mono Light" . (:family "IBM Plex Mono" :weight 'semi-light))
+                        ("IBM Plex Mono Regular" . (:family "IBM Plex Mono" :weight 'normal))))
+         (v-favorites '(("Helvetica Neue Regular" . (:family "Helvetica Neue" :weight 'normal))
+                        ("Helvetica Neue Light" . (:family "Helvetica Neue" :weight 'light))
+                        ("Helvetica Neue Ultralight" . (:family "Helvetica Neue" :weight 'thin))
+                        ("Helvetica Neue Thin" . (:family "Helvetica Neue" :weight 'ultra-light))
+                        ("Bodini 72" . (:family "Bodini 72" :weight 'normal))
+                        ("American Typewriter Light" . (:family "American Typewriter" :weight 'light))
+                        ("American Typewriter Regular" . (:family "American Typewriter" :weight 'normal))
+                        ("Futura" . (:family "Futura" :weight 'normal))
+                        ("Gill Sans Regular" . (:family "Gill Sans" :weight 'normal))
+                        ("Gill Sans Light" . (:family "Gill Sans" :weight 'light))
+                        ("Avenir Next Ultralight" . (:family "Avenir Next" :weight 'thin))
+                        ("Avenir Next Regular" . (:family "Avenir Next" :weight 'normal))))
+         (m-selected (assoc (completing-read "Select default font: " (--map (car it) m-favorites)) m-favorites))
+         (v-selected (assoc (completing-read "Select default font: " (--map (car it) v-favorites)) v-favorites)))
+      (setq doom-font
+            `(font-spec ,@(cdr m-selected))
+            doom-variable-pitch-font
+            `(font-spec ,@(cdr v-selected)))
+      (doom/reload-font)))
+
 (defun fraction-radian (denominator)
   "Fraction DENOMINATOR of circle to radians."
   (interactive "nDenomiator:")
