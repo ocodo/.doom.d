@@ -12,9 +12,9 @@
     (lambda-line-gui-mod-symbol "  ⍺ ")
     (lambda-line-gui-rw-symbol  "  ⍺ ")
     (lambda-line-vc-symbol  "   ")
-    (lambda-line-space-top 0.45)  ;; padding on top and bottom of line
-    (lambda-line-space-bottom -0.30)
-    (lambda-line-symbol-position 0) ;; adjust the vertical placement of symbol
+    (lambda-line-space-top 0.30)  ;; padding on top and bottom of line
+    (lambda-line-space-bottom -0.40)
+    (lambda-line-symbol-position -0.150) ;; adjust the vertical placement of symbol
     (lambda-line-abbrev-alist
      `((dired-mode . "DR")
        (emacs-lisp-mode . "λ")
