@@ -60,20 +60,24 @@
 (defun docstring-options-table-to-markdown (docstring)
   "Convert a table definition in S to markdown."
   (string-match "#TABLE \\(.+?\\) *?#\n\\(\\(.*?\n\\)*?.*?\\)\n#TABLE#" docstring)
-  (if (and (match-string 1 docstring) (match-string 2 docstring))
-      (let* ((heading-string (match-string 1 docstring))
+  (if (and (match-string 0 docstring)
+           (match-string 1 docstring)
+           (match-string 2 docstring))
+      (let* ((source (match-string 0 docstring))
+             (heading-string (match-string 1 docstring))
              (body-string (match-string 2 docstring))
              (heading-row (replace-regexp-in-string
                            "\\([^[:space:]]+?\\) +- +\\(.*\\)"
                            "| \\1 | \\2 |\n|-|-|\n"
                            heading-string))
-             (body-rows   (s-join "\n"
-                           (--map  (replace-regexp-in-string
-                                    "\\([^[:space:]]+\\)[ -]+\\(.*\\)"
-                                    "| `\\1' | \\2 |"
-                                    it)
-                            (s-split "\n" body-string)))))
-         (format "%s%s" heading-row body-rows))
+             (body-rows (s-join "\n"
+                         (--map  (replace-regexp-in-string
+                                  "\\([^[:space:]]+\\)[ -]+\\(.*\\)"
+                                  "| `\\1' | \\2 |"
+                                  it)
+                          (s-split "\n" body-string))))
+             (table (format "%s%s" heading-row body-rows)))
+       (string-replace source table docstring))
     docstring))
 
 (defun get-defun-info (buffer)
