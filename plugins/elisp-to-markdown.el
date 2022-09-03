@@ -60,19 +60,21 @@
 (defun docstring-options-table-to-markdown (s)
   "Convert a table definition in DOCSTRING to markdown."
   (string-match "#TABLE \\(.+?\\) *?#\n\\(\\(.*?\n\\)*?.*?\\)\n#TABLE#" s)
-  (let* ((heading-string (match-string 1 s))
-         (body-string (match-string 2 s))
-         (heading-row (replace-regexp-in-string
-                       "\\([^[:space:]]+?\\) +- +\\(.*\\)"
-                       "| \\1 | \\2 |\n|-|-|\n"
-                       heading-string))
-         (body-rows   (s-join "\n"
-                       (--map  (replace-regexp-in-string
-                                "\\([^[:space:]]+\\)[ -]+\\(.*\\)"
-                                "| `\\1' | \\2 |"
-                                it)
-                        (s-split "\n" body-string)))))
-     (format "%s%s" heading-row body-rows)))
+  (if (match-string 0)
+      (let* ((heading-string (match-string 1 s))
+             (body-string (match-string 2 s))
+             (heading-row (replace-regexp-in-string
+                           "\\([^[:space:]]+?\\) +- +\\(.*\\)"
+                           "| \\1 | \\2 |\n|-|-|\n"
+                           heading-string))
+             (body-rows   (s-join "\n"
+                           (--map  (replace-regexp-in-string
+                                    "\\([^[:space:]]+\\)[ -]+\\(.*\\)"
+                                    "| `\\1' | \\2 |"
+                                    it)
+                            (s-split "\n" body-string)))))
+         (format "%s%s" heading-row body-rows))
+    s))
 
 (defun get-defun-info (buffer)
   "Get information about all `defun' top-level sexps in a BUFFER.

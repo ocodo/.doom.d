@@ -27,10 +27,14 @@ returns a 6 digit hex color."))
                   input))
              expected))))
 
-
 (ert-deftest docstring-table-to-markdown ()
   "It converts a docstring plist table definition to a markdown table."
-  (should
+  (should ;; pass through
+   (string= (docstring-options-table-to-markdown "Change a `hex` color's brightness `val`, amount values from 0.0-1.0.
+returns a 6 digit hex color.")
+            "Change a `hex` color's brightness `val`, amount values from 0.0-1.0.
+returns a 6 digit hex color."))
+  (should ;; do the thing...
    (string= (docstring-options-table-to-markdown
              "#TABLE Option - Description #
 :test - this is what testing is about
