@@ -57,12 +57,12 @@
                                    docstring)
                                (format "%s%s" name args)))))))
 
-(defun docstring-options-table-to-markdown (s)
-  "Convert a table definition in DOCSTRING to markdown."
-  (string-match "#TABLE \\(.+?\\) *?#\n\\(\\(.*?\n\\)*?.*?\\)\n#TABLE#" s)
-  (if (match-string 0)
-      (let* ((heading-string (match-string 1 s))
-             (body-string (match-string 2 s))
+(defun docstring-options-table-to-markdown (docstring)
+  "Convert a table definition in S to markdown."
+  (string-match "#TABLE \\(.+?\\) *?#\n\\(\\(.*?\n\\)*?.*?\\)\n#TABLE#" docstring)
+  (if (and (match-string 1 docstring) (match-string 2 docstring))
+      (let* ((heading-string (match-string 1 docstring))
+             (body-string (match-string 2 docstring))
              (heading-row (replace-regexp-in-string
                            "\\([^[:space:]]+?\\) +- +\\(.*\\)"
                            "| \\1 | \\2 |\n|-|-|\n"
@@ -74,7 +74,7 @@
                                     it)
                             (s-split "\n" body-string)))))
          (format "%s%s" heading-row body-rows))
-    s))
+    docstring))
 
 (defun get-defun-info (buffer)
   "Get information about all `defun' top-level sexps in a BUFFER.
