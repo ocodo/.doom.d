@@ -165,8 +165,6 @@ Swatch Template parameters:
     %5$s - text-accent-color
     %6$s - swatch-color-name")))
 
-
-
 (ert-deftest docstring-args-to-markdown-code ()
   "Transform DOCSTRING arguments to inline markdown `code` document style."
     (should (string=
