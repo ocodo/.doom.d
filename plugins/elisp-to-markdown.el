@@ -28,23 +28,51 @@
       "`\\1`"
       docstring)))
 
-(defun generate-markdown-defun-entry (fn)
+(defun defun-is-interactive (fn-info)
+  "Check FN-INFO is-interactive"
+  (and (nth 3 fn-info) "--"))
+
+(defun defun-is-internal (fn-info)
+  "Check FN-INFO is-internal"
+  (and (nth 4 fn-info) "zz"))
+
+(defun generate-markdown-defun-entry (fn-info)
   "Generate a markdown entry for FN."
   (declare (side-effect-free t))
-  (cl-destructuring-bind (name args docstring is-interactive) fn
+  (cl-destructuring-bind (name args docstring is-interactive is-internal) fn-info
    (let ((name (format "%s" name))
          (args (if args (format " %s" args) "")))
        (when (string= nil docstring)
          (setq docstring "No docstring available: TODO"))
        (format "### %s%s\n\n%s\n\n<sup>function signature</sup>\n```lisp\n(%s)\n```\n\n- - -\n"
                name
-               (if is-interactive " [command]" "")
+               (or (and is-interactive " [command]")
+                   (and is-internal " [internal]")
+                   "")
                ;; TODO: Process the docstring as code and text separately.
                ;; (docstring-to-text-and-code docstring)
-               (docstring-args-to-markdown-code args
-                 (docstring-back-quoted-to-markdown-code
-                   docstring))
-               (format "%s%s" name args)))))
+               (docstring-table-to-markdown
+                (docstring-args-to-markdown-code args
+                                 (docstring-back-quoted-to-markdown-code
+                                   docstring)
+                               (format "%s%s" name args)))))))
+
+(defun docstring-options-table-to-markdown (s)
+  "Convert a table definition in DOCSTRING to markdown."
+  (string-match "#TABLE \\(.+?\\) *?#\n\\(\\(.*?\n\\)*?.*?\\)\n#TABLE#" s)
+  (let* ((heading-string (match-string 1 s))
+         (body-string (match-string 2 s))
+         (heading-row (replace-regexp-in-string
+                       "\\([^[:space:]]+?\\) +- +\\(.*\\)"
+                       "| \\1 | \\2 |\n|-|-|\n"
+                       heading-string))
+         (body-rows   (s-join "\n"
+                       (--map  (replace-regexp-in-string
+                                "\\([^[:space:]]+\\)[ -]+\\(.*\\)"
+                                "| `\\1' | \\2 |"
+                                it)
+                        (s-split "\n" body-string)))))
+     (format "%s%s" heading-row body-rows)))
 
 (defun get-defun-info (buffer)
   "Get information about all `defun' top-level sexps in a BUFFER.
@@ -66,13 +94,13 @@ Returns a list with elements of the form (symbol args docstring)."
               (cond
                ((not (listp form)) nil)
                ((eq (nth 0 form) 'defun)
-                (let ((sym (nth 1 form))
-                      (args (nth 2 form))
-                      (doc (when (stringp (nth 3 form)) (nth 3 form)))
-                      (is-interactive (string= "interactive" (car (nth 4 form)))))
-                      ;;(interactive-info (when (string= "interactive" (car (nth 4 form)))
-                      ;;                   (cadr (nth 4 form)))))
-                  (push (list sym args doc is-interactive) result))))))
+                (let* ((sym (nth 1 form))
+                       (name (symbol-name sym))
+                       (args (nth 2 form))
+                       (doc (when (stringp (nth 3 form)) (nth 3 form)))
+                       (is-internal (s-contains? "--" name))
+                       (is-interactive (string= "interactive" (car (nth 4 form)))))
+                  (push (list sym args doc is-interactive is-internal) result))))))
           result)))))
 
 (defun generate-markdown-list-of-buffer-defuns (buffer)
@@ -80,11 +108,17 @@ Returns a list with elements of the form (symbol args docstring)."
   (s-join "\n"
           (mapcar
            #'generate-markdown-defun-entry
-           (-sort (lambda (a b)
-                    (let ((c (symbol-name (first a)))
-                          (d (symbol-name (first b))))
-                      (string< c d)))
-                  (get-defun-info (current-buffer))))))
+            (-sort (lambda (a b)
+                     (let* ((name-a (symbol-name (car a)))
+                            (name-b (symbol-name (car b)))
+                            (c (format "%s%s"
+                                       (or (defun-is-interactive a) (defun-is-internal a) "")
+                                       name-a))
+                            (d (format "%s%s"
+                                       (or (defun-is-interactive b) (defun-is-internal b) "")
+                                       name-b)))
+                       (string< c d)))
+                   (get-defun-info (current-buffer))))))
 
 (defun generate-markdown-page-of-buffer-defuns (&optional buffer)
   "Generate markdown page for all defun in BUFFER.

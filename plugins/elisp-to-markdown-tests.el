@@ -27,6 +27,19 @@ returns a 6 digit hex color."))
                   input))
              expected))))
 
+
+(ert-deftest docstring-table-to-markdown ()
+  "It converts a docstring plist table definition to a markdown table."
+  (should
+   (string= (docstring-options-table-to-markdown
+             "#TABLE Option - Description #
+:test - this is what testing is about
+:opt  - an option
+#TABLE#") "| Option | Description |
+|-|-|
+| `:test' | this is what testing is about |
+| `:opt' | an option |")))
+
 (ert-deftest docstring-args-to-markdown-code ()
   "Transform DOCSTRING arguments to inline markdown `code` document style."
     (should (string=
