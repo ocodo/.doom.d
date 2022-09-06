@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# contributor: Jason Milkins
+# name: lambda (non interactive)
+# key: lmd
+# --
+(lambda ($1) $0)
