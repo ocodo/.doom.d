@@ -45,14 +45,15 @@
 ;; Config that is too small to break out a use-package / file...
 ;; Prettify symbols
 (global-prettify-symbols-mode t)
-;; (advice-remove
-;;  'mac-handle-font-selection
-;;  'ocodo/mac-log-handle-font-selection)
 
 (advice-add
  'mac-handle-font-selection
  :before
  'ocodo/mac-log-handle-font-selection)
+
+;; (advice-remove
+;;  'mac-handle-font-selection
+;;  'ocodo/mac-log-handle-font-selection)
 
 (defun ocodo/mac-log-handle-font-selection (event)
   (let* ((ae (mac-event-ae event))
