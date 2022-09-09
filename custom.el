@@ -5,7 +5,14 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    '("441fa2381ffe3031321e7fb0abee3cd69de7d1078925d740ee7a8ff85aac5730" default))
- '(safe-local-variable-values '((eval when (fboundp 'rainbow-mode) (rainbow-mode 1)))))
+ '(safe-local-variable-values
+   '((eval and
+           (fboundp 'nameless-mode)
+           (setq nameless-current-name "aya")
+           (nameless-mode 1))
+     (eval when
+           (fboundp 'rainbow-mode)
+           (rainbow-mode 1)))))
 (put 'projectile-ripgrep 'disabled nil)
 (put 'customize-face 'disabled nil)
 (put 'customize-set-variable 'disabled nil)
