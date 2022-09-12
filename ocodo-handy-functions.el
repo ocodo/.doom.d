@@ -1095,6 +1095,14 @@ Leave *scratch* and *Messages* alone too."
   (when (ocodo/straight-remove-packages packages no-confirm)
     (doom/reload)))
 
+(defun ocodo/straight-shut-up ()
+  "Recompile straigt to shut it up."
+  (interactive)
+  (byte-compile-file "~/.emacs.d/.local/straight/build-28.1/straight/straight.el")
+  (byte-compile-file "~/.emacs.d/.local/straight/build-28.1/straight/straight-x.el")
+  (byte-compile-file "~/.emacs.d/.local/straight/build-28.1/straight/straight-autoloads.el")
+  (byte-compile-file "~/.emacs.d/.local/straight/build-28.1/straight/straight-ert-print-hack.el"))
+
 (defun ocodo/straight-remove-packages (&optional packages no-confirm)
   "Remove PACKAGES, (unattended NO-CONFIRM = t)"
   (interactive)
