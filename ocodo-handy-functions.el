@@ -822,6 +822,12 @@ If your're in the minibuffer it will use the other buffer file name."
   "Is the FILENAME markdown."
   (s-matches-p "^.*[.]\\(md\\|markdown\\)$" filename))
 
+(defun join-lines-in-sexp ()
+  "Join all line of the sexp infront of point."
+  (interactive)
+  (mark-sexp)
+  (join-line-or-lines-in-region))
+
 (defun join-line-from-below ()
   "Join line from below."
   (interactive)
