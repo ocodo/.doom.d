@@ -34,6 +34,8 @@
 (package! buttercup)
 (package! fontify-face)
 (package! svg-clock)
+(package! persistent-scratch)
+(package! vline)
 
 (package! hydra-posframe
   :recipe (:host github :repo "ladicle/hydra-posframe"))
@@ -54,7 +56,6 @@
 (package! cyanometric-theme)
 (package! sakura-theme)
 (package! vegetative-theme)
-(package! vline)
 
 (package! ayah
   :recipe (:host github :repo "emacsfodder/ayah"))
