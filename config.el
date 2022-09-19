@@ -9,6 +9,8 @@
 (require 'ocodo-handy-functions)
 (require 'key-bindings)
 
+(display-time)
+
 (setq initial-major-mode 'lisp-interaction-mode)
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
