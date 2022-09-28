@@ -35,3 +35,17 @@
 
     ;; activate lambda-line
     (lambda-line-mode 1))
+
+
+;; Gfn doom font shat... bye
+(unbind-key "s-=")
+(unbind-key "s--")
+
+(bind-key "s-=" #'text-scale-increase)
+(bind-key "s--" #'text-scale-decrease)
+
+(set-fontset-font
+  "fontset-default"
+  (cons (decode-char 'ucs #xF0000)
+        (decode-char 'ucs #xF008F))
+  "ClockFace")
