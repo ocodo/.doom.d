@@ -2,6 +2,42 @@
 ;;  Customized key bindings for the global-key-map
 ;;; Code:
 
+;;; Zoom
+(set-face-attribute 'default nil :height 240)
+
+(defun ocodo/default-face-size-decrease ()
+  "Decrease the default face size."
+  (interactive)
+  (ocodo/default-face-size-adjust -10))
+
+(defun ocodo/default-face-size-increase ()
+  "Increase the default face size."
+  (interactive)
+  (ocodo/default-face-size-adjust 10))
+
+(defun ocodo/default-face-size-adjust (amount)
+  "Adjust the default face size by AMOUNT."
+  (let* ((current (face-attribute 'default :height))
+         (size (+ amount current)))
+     (message "Resize default face to: %i (delta: %i, current: %i)"
+              size amount current)
+     (set-face-attribute 'default nil :height size)))
+
+(defun ocodo/default-face-size-reset ()
+  "Reset the default face size to 230."
+  (interactive)
+  (set-face-attribute 'default nil :height 230))
+
+(unbind-key "s-=")
+(unbind-key "s--")
+
+(bind-key "s-=" #'text-scale-increase)
+(bind-key "s--" #'text-scale-decrease)
+(bind-key "M-s-=" #'ocodo/default-face-size-increase)
+(bind-key "M-s--" #'ocodo/default-face-size-decrease)
+(bind-key "M-s-0" #'ocodo/default-face-size-reset)
+(bind-key "s-)" #'text-scale-adjust)
+
 (map!
 ;; Unbind C-RET on global key map
    "C-RET"      nil
