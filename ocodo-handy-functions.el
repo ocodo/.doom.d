@@ -1721,6 +1721,13 @@ css-value to the hex color found."
   (interactive)
   (setq screencapture-mac-default-commandline nil))
 
+(defun set-doom-lambda-line-fonts ()
+  "Sort out font / unicode / fontset stuff."
+  (interactive)
+  (doom/increase-font-size 1)
+  (doom/decrease-font-size 1)
+  (lambda-line--clockface-update-fontset "ClockFaceRect"))
+
 (defun search-backward-wrapped-string (wrap_start wrap_end)
   "Search for a string backwards from the current point.
 
