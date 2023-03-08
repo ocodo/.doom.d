@@ -94,3 +94,5 @@
 (edit-server-start)
 
 (add-hook 'sh-mode-hook #'ocodo-sh-indent-rules)
+
+(set-doom-lambda-line-fonts)
