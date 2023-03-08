@@ -1865,18 +1865,45 @@ Comments stay with the code below."
                         (insert-before-markers real)
                         (delete-region (point) (marker-position end)))))))))
 
+(defun ssh-agent--set-env-sock (sock)
+  "Set the env var SSH_AUTH_SOCK to SOCK."
+  (setenv "SSH_AUTH_SOCK"
+          (shell-command-to-string
+           (format "echo '%s' | awk '{printf($8)}'" sock))))
+
+(defun ssh-agent--fix ()
+  "Fix the env to use the ssh-agent."
+  (let ((private-sock (shell-command-to-string "lsof -c ssh-agent | grep /private"))
+        (agent-sock (shell-command-to-string "lsof -c ssh-agent | grep /agent")))
+    (unless (string= private-sock "")
+      (ssh-agent--set-env-sock private-sock))
+    (unless (string= agent-sock "")
+      (ssh-agent--set-env-sock agent-sock))))
+
+(defun ssh-agent--close (ssh-agent-info)
+  "Extract PID from SSH-AGENT-INFO and close the process."
+  (let ((pid (cadr (split-string ssh-agent-info " " t))))
+    (shell-command (format "kill %s" pid))))
+
+(defun ssh-agent--close-rejected-agents (selected-agent ssh-agents)
+  "Close SSH-AGENTS that are not SELECTED-AGENT."
+    (let ((redundant-agents (--remove (string= it selected-agent) ssh-agents)))
+      (--each redundant-agents (ssh-agent--close it))))
+
 (defun ssh-agent-env-fix ()
   "Ensure $SSH_AUTH_SOCK is set correctly in the environment."
   (interactive)
   (if (= (string-to-number (shell-command-to-string "pgrep ssh-agent | wc -l")) 1)
-      (let ((private-sock (shell-command-to-string "lsof | grep ssh-agent | grep /private"))
-            (agent-sock (shell-command-to-string "lsof | grep ssh-agent | grep /agent")))
-        (unless (string= private-sock "")
-          (setenv "SSH_AUTH_SOCK" (shell-command-to-string (format "echo '%s' | awk '{printf($8)}'" private-sock))))
-        (unless (string= agent-sock "")
-          (setenv "SSH_AUTH_SOCK" (shell-command-to-string (format "echo '%s' | awk '{printf($8)}'" agent-sock)))))
-
-    (message "There are more than 1 ssh-agents running (I can't choose which one to use!)...:\n %s" (shell-command-to-string "pgrep -l ssh-agent"))))
+      (ssh-agent--fix)
+    (let* ((ssh-agents (split-string
+                        (shell-command-to-string
+                         "lsof -c ssh-agent | grep -E '/var/|/private' | awk '{print $1, $2, $8}'")
+                        "\n" t))
+           (selected-agent (completing-read
+                            "Select the ssh-agent (There are more than 1): "
+                            ssh-agents)))
+        (ssh-agent--close-rejected-agents selected-agent ssh-agents)
+        (ssh-agent--fix))))
 
 (defun switch-to-message-buffer ()
   "Switch to the message buffer."

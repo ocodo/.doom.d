@@ -96,3 +96,5 @@
 (add-hook 'sh-mode-hook #'ocodo-sh-indent-rules)
 
 (set-doom-lambda-line-fonts)
+
+(ssh-agent-env-fix)
