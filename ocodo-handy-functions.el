@@ -240,6 +240,23 @@ For example:
         (replace-match (number-to-string (funcall func number)))
         (goto-char point)))))
 
+(defun chmod-this-file (mode)
+  "Change the permissions of the current buffer's file to MODE.
+MODE is a string representing the new permissions, e.g. \"755\"."
+  (interactive "sEnter new permissions (e.g. 755): ")
+  (when buffer-file-name
+    (let ((filename (buffer-file-name)))
+      (shell-command (concat "chmod " mode " " filename))
+      (message "Changed permissions of %s to %s." filename mode))))
+
+(defun chmod-executable-this-file ()
+  "Change the permissions of the current buffer's file to make it executable."
+  (interactive)
+  (when buffer-file-name
+    (let ((filename (buffer-file-name)))
+      (shell-command (concat "chmod +x " filename))
+      (message "Changed permissions of %s to executable." filename))))
+
 (defun cleanup-buffer ()
   "Perform a cleanup operations on a buffer, tabs to spaces, re-indent, trim whitespace."
   (interactive)
