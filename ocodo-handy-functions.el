@@ -861,6 +861,13 @@ If your're in the minibuffer it will use the other buffer file name."
              (join-line))))
         (t (call-interactively 'join-line))))
 
+(defun jump-to-message-buffer ()
+  "Jump to the *Messages* buffer."
+  (interactive)
+  (switch-to-buffer "*Messages*"))
+
+(bind-key "s-m" 'jump-to-message-buffer)
+
 (defun kill-untitled-buffers ()
   "Kill untitled buffers."
   (interactive)
@@ -1910,17 +1917,52 @@ Comments stay with the code below."
 (defun ssh-agent-env-fix ()
   "Ensure $SSH_AUTH_SOCK is set correctly in the environment."
   (interactive)
-  (if (= (string-to-number (shell-command-to-string "pgrep ssh-agent | wc -l")) 1)
-      (ssh-agent--fix)
-    (let* ((ssh-agents (split-string
-                        (shell-command-to-string
-                         "lsof -c ssh-agent | grep -E '/var/|/private' | awk '{print $1, $2, $8}'")
-                        "\n" t))
-           (selected-agent (completing-read
-                            "Select the ssh-agent (There are more than 1): "
-                            ssh-agents)))
-        (ssh-agent--close-rejected-agents selected-agent ssh-agents)
-        (ssh-agent--fix))))
+  (if (= (string-to-number (shell-command-to-string "pgrep ssh-agent | wc -l")) 0)
+    (message "No ssh-agents are running!")
+    
+   (if (= (string-to-number (shell-command-to-string "pgrep ssh-agent | wc -l")) 1)
+       (ssh-agent--fix)
+     (let* ((ssh-agents (split-string
+                         (shell-command-to-string
+                          "lsof -c ssh-agent | grep -E '/var/|/private' | awk '{print $1, $2, $8}'")
+                         "\n" t))
+            (selected-agent (completing-read
+                             "Select the ssh-agent (There are more than 1): "
+                             ssh-agents)))
+         (ssh-agent--close-rejected-agents selected-agent ssh-agents)
+         (ssh-agent--fix)))))
+
+(defun setup-ssh-agent ()
+  "Checks if macOS and a launchd ssh-agent is running, otherwise starts it and adds ssh keys from the macOS keychain"
+  (interactive)
+  (when (eq system-type 'darwin) ;; check if macOS
+    (let ((ssh-auth-sock (getenv "SSH_AUTH_SOCK"))
+          (ssh-agent-info (shell-command-to-string "launchctl getenv SSH_AUTH_SOCK")))
+      (if (and (string-prefix-p "/private/tmp/com.apple.launchd." ssh-auth-sock)
+               (string-prefix-p "/private/tmp/com.apple.launchd." ssh-agent-info))
+          ;; if launchd ssh-agent is running and ssh-auth-sock points to it
+          (progn
+            ;; terminate any other ssh-agents running
+            (dolist (pid (split-string (shell-command-to-string "pgrep ssh-agent") "\n" t))
+              (unless (string-prefix-p (concat "SSH_AUTH_SOCK=" ssh-auth-sock) (shell-command-to-string (concat "ps -o command= " pid)))
+                (shell-command (concat "kill " pid))))
+            ;; set SSH environment variables
+            (setenv "SSH_AUTH_SOCK" ssh-auth-sock)
+            (setenv "SSH_AGENT_PID" (substring ssh-auth-sock (length "/private/tmp/com.apple.launchd.")))
+            (setenv "SSH_ASKPASS" "git-gui--askpass")
+            (setenv "GIT_ASKPASS" "git-gui--askpass")
+            ;; add ssh keys from macOS keychain
+            (shell-command "ssh-add -A"))
+        ;; if launchd ssh-agent is not running
+        (progn
+          ;; start launchd ssh-agent
+          (shell-command "eval $(ssh-agent -s | tee /dev/stderr)")
+          ;; set SSH environment variables
+          (setenv "SSH_ASKPASS" "git-gui--askpass")
+          (setenv "GIT_ASKPASS" "git-gui--askpass")
+          ;; add ssh keys from macOS keychain
+          (shell-command "ssh-add -A"))))))
+
 
 (defun switch-to-message-buffer ()
   "Switch to the message buffer."
