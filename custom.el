@@ -4,7 +4,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("441fa2381ffe3031321e7fb0abee3cd69de7d1078925d740ee7a8ff85aac5730" default))
+   '("cb8b94bca7576a8552734086b32dc1a963b91c4c8b8dac95f335f5ce7e6f9dae" "130b47ad4ea2bc61b79e13ecb4a6e6b30351de0fea02e757f074477aa744128b" "441fa2381ffe3031321e7fb0abee3cd69de7d1078925d740ee7a8ff85aac5730" default))
  '(safe-local-variable-values
    '((eval and
            (fboundp 'nameless-mode)
