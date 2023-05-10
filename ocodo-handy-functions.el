@@ -1125,6 +1125,15 @@ Leave *scratch* and *Messages* alone too."
   (when (ocodo/straight-remove-packages packages no-confirm)
     (doom/reload)))
 
+(defun ocodo/preview-mjml ()
+  "Compile the current MJML buffer to HTML and open it in the default browser."
+  (interactive)
+  (let ((html-file (make-temp-file "mjml-preview-" nil ".html"))
+        (temp-file (make-temp-file "mjml-temp-" nil ".mjml")))
+    (write-file temp-file)
+    (shell-command (format "mjml -r \"%s\" -o \"%s\"" temp-file html-file))
+    (browse-url (concat "file://" html-file))))
+
 (defun ocodo/straight-shut-up ()
   "Recompile straigt to shut it up."
   (interactive)
