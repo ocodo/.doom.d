@@ -150,6 +150,7 @@
 ; --- mode/keymap specific ---
 
 ; --- Magit ---
-(bind-key "s-P" #'magit-push-current-to-upstream magit-status-mode-map)
+(bind-key "s-p" #'magit-push-current-to-upstream magit-status-mode-map)
+(bind-key "s-f" #'magit-pull-from-upstream magit-status-mode-map)
 
 (provide 'key-bindings)
