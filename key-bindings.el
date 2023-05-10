@@ -147,4 +147,9 @@
 (bind-key "s-y"            #'yank-from-kill-ring)
 (bind-key "s-T"            #'treemacs)
 
+; --- mode/keymap specific ---
+
+; --- Magit ---
+(bind-key "s-P" #'magit-push-current-to-upstream magit-status-mode-map)
+
 (provide 'key-bindings)
