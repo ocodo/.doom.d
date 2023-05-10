@@ -1,6 +1,6 @@
 (use-package vertico-posframe
   :config
-   (defun ocodo/vertico-posframe-get-size ()
+   (defun ocodo/vertico-posframe-get-size (buffer)
      "Override of `vertico-posframe-get-size'"
      (let ((width (round (* (frame-width) 0.8))))
       (list
@@ -33,6 +33,7 @@
          vertico-posframe-max-width 120
          vertico-posframe-poshandler #'ocodo/posframe-poshandler-frame-center-eyelevel
          vertico-posframe-size-function #'ocodo/vertico-posframe-get-size
+         ;vertico-posframe-size-function #'vertico-posframe-get-size
          vertico-posframe-border-width 20
          vertico-posframe-font "Avenir Next"
          vertico-posframe-parameters '((left-fringe . 0) (right-fringe . 0))

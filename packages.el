@@ -31,7 +31,6 @@
 (package! persistent-scratch)
 (package! rainbow-identifiers)
 (package! speed-type)
-(package! string-edit)
 (package! svg-clock)
 (package! swiper)
 (package! tblui)
