@@ -38,6 +38,8 @@
 (bind-key "M-s-0" #'ocodo/default-face-size-reset)
 (bind-key "s-)" #'text-scale-adjust)
 
+(bind-key "s-<mouse-1>" #'browse-url-at-mouse)
+
 (map!
 ;; Unbind C-RET on global key map
    "C-RET"      nil
