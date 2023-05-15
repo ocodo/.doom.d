@@ -18,6 +18,7 @@
 (package! fontify-face)
 (package! free-keys)
 (package! google-this)
+(package! goto-last-change)
 (package! helm-swoop)
 (package! hercules)
 (package! iedit)
