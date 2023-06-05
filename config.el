@@ -23,7 +23,7 @@
 (add-hook 'doom-load-theme-hook #'set-fancy-splash)
 
 (defun set-fancy-splash ()
-  (setq fancy-splash-image "~/.doom.d/doom-creamsody.png")
+  (setq fancy-splash-image "~/.doom.d/golden-yak.png")
   (add-hook! 'after-setting-font-hook (+doom-dashboard-reload 'force)))
 
 (setq doom-theme 'soothe)
