@@ -1,0 +1,30 @@
+# -*- mode: snippet -*-
+# name: Commit Message
+# key: gmm
+# condition: (string-match-p ".*/COMMIT_EDITMSG\\'" (buffer-file-name))
+# --
+${1:Subject Line : 50char suggested limit}
+
+[Release Notes]
+- ${2:$$(completing-read "Type: " '(
+"Build"
+"Debug"
+"Dependency"
+"Documentation"
+"Feature"
+"Fix"
+"Issue Progress"
+"Localization"
+"Optimization"
+"Refactor"
+"Remove"
+"Restructure"
+"Security"
+"Style"
+"Submodule sync"
+"Testing"
+))}
+  - ${3:Notes}
+
+[Additional Details]
+$0
