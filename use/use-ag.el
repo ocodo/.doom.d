@@ -21,4 +21,4 @@ _k_ : Ag Close all Ag buffers"
     (bind-key "C-x f" #'silver-searcher-hydra/body)))
 
 (provide 'use-ag)
-;;; use-ag ends here
+;;; use-ag.el ends here
