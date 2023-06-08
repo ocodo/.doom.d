@@ -24,13 +24,14 @@
 ;;; Code:
 
 (require 's)
-(require 'cl)
+(require 'cl-lib)
 (require 'dash)
 (require 'kv)
 (require 'find-func)
 (require 'kurecolor)
 (require 'cua-base)
 (require 'magit)
+(require 'pcre2el)
 (require 'rx)
 (require 'xr)
 (require 'time-stamp)
@@ -45,27 +46,25 @@
 Example usage:
 
 ```lisp
-(let1 my-var \"Hello World\"
-  (message \"%s\" my-var))
+ (let1 my-var \"Hello World\"
+   (message \"%s\" my-var))
 
-=> \"Hello World\"
-```
-"
+ => \"Hello World\"
+```"
   `(let ((,var ,val)) ,@body))
 
 (defmacro plist-bind (args expr &rest body)
-  "Syntax sugar to destructure PLIST, binding values to ARGS named as keys. Access them in the BODY form.
+  "Destructure PLIST, ARGS (keys) of EXPR (a plist) are available in BODY.
 
 For example:
 
 ```lisp
-(plist-bind (a c)                ;; <- arg names match key names.
+ (plist-bind (a c)                ;; <- arg names match key names.
   '(:a \"foo\" :b 13 :c \"bar\") ;; <- plist
   (list a c))                    ;; <- Body
 
 ;; => (\"foo\" \"bar\")
-```
-"
+```"
   `(cl-destructuring-bind
        (&key ,@args &allow-other-keys)
        ,expr
@@ -75,23 +74,21 @@ For example:
   "Return a random element from the LIST."
   (nth (random (length list)) list))
 
-(defmacro *-and-replace (function-name evaluator)
- "A macro which creates a new command NAME using EVALUATOR.
-
-The new command will send the region string to the EVALUATOR, and replace it the result.
+(defmacro *-and-replace (name evaluator)
+ "Create a command NAME which replaces region with result of EVALUATOR.
 
 For example:
 
-Using `shell-command-to-string', we can make a replace-region command with `*-and-replace'
+Using `shell-command-to-string', we can make a replace-region
+command with `*-and-replace'
 
- ```lisp
+```lisp
  (*-and-replace shell-command-eval-and-replace #'shell-command-to-string)
 
 ;; =>
 ;; (shell-command-eval-and-replace)
- ```
-"
- `(defun ,function-name ()
+```"
+ `(defun ,name ()
     (interactive)
     (if (not (region-active-p))
         (replace-thing-at-point-with ,evaluator)
@@ -124,14 +121,13 @@ operations on lists / trees.
 For example:
 
 ```lisp
-(defun-pcase pick-it (`(,_ ,_ (,_ ,it ,_)))
+ (defun-pcase pick-it (`(,_ ,_ (,_ ,it ,_)))
     \"Select it\"
    (format \"%s\" it))
 
-(my-pfun '(1 2 (1 \"this one\" 3)))
+ (my-pfun '(1 2 (1 \"this one\" 3)))
 ;; => \"this one\"
-```
-"
+```"
  (declare (doc-string 3) (indent 2))
  `(progn (defalias
            (quote ,name)
@@ -152,7 +148,7 @@ For example:
                                    ("ERT Testing" 1 "^Ert ")
                                    ("Debugging" 1 "[Dd]ebug")
                                    ("Windows" 1 "[Ww]indow"))
-  "Key binding group filters")
+  "Key binding group filters.")
 
 (defvar ocodo-key-bindings-lisp-files
   (-concat
@@ -162,11 +158,11 @@ For example:
                  (let1 text
                        (f-read file 'utf-8)
                    (s-contains? "bind-key" text)))))
-  "List of emacs-lisp files which have personalised key bindings")
+  "List of emacs-lisp files which have personalised key bindings.")
 
 (defvar ocodo-key-bindings-heading
   "Ocodo's Emacs Key Bindings."
-  "Key bindings page heading")
+  "Key bindings page heading.")
 
 (defvar ocodo-key-bindings-table-heading (concat
                                           "| Key(s)  | Command | keymap  |\n"
@@ -199,8 +195,7 @@ For example:
 ;;    301   213     4111
 ;;   2134  4151   525235
 ;;  48912   522    19538
-```
-"
+```"
   (interactive "r")
   (align-regexp begin end ".* \\([0-9]+\\).*" -1 1 nil))
 
@@ -219,8 +214,8 @@ take a single numeric argument and return anything.
 For example:
 
 ```lisp
-(defun round-number-at-point ()
-\"Round the number at point.\"
+ (defun round-number-at-point ()
+  \"Round the number at point.\"
   (interactive)
   (change-number-at-point #'round))
 
@@ -229,8 +224,7 @@ For example:
 (defun number-at-point-to-currency ()
  \"Change the number at point to currency.\"
   (format \"$%.2f\" (number-at-point))))
-```
-"
+```"
   (let ((number (number-at-point))
         (point (point)))
     (when number
@@ -258,7 +252,7 @@ MODE is a string representing the new permissions, e.g. \"755\"."
       (message "Changed permissions of %s to executable." filename))))
 
 (defun cleanup-buffer ()
-  "Perform a cleanup operations on a buffer, tabs to spaces, re-indent, trim whitespace."
+  "Cleanup buffer, tabs to spaces, re-indent, trim whitespace."
   (interactive)
   (indent-buffer)
   (untabify-buffer)
@@ -321,17 +315,18 @@ Use `csv-mode` instead.
 For example:
 
 ```lisp
-(let1 csv (format-multiline
+ (let1 csv (format-multiline
             \"|1, 2, 3, Words like this, #ffeeff
             |2, 41, 414, 2002, Foo Bar\")
   (csv-to-lists csv))
 
 ;; => ((\"1\" \"2\" \"3\" \"Words like this\" \"#ffeeff\")
 ;;     (\"2\" \"41\" \"414\" \"2002\" \"Foo Bar\"))
-```
-"
+```"
  (mapcar (lambda (line) (split-string line ","))
          (split-string (s-chomp csv) "\n")))
+
+(require 'which-key)
 
 (defun cua-rectangle-which-key-help ()
   "Display cua-rectangle-keymap in which-key."
@@ -344,7 +339,7 @@ For example:
   (format "%X" (string-to-number num)))
 
 (defun decrease-default-font-height (m)
-  "Adjust the default font :height by 10, universal argument is M (to set by multiples)."
+  "Adjust the default font :height by 10 (prefix arg M for multiples)."
   (interactive "p")
   (increase-default-font-height -1))
 
@@ -362,7 +357,7 @@ When there is only one frame, kill the buffer."
     (kill-buffer)))
 
 (defun delete-this-buffer-and-file (force)
-  "Delete the file connected to this buffer and kill it, FORCE is universal argument."
+  "Delete kill file and buffer, prefix arg FORCE."
   (interactive "P")
   (let ((filename (buffer-file-name))
         (buffer (current-buffer))
@@ -375,6 +370,7 @@ When there is only one frame, kill the buffer."
         (message "Deleted '%s'" filename)))))
 
 (defun describe-thing-at-point ()
+  "Describe the function or variable at point."
   (interactive)
   (let* ((thing (symbol-at-point)))
     (cond
@@ -412,7 +408,7 @@ at N positons from `point'."
     (describe-char (- p prefix))))
 
 (defun dired-find-file-other-window-and-back ()
-  "In Dired, visit this file or directory in another window and remain in first window."
+  "Open file or directory, focus original window."
   (interactive)
   (find-file-other-window (dired-get-file-for-visit))
   (switch-window))
@@ -1537,6 +1533,7 @@ OSX specific."
       (replace-match to))))
 
 (defun replace-region-with (fn)
+  "Replace current region using FN."
   (let* ((input (buffer-substring-no-properties (region-beginning) (region-end)))
          (output (funcall fn input)))
     (delete-region (region-beginning) (region-end))
@@ -1753,6 +1750,20 @@ css-value to the hex color found."
   "Reset the default commandline"
   (interactive)
   (setq screencapture-mac-default-commandline nil))
+
+
+(defmacro ocodo/cmdalias (name command)
+  `(defun ,name ()
+     ,(format "%s is an alias of %s." name command)
+     (interactive)
+     (call-interactively (function ,command))))
+
+(defmacro ocodo/cmdalias (name command)
+  `(defun ,name ()
+     (interactive)
+     (call-interactively ',command)))
+
+(ocodo/cmdalias ocodo/reload-fonts set-doom-lambda-line-fonts)
 
 (defun set-doom-lambda-line-fonts ()
   "Sort out font / unicode / fontset stuff."
