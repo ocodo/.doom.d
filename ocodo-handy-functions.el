@@ -713,6 +713,11 @@ when matches are equidistant from the current point."
           (mapc (lambda (file) (find-file file)) file-list))
       (user-error "Not in a git repository"))))
 
+(defun git-delete-file-from-cache (filename)
+  "Git rm --cache FILENAME."
+  (interactive "f")
+  (shell-command (format "git rm --cache %s" filename)))
+
 (defun github-browse-repo (repo)
   "Browse a github REPO by supplying the user/reponame."
   (interactive "sGithub Repo [format: user/repo]: ")
