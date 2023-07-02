@@ -40,6 +40,22 @@
 (require 'lisp-mnt)
 (require 'subr-x)
 
+(defvar ocodo-github-repos-cache '()
+  "Cache list of github repos.")
+
+(defvar ocodo-github-orgs (list
+                           "ocodo"
+                           "emacsfodder"
+                           "codefodder"
+                           "osxfodder"
+                           "getclacking"
+                           "emacsgifs"
+                           "gofodder"
+                           "cutbox"
+                           "crystal-castles"
+                           "nms-shoppinglist")
+  "List of my active github orgs.")
+
 (defmacro let1 (var val &rest body)
   "Syntax sugar for LET. A single VAR VAL let over BODY.
 
@@ -713,14 +729,46 @@ when matches are equidistant from the current point."
           (mapc (lambda (file) (find-file file)) file-list))
       (user-error "Not in a git repository"))))
 
+(defun git-in-repo-p (dir)
+  "True if DIR is in a git repo."
+  (not (string-match "^fatal: Not a git repo " (shell-command-to-string "git ls-files"))))
+
 (defun git-delete-file-from-cache (filename)
   "Git rm --cache FILENAME."
   (interactive "f")
   (shell-command (format "git rm --cache %s" filename)))
 
+(defun ocodo-github-repos ()
+  "List github repos using gh cli and `ocodo-github-orgs'."
+  (unless ocodo-github-repos-cache
+    (setq ocodo-github-repos-cache
+     (s-split "\n"
+      (s-join ""
+       (--map
+        (shell-command-to-string
+         (format "gh repo list %s --json nameWithOwner -t '{{range .}}{{tablerow .nameWithOwner}}{{end}}'" it))
+        ocodo-github-orgs))
+      t)))
+  ocodo-github-repos-cache)
+
+(defun ocodo-github-repos-refresh ()
+  "Refresh repos cache."
+  (interactive)
+  (setq ocodo-github-repos-cache nil)
+  (ocodo-github-repos))
+
+(defun github-browse-current-repo (repo)
+  "Browse the current github REPO, If the user is not in a repo,
+Select from `ocodo-github-repos'."
+  (interactive (list
+                (if (git-in-repo-p (pwd))
+                    (s-chomp (shell-command-to-string "gh repo view --json nameWithOwner -t '{{tablerow .nameWithOwner}}'"))
+                  (completing-read "Github Repo [format: user/repo]: " (ocodo-github-repos) nil nil))))
+  (browse-url (format "https://github.com/%s" repo)))
+
 (defun github-browse-repo (repo)
-  "Browse a github REPO by supplying the user/reponame."
-  (interactive "sGithub Repo [format: user/repo]: ")
+  "Browse the github REPO. Select from `ocodo-github-repos'."
+  (interactive (list (completing-read "Github Repo [format: user/repo]: " (ocodo-github-repos) nil nil)))
   (browse-url (format "https://github.com/%s" repo)))
 
 (defun google-en-to-thai (text)
