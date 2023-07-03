@@ -40,6 +40,8 @@
 
 (bind-key "s-<mouse-1>" #'browse-url-at-mouse)
 
+(bind-key "M-s-o" #'ocodo-open-project)
+
 (map!
 ;; Unbind C-RET on global key map
    "C-RET"      nil
