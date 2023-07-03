@@ -72,8 +72,6 @@ Example usage:
 (defmacro plist-bind (args expr &rest body)
   "Destructure PLIST, ARGS (keys) of EXPR (a plist) are available in BODY.
 
-Use the new plist-let instead.
-
 For example:
 
 ```lisp
