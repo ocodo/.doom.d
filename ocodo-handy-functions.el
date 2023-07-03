@@ -799,7 +799,6 @@ Look for name matches in workspace, Check git remote for a match."
     (while (and (null found) workspace-folders)
      (let* ((d (car workspace-folders))
             (url (ocodo/git-remote-url d)))
-       (debug project url d)
        (when (string= url project) d (setq found d))
        (setq workspace-folders (cdr workspace-folders))))
     found))
