@@ -150,8 +150,6 @@ For example:
            (pcase-lambda ,arglist ,@body)
            ,docstring)))
 
-
-
 (defvar ocodo-key-binding-groups '(("Markdown Soma" 1 "^Markdown soma")
                                    ("Smart Parens" 1 "^Sp ")
                                    ("Text Transforms" 0 "C-c t t")
@@ -591,7 +589,7 @@ For example:
 ```
 "
   (let* ((parts (split-string (number-to-string n) "[.]"))
-         (characteristic (first parts))
+         (characteristic (car parts))
          (separated
           (reverse
            (string-join (--reject (string= it "")
@@ -757,9 +755,76 @@ when matches are equidistant from the current point."
   (setq ocodo-github-repos-cache nil)
   (ocodo-github-repos))
 
+(defun ocodo-open-project (project)
+  "Open a PROJECT in workspace or from github."
+  (interactive (list (completing-read "Select a project: " (ocodo-project-list))))
+  (if (string-match-p "git@github\\.com:" project)
+      (ocodo-open-project-repo-locally project)
+    (ocodo-open-local-project project)))
+
+(defun ocodo-open-project-repo-locally (project)
+  "Open a PROJECT repo locally.
+Clone if not already in workspace."
+  (let ((path (ocodo-find-local-repo project)))
+    (if path
+        (ocodo-open-local-project path)
+      (progn
+        (let ((path (format "~/workspace/%s" (f-filename project))))
+         (if (f-exists-p path)
+             (error "%s already exists" path)
+          (progn
+            (ocodo-clone-project project path)
+            (ocodo-open-local-project path))))))))
+
+(defun ocodo-clone-project (project path)
+  "Clone PROJECT (git ssh url) to PATH."
+  (message
+   (shell-command-to-string (format "git clone %s %s" project path))))
+
+(defun ocodo/git-remote-url (&optional directory remote)
+  "Return the url of the git REMOTE in DIRECTORY.
+Return nil if no remote or not a git repo.
+
+DIRECTORY and REMOTE are optional.
+Current dir and origin will be used by default."
+  (let ((directory (if directory (format "-C %s" directory) ""))
+        (remote (or remote "origin")))
+    (s-chomp (shell-command-to-string (format "git %s remote get-url %s" directory remote)))))
+
+(defun ocodo-find-local-repo (project)
+  "Return the path of PROJECT with repo url.
+Look for name matches in workspace, Check git remote for a match."
+  (let ((workspace-folders (cl-copy-list (ocodo-local-project-list)))
+        (found nil))
+    (while (and (null found) workspace-folders)
+     (let* ((d (car workspace-folders))
+            (url (ocodo/git-remote-url d)))
+       (debug project url d)
+       (when (string= url project) d (setq found d))
+       (setq workspace-folders (cdr workspace-folders))))
+    found))
+
+(defun ocodo-project-list ()
+  "List of project names from workspace and github repos."
+  (append
+   (mapcar
+    (lambda (p) (format "git@github.com:%s.git" p))
+    (ocodo-github-repos))
+   (ocodo-local-project-list)))
+
+(defun ocodo-local-project-list ()
+  "List of project names from workspace."
+  (f-directories "~/workspace"))
+
+(defun ocodo-open-local-project (project)
+  "Open a local PROJECT."
+  (if (f-exists-p project)
+      (find-file project)
+    (error "%s was not found locally" project)))
+
 (defun github-browse-current-repo (repo)
-  "Browse the current github REPO, If the user is not in a repo,
-Select from `ocodo-github-repos'."
+  "Browse the current github REPO.
+If the user is not in a repo, Select from `ocodo-github-repos'."
   (interactive (list
                 (if (git-in-repo-p (pwd))
                     (s-chomp (shell-command-to-string "gh repo view --json nameWithOwner -t '{{tablerow .nameWithOwner}}'"))
@@ -1267,10 +1332,10 @@ Leave *scratch* and *Messages* alone too."
 
 (defun ocodo-filter-key-bindings (filter index bindings)
   "Filter BINDINGS by FILTER on INDEX."
-  (--filter (s-matches-p filter (nth-value index it)) bindings))
+  (--filter (s-matches-p filter (nth index it)) bindings))
 
 (defun ocodo-ungrouped-key-bindings (bindings title groups)
-  "Collect BINDINGS and HEADINGS into GROUPS."
+  "Collect BINDINGS and TITLE into GROUPS."
   (let ((bindings (ocodo-key-bindings-for-documentation))
         (predicates (--map
                        (cl-destructuring-bind (_ index filter) it
@@ -1918,7 +1983,7 @@ Return an error if no buffer file."
   (comment-region (point-at-bol) (point-at-eol)))
 
 (defun sort-sexps (beg end)
-  "Sort sexps in region.
+  "Sort sexps in region BEG / END.
 Comments stay with the code below."
   (interactive "r")
   (cl-flet ((skip-whitespace () (while (looking-at (rx (1+ (or space "\n"))))
