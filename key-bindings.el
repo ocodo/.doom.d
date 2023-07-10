@@ -42,6 +42,9 @@
 
 (bind-key "M-s-o" #'ocodo-open-project)
 
+(bind-key "s-r" #'+make/run)
+(bind-key "s-R" #'+make/run-last)
+
 (map!
 ;; Unbind C-RET on global key map
    "C-RET"      nil
