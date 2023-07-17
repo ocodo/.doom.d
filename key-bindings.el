@@ -103,26 +103,28 @@ Region             Avy              Flycheck
           (defhydra iedit-commands
             (:color blue :hint nil)
             "
-iedit
-_RET_ toggle iedit mode
-_;_ toggle selection        _{_ expand up a line      _D_ Delete all
-_\"_ toggle occurence lines  _}_ expand down a line   _M_ Multiple Cursors
+_RET_ toggle iedit mode     _s_ Search iedit
+_;_ toggle selection        _[_ expand up a line      _d_ Delete all
+_\"_ toggle occurence lines  _]_ expand down a line   _m_ Multiple Cursors
 _'_ toggle context lines    _<_ goto first
-_H_ restrict function       _>_ goto last
-_I_ restrict line
+_h_ only this function      _>_ goto last
+_i_ only this line
 "
             ("RET" iedit-mode)
+            ("s" (progn
+                   (isearch-forward)
+                   (iedit-mode-from-isearch)))
             (";" iedit-toggle-selection)
             ("\"" iedit-show/hide-occurrence-lines)
             ("'" iedit-show/hide-context-lines)
-            ("H" iedit-restrict-function)
-            ("I" iedit-restrict-current-line)
-            ("{" iedit-expand-up-a-line)
-            ("}" iedit-expand-down-a-line)
+            ("h" iedit-restrict-function)
+            ("i" iedit-restrict-current-line)
+            ("[" iedit-expand-up-a-line)
+            ("]" iedit-expand-down-a-line)
             ("<" iedit-goto-first-occurrence)
             (">" iedit-goto-last-occurrence)
-            ("D" iedit-delete-occurrences)
-            ("M" iedit-switch-to-mc-mode)))
+            ("d" iedit-delete-occurrences)
+            ("m" iedit-switch-to-mc-mode)))
 
 (bind-key "C-c ]"          #'embrace-commander)
 
