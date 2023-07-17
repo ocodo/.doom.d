@@ -979,7 +979,6 @@ If your're in the minibuffer it will use the other buffer file name."
   (interactive)
   (switch-to-buffer "*Messages*"))
 
-(bind-key "s-m" 'jump-to-message-buffer)
 
 (defun kill-untitled-buffers ()
   "Kill untitled buffers."

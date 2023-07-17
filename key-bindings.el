@@ -45,6 +45,38 @@
 (bind-key "s-r" #'+make/run)
 (bind-key "s-R" #'+make/run-last)
 
+(bind-key "s-l" #'consult-line)
+
+(bind-key "s-m" #'jump-to-message-buffer)
+
+(bind-key "s-f"
+          (defhydra file-commands
+            (:color blue :hint nil)
+            "
+This file:
+[_r_] Rename/Move
+[_d_] Delete
+"
+            ("r" rename-this-buffer-and-file)
+            ("d" delete-this-buffer-and-file)))
+
+(bind-key "s-a"
+          (defhydra avy-commands
+            (:color blue :hint nil)
+            "
+Region             Avy              Flycheck
+[_a_]   Select all   [_m_] Move line    [_e_] Errors
+[_SPC_] Expand       [_j_] Goto line    [_n_] Next error
+                   [_g_] Goto char
+"
+            ("a" mark-whole-buffer)
+            ("SPC" er/expand-region)
+            ("j" avy-goto-line)
+            ("m" avy-move-line)
+            ("g" avy-goto-char)
+            ("e" consult-flycheck)
+            ("n" flycheck-next-error)))
+
 (map!
 ;; Unbind C-RET on global key map
    "C-RET"      nil
@@ -67,6 +99,30 @@
 (bind-key "C-M-^"          #'join-line-from-below)
 
 (bind-key "C-c ;"          #'iedit-mode)
+(bind-key "s-;"
+          (defhydra iedit-commands
+            (:color blue :hint nil)
+            "
+iedit
+_RET_ toggle iedit mode
+_;_ toggle selection        _{_ expand up a line      _D_ Delete all
+_\"_ toggle occurence lines  _}_ expand down a line   _M_ Multiple Cursors
+_'_ toggle context lines    _<_ goto first
+_H_ restrict function       _>_ goto last
+_I_ restrict line
+"
+            ("RET" iedit-mode)
+            (";" iedit-toggle-selection)
+            ("\"" iedit-show/hide-occurrence-lines)
+            ("'" iedit-show/hide-context-lines)
+            ("H" iedit-restrict-function)
+            ("I" iedit-restrict-current-line)
+            ("{" iedit-expand-up-a-line)
+            ("}" iedit-expand-down-a-line)
+            ("<" iedit-goto-first-occurrence)
+            (">" iedit-goto-last-occurrence)
+            ("D" iedit-delete-occurrences)
+            ("M" iedit-switch-to-mc-mode)))
 
 (bind-key "C-c ]"          #'embrace-commander)
 
