@@ -23,22 +23,33 @@
 ;;
 ;;; Code:
 
-(require 's)
 (require 'cl-lib)
+(require 'cua-base)
+(require 'cua-rect)
 (require 'dash)
-(require 'kv)
+(require 'doom)
+(require 'f)
 (require 'find-func)
 (require 'kurecolor)
-(require 'cua-base)
+(require 'kv)
+(require 'lambda-line)
+(require 'lisp-mnt)
 (require 'magit)
+(require 'markdown-soma)
+(require 'multiple-cursors)
 (require 'pcre2el)
 (require 'rx)
-(require 'xr)
-(require 'time-stamp)
-(require 'yasnippet)
-(require 'f)
-(require 'lisp-mnt)
+(require 'sh-script)
+(require 'straight)
 (require 'subr-x)
+(require 'time-stamp)
+(require 'xr)
+(require 'yasnippet)
+
+;; Declare used global vars
+(defvar recentf-list)
+(defvar smie-config)
+(defvar sh-styles-alist)
 
 (defvar ocodo-github-repos-cache '()
   "Cache list of github repos.")
@@ -91,7 +102,7 @@ For example:
   (nth (random (length list)) list))
 
 (defmacro *-and-replace (name evaluator)
- "Create a command NAME which replaces region with result of EVALUATOR.
+ "Create a command NAME which replace region with result of EVALUATOR.
 
 For example:
 
@@ -150,39 +161,6 @@ For example:
            (pcase-lambda ,arglist ,@body)
            ,docstring)))
 
-(defvar ocodo-key-binding-groups '(("Markdown Soma" 1 "^Markdown soma")
-                                   ("Smart Parens" 1 "^Sp ")
-                                   ("Text Transforms" 0 "C-c t t")
-                                   ("Auto Snippet" 1 "^Aya")
-                                   ("Ruby" 1 "^Ruby")
-                                   ("Swiper" 1 "^Swiper")
-                                   ("Git" 0 "C-x v ")
-                                   ("Color" 1 "[Cc]olor")
-                                   ("Dired" 1 "^Dired")
-                                   ("ERT Testing" 1 "^Ert ")
-                                   ("Debugging" 1 "[Dd]ebug")
-                                   ("Windows" 1 "[Ww]indow"))
-  "Key binding group filters.")
-
-(defvar ocodo-key-bindings-lisp-files
-  (-concat
-   `(,(expand-file-name "~/.doom.d/key-bindings.el"))
-   (f-entries "~/.doom.d/use/"
-              (lambda (file)
-                 (let1 text
-                       (f-read file 'utf-8)
-                   (s-contains? "bind-key" text)))))
-  "List of emacs-lisp files which have personalised key bindings.")
-
-(defvar ocodo-key-bindings-heading
-  "Ocodo's Emacs Key Bindings."
-  "Key bindings page heading.")
-
-(defvar ocodo-key-bindings-table-heading (concat
-                                          "| Key(s)  | Command | keymap  |\n"
-                                          "|:--------|:--------|--------:|")
-  "Markdown table heading for key binding documentation.")
-
 (defvar screencapture-mac-default-commandline nil
   "Default command line with options.")
 
@@ -235,9 +213,9 @@ For example:
 
 ;; Or...
 
-(defun number-at-point-to-currency ()
- \"Change the number at point to currency.\"
-  (format \"$%.2f\" (number-at-point))))
+ (defun number-at-point-to-currency ()
+  \"Change the number at point to currency.\"
+   (format \"$%.2f\" (number-at-point))))
 ```"
   (let ((number (number-at-point))
         (point (point)))
@@ -406,7 +384,7 @@ Move back to point after describing the char."
 (defun describe-char-next (prefix)
   "Describe the char next to point (+1).
 
-Universal PREFiX can be used to describe char
+Universal PREFIX can be used to describe char
 at N positons from `point'."
   (interactive "p")
   (let ((p (point)))
@@ -425,10 +403,10 @@ at N positons from `point'."
   "Open file or directory, focus original window."
   (interactive)
   (find-file-other-window (dired-get-file-for-visit))
-  (switch-window))
+  (other-window -1))
 
 (defun dired-menu ()
-  "Go to one of the currently open dired buffers (if there is one)."
+  "Go to one of the currently open Dired buffers (if there is one)."
   (interactive)
   (let* ((dired-buffers (--map (buffer-name it)
                                (--filter
@@ -439,12 +417,12 @@ at N positons from `point'."
       (message "There's no dired buffers open right now"))))
 
 (defun dired-osx-open-this-file ()
-  "Use the OSX `open' command to launch the current dired file at point."
+  "Use the OSX `open' command to launch the current Dired file at point."
   (interactive)
   (shell-command-to-string (format "open %S" (dired-file-name-at-point))))
 
 (defun dired-visit-library (libraryname)
-  "Open directory with dired which contain the given LIBRARYNAME."
+  "Open directory with Dired which contain the given LIBRARYNAME."
   (interactive "M")
   (dired (file-name-as-directory
           (file-name-directory (find-library-name libraryname)))))
@@ -479,7 +457,7 @@ If UP is non-nil, duplicate and move point to the top."
         (if up
             (progn (message "setting region (up)")
                    (push-mark-command nil)
-                   (goto-char (second saved-region))
+                   (goto-char (nth 1 saved-region))
                    (exchange-point-and-mark))
           (progn (message "setting region")
                  (push-mark-command nil)
@@ -544,23 +522,22 @@ FORMAT-STRING. Tokens are as defined in `(format ...)`
 For example:
 
 ```
-(fomat-multiline \"|- List...
-                  |  - Item %s
-                  |  - Item %#x
-                  |  - Item %x
-                  |
-                  |... %s\"
-  \"one\" 2 #xf \"the end\")
+ (fomat-multiline \"|- List...
+                   |  - Item %s
+                   |  - Item %#x
+                   |  - Item %x
+                   |
+                   |... %s\"
+   \"one\" 2 #xf \"the end\")
 
-=>
-\"- List...
-  - Item one
-  - Item 0x2
-  - Item f
+ =>
+ \"- List...
+   - Item one
+   - Item 0x2
+   - Item f
 
-... the end\"
-```
-"
+ ... the end\"
+```"
   (apply 'format
          (s-join "\n" (--map (s-replace-regexp "^\s*|" "" it) (s-lines format-string)))
          args))
@@ -573,7 +550,7 @@ For example:
   (yank))
 
 (defun kill-save-sexp (arg)
-  "Save sexp to kill-ring, follows the ARG rules of `kill-sexp'."
+  "Save sexp to `kill-ring', follows the ARG rules of `kill-sexp'."
   (interactive "p")
   (kill-sexp arg)
   (yank))
@@ -584,10 +561,9 @@ For example:
 For example:
 
 ```lisp
-(format-thousands-separators 3032498000)
-;; => \"3,032,498,000\"
-```
-"
+ (format-thousands-separators 3032498000)
+ ;; => \"3,032,498,000\"
+```"
   (let* ((parts (split-string (number-to-string n) "[.]"))
          (characteristic (car parts))
          (separated
@@ -601,7 +577,7 @@ For example:
                         ","))))
     (if (eq (length parts) 1)
         separated
-      (format "%s.%s" separated (second parts)))))
+      (format "%s.%s" separated (nth 1 parts)))))
 
 (defun fraction-radian (denominator)
   "Fraction DENOMINATOR of circle to radians."
@@ -630,10 +606,9 @@ current display resolution. This is then filtered out (using grep
 For example:
 
 ```lisp
-(get-osx-display-resolution)
-;; => (\"3840\" \"2160\")
-```
-"
+ (get-osx-display-resolution)
+ ;; => (\"3840\" \"2160\")
+```"
   (s-split "x"
    (s-chomp
     (shell-command-to-string
@@ -855,10 +830,10 @@ If the user is not in a repo, Select from `ocodo-github-repos'."
   "Convert hex NUM to decimal."
   (format "%i" (string-to-number num 16)))
 
-(defun increase-default-font-height (m)
-  "Adjust the default font :height by 10, universal argument is M (to set by multiples)."
+(defun increase-default-font-height (prefix)
+  "Adjust the default font :height by 10, PREFIX (to set by multiples)."
   (interactive "p")
-  (let ((new-height (+ (* m 10) (face-attribute 'default :height))))
+  (let ((new-height (+ (* prefix 10) (face-attribute 'default :height))))
     (set-face-attribute 'default nil :height new-height)
     (message "Default font height set to %i" new-height)))
 
@@ -880,7 +855,7 @@ If the user is not in a repo, Select from `ocodo-github-repos'."
           (setq answer (+ (string-to-number (match-string 0) 2) inc-by))
           (when (< answer 0)
             (setq answer (+ (expt 2 field-width) answer)))
-          (replace-match (format-bin answer field-width)))))))
+          (replace-match (format-binary answer field-width)))))))
 
 (defun indent-buffer ()
   "Indent the current buffer."
@@ -938,12 +913,12 @@ If your're in the minibuffer it will use the other buffer file name."
   (interactive)
   (insert (format-time-string "%l:%M%P(%z) %Y-%m-%d")))
 
-(defun int-to-binary-string (i)
-  "convert an integer into it's binary representation in string format"
+(defun int-to-binary-string (int)
+  "Convert an INT into it's binary representation in string format."
   (let ((res ""))
-    (while (not (= i 0))
-      (setq res (concat (if (= 1 (logand i 1)) "1" "0") res))
-      (setq i (lsh i -1)))
+    (while (not (= int 0))
+      (setq res (concat (if (= 1 (logand int 1)) "1" "0") res))
+      (setq int (lsh int -1)))
     (if (string= res "")
         (setq res "0"))
     res))
@@ -1034,7 +1009,7 @@ If your're in the minibuffer it will use the other buffer file name."
     (magit-refresh)))
 
 (defun make-kurecolor-24bit-hue-table (color)
-  "Make a 24bit color table using Kurecolor."
+  "Make a 24bit COLOR table using Kurecolor."
   (interactive)
   (cl-loop for
            (a b) in
@@ -1119,25 +1094,6 @@ Internally uses the script `~/.doom.d/bin/emacs-markdown-preview-layout.osa'."
   (when (not markdown-soma-mode)
     (shell-command "~/.doom.d/bin/emacs-markdown-preview-layout.osa" nil nil)))
 
-(defun markdown-soma-window-arrangement-stop ()
-  "Arrange windows for `markdown-soma-stop'.
-
-Internally uses the script `~/.doom.d/bin/emacs-markdown-preview-close.osa'."
-  (interactive)
-  (when markdown-soma-mode
-    (shell-command "~/.doom.d/bin/emacs-markdown-preview-close.osa" nil nil)))
-
-(advice-add #'markdown-soma-start
-            :before
-            #'markdown-soma-window-arrangement-start)
-
-(advice-add #'markdown-soma-stop
-            :before
-            #'markdown-soma-window-arrangement-stop)
-
-(advice-remove #'markdown-soma-start #'markdown-soma-window-arrangement-start)
-(advice-remove #'markdown-soma-stop #'markdown-soma-window-arrangement-stop)
-
 (defun mc/cua-rectangle-to-multiple-cursors ()
   "Switch from cua rectangle to multiple cursors."
   (interactive)
@@ -1177,10 +1133,9 @@ Internally uses the script `~/.doom.d/bin/emacs-markdown-preview-close.osa'."
 For example:
 
 ```lisp
-(md-code-to-docstring-arg \"`code`\")
-;;  => CODE
-```
-"
+ (md-code-to-docstring-arg \"`code`\")
+ ;;  => CODE
+```"
   (s-replace-regexp
    (rx "`" (group (>= 1 (any alnum "_" "-"))) "`")
    (lambda (match) (upcase (format "%s" (s-replace "`" "" match))))
@@ -1232,7 +1187,7 @@ Leave *scratch* and *Messages* alone too."
   (delete-other-windows))
 
 (defun ocodo/doom-upgrade-packages (&optional packages no-confirm)
-  "Upgrade PACKAGES, (unattended NO-CONFIRM = t)"
+  "Upgrade PACKAGES, (unattended NO-CONFIRM = t)."
   (interactive)
   (when (ocodo/straight-remove-packages packages no-confirm)
     (doom/reload)))
@@ -1255,7 +1210,7 @@ Leave *scratch* and *Messages* alone too."
   (byte-compile-file "~/.emacs.d/.local/straight/build-28.1/straight/straight-ert-print-hack.el"))
 
 (defun ocodo/straight-remove-packages (&optional packages no-confirm)
-  "Remove PACKAGES, (unattended NO-CONFIRM = t)"
+  "Remove PACKAGES, (unattended NO-CONFIRM = t)."
   (interactive)
   (let* ((straight-absolute-build-dir (format "%s%s%s"
                                               straight-base-dir
@@ -1271,7 +1226,7 @@ Leave *scratch* and *Messages* alone too."
          (confirmed (if no-confirm
                         t
                       (y-or-n-p
-                       (format "%s\nConfirm delete: "
+                       (format "%s\nDelete?"
                                (s-join
                                 "\n"
                                 (--map
@@ -1320,135 +1275,6 @@ Leave *scratch* and *Messages* alone too."
       (insert (propertize "Done" 'face 'success))
       (read-only-mode)
       deletions)))
-
-(defun ocodo-make-key-binding-table-row (binding)
-  "Make a markdown table row from BINDING."
-  (cl-destructuring-bind
-      (keys command keymap)
-      binding
-   (format "| <kbd>%s</kbd> | %s | %s |" keys command keymap)))
-
-(defun ocodo-filter-key-bindings (filter index bindings)
-  "Filter BINDINGS by FILTER on INDEX."
-  (--filter (s-matches-p filter (nth index it)) bindings))
-
-(defun ocodo-ungrouped-key-bindings (bindings title groups)
-  "Collect BINDINGS and TITLE into GROUPS."
-  (let ((bindings (ocodo-key-bindings-for-documentation))
-        (predicates (--map
-                       (cl-destructuring-bind (_ index filter) it
-                         `(lambda (bind) (s-matches-p ,filter (nth ,index bind))))
-                       groups)))
-    (list title
-      (--sort
-          (string< (second it)
-                   (second other))
-        (-filter (lambda (b)
-                   (--all? (eql nil it)
-                    (--map (funcall it b) predicates)))
-          bindings)))))
-
-(defun ocodo-make-key-binding-groups (bindings headings groups)
-  "Collect BINDINGS and HEADINGS into GROUPS."
-  (--map
-   (cl-destructuring-bind (title index filter) it
-    (list title
-      (--sort
-          (string< (second it) (second other))
-        (ocodo-filter-key-bindings
-          filter index
-          bindings))))
-   groups))
-
-(defun ocodo-key-bindings-use-unicode-symbols (key-binding &optional white-arrows)
-  "KEY-BINDING string directions to unicode arrows.
-<up> <down> <left> <right> replaced with ↑ ↓ ← →.
-<return> replaced with ⮐.
-
-Setting WHITE-ARROWS to t, gives these replacements: ⇧ ⇩ ⇦ ⇨ and ⏎."
- (let ((key-to-arrow '(("<return>" ("⏎" . "⮐"))
-                       ("<up>"     ("⇧" . "↑"))
-                       ("<down>"   ("⇩" . "↓"))
-                       ("<left>"   ("⇦" . "←"))
-                       ("<right>"  ("⇨" . "→"))))
-       (fn (or (and white-arrows 'cdar) 'cddr)))
-   (cl-reduce (lambda (text it)
-                (s-replace (car it) (funcall fn it) text))
-       key-binding)))
-
-(defun ocodo-key-bindings-for-documentation ()
-  "Cleaned list of key bindings for documentation."
-  (ocodo-clean-key-bindings-for-documentation
-   (ocodo-collate-key-bindings-for-documentation)))
-
-(defun ocodo-clean-key-bindings-for-documentation (binding-list)
-  "Prepare collated binding LIST for documentation."
-  (--map `(,(s-replace "|" "\\|" (ocodo-key-bindings-use-unicode-symbols (first it)))
-           ,(s-capitalized-words (s-replace "#'" "" (format "%s"(second it))))
-           ,(s-capitalized-words (s-replace-regexp "^nil$" "Global" (s-replace "'" "" (format "%s" (third it))))))
-         (ocodo-collate-key-bindings-for-documentation)))
-
-(defun ocodo-collate-key-bindings-for-documentation ()
-  "Collate all key bindings found in ocodo-key-bindings-lisp-files."
-   (eval
-    (car
-     (read-from-string
-      (format "'(%s)"
-       (s-join
-        "\n"
-        (--map
-         (format
-          "( %s )"
-          (second (s-match
-                   "[[:space:]]*?(bind-key\\(.*?\\))+$"
-                   it)))
-         (--filter (s-contains-p "(bind-key " it)
-                   (-flatten
-                    (--map (s-split "\n" (f-read it 'utf-8))
-                     ocodo-key-bindings-lisp-files))))))))))
-
-(defun ocodo-key-binding-groups-to-markdown (binding-groups headings)
-  "Convert BINDING-GROUPS to string of markdown tables."
-  (concat
-   (format-multiline "|# %s
-                      |
-                      |%s
-                      |"
-                     ocodo-key-bindings-heading
-                     (lm-commentary "~/.doom.d/key-bindings.el"))
-
-   (s-join "\n"
-    (--map
-     (cl-destructuring-bind (title bindings) it
-       (format-multiline "|
-                          |### %s
-                          |
-                          |%s
-                          |%s"
-          title
-          headings
-          (s-join "\n"
-           (--map
-            (ocodo-make-key-binding-table-row it)
-            bindings))))
-     (push
-      (ocodo-ungrouped-key-bindings (ocodo-key-bindings-for-documentation)
-        "General" ocodo-key-binding-groups)
-      binding-groups)))))
-
-(defun ocodo-custom-key-bindings-markdown (file)
-  "Generate markdown FILE with table of custom bindings"
-  (interactive "f[Cusom Bindings] Save to markdown file: ")
-  (let* ((table-heading ocodo-key-bindings-table-heading)
-
-         (binding-list (ocodo-key-bindings-for-documentation))
-
-         (custom-key-bindings-markdown (ocodo-key-binding-groups-to-markdown
-                                        (ocodo-make-key-binding-groups binding-list table-heading ocodo-key-binding-groups)
-                                        table-heading)))
-    (f-write custom-key-bindings-markdown 'utf-8 file)
-    (message ": %s" file)
-    (when (y-or-n-p (format "Generated %s, open it?" file)) (find-file file))))
 
 (defun ocodo-sh-indent-rules ()
   "Set up shell script indenation rules engines."
@@ -1525,7 +1351,7 @@ Setting WHITE-ARROWS to t, gives these replacements: ⇧ ⇩ ⇦ ⇨ and ⏎."
 \(When it's missing\)"
   (interactive)
   (if (and buffer-file-name (string-match "emacs-lisp" (format "%s" major-mode)))
-      (let* ((filename (file-name-base))
+      (let* ((filename (file-name-base buffer-file-name))
              (end-file-message (format  ";;; %s.el ends here" filename)))
         (goto-char (point-max))
         (unless (looking-back end-file-message nil)
@@ -1533,10 +1359,13 @@ Setting WHITE-ARROWS to t, gives these replacements: ⇧ ⇩ ⇦ ⇨ and ⏎."
     (message "Not a lisp file.")))
 
 (defun package-commentary-to-markdown (markdown-file &optional emacslisp-file)
-  "Read the commentary from current emacslisp file and write it to MARKDOWN-FILE.
+  "Convert commentary EMACSLISP-FILE and write it to MARKDOWN-FILE.
 
-Conversion is minimal and expects that most of the docstring is already formatted as
-markdown.  Quoted `items' will be converted to backquoted `items`."
+Conversion is minimal and expects that most of the docstring is
+already formatted as markdown. Quoted `items' will be converted
+to backquoted `items`.
+
+If EMACSLISP-FILE is nil the current buffer file will be used."
   (interactive "FMarkdown file: \ni")
   (if (null emacslisp-file)
       (when (string-match "emacs-lisp" (format "%s" major-mode))
@@ -1550,7 +1379,7 @@ markdown.  Quoted `items' will be converted to backquoted `items`."
         (f-write-text
          (replace-regexp-in-string "`\\(.*?\\)'" "`\\1`" (lm-commentary))
          'utf-8 markdown-file))
-      (if (y-or-n-p (format "Review changes to %s (y) or close? (n) " markdown-file))
+      (if (y-or-n-p (format "Review changes to %s?" markdown-file))
           (find-file markdown-file)
         (switch-to-buffer (get-buffer working-buffer))))))
 
@@ -1585,7 +1414,7 @@ commentary.  Backquoted `code` will be converted to Emacs quoted `items'."
                     (lambda (line)
                       (format ";; %s \n" line))
                     (split-string markdown-text "\n")))))
-            (if (y-or-n-p (format "Review changes to %s (y) or close? (n) " emacslisp-file))
+            (if (y-or-n-p (format "Review changes to %s?" emacslisp-file))
                 (message "Note: Changes not saved yet.")
               (save-buffer t)
               (switch-to-buffer working-buffer)))))))
@@ -1742,7 +1571,7 @@ css-value to the hex color found."
     (insert variable-definition)))
 
 (defun screencapture-mac (&optional commandline file-keyword)
-  "Screencapture on macOS, interactive or supply COMMANDLINE and FILE_KEYWORD."
+  "Screencapture on macOS, interactive or supply COMMANDLINE and FILE-KEYWORD."
   (interactive)
   (if (or screencapture-mac-default-commandline commandline)
       (if commandline
@@ -1761,12 +1590,12 @@ css-value to the hex color found."
                                                               (screencapture-mac--summary-list))))))))
            (filename (screencapture-mac--filename-generator screencapture-mac-default-file-location nil file-keyword)))
 
-      (when (y-or-n-p (format "Make default (%s) :" command))
+      (when (y-or-n-p (format "Make default (%s)?" command))
         (setq screencapture-mac-default-commandline command))
       (screencapture-mac--run command filename))))
 
 (defun screencapture-mac--complete-arguments-for-option (plist)
-  "Do completeing read for arguments of option."
+  "Do completeing read for arguments of option, using PLIST."
   (plist-bind (flag arg description helper helper-prompt) plist
               (if arg
                   (format " %s %s " flag
@@ -1777,10 +1606,11 @@ css-value to the hex color found."
                 (format " %s " flag))))
 
 (defun screencapture-mac--entry-from-summaries (summaries)
+  "Get an option from SUMMARIES."
   (mapcar 'screencapture-mac--get-option summaries))
 
 (defun screencapture-mac--filename-generator (path &optional ext file-keyword)
-  "Generate a filename for the screenshot at PATH with optional EXT and FILE_KEYWORD."
+  "Create filename for the screenshot at PATH with optional EXT & FILE-KEYWORD."
   (let ((path (if (s-ends-with? "/" path) path (format "%s/" path)))
         (file-keyword
          (or file-keyword
@@ -1796,7 +1626,7 @@ css-value to the hex color found."
               (or ext "png"))))))
 
 (defun screencapture-mac--get-option (summary)
-  "Fetch the option from SUMMARY"
+  "Fetch option from SUMMARY."
   (let ((flag (substring summary 0 2)))
     (kvplist2get
      (screencapture-mac--options) :flag flag)))
@@ -1837,6 +1667,7 @@ css-value to the hex color found."
     (:flag "-x" :description "do not play sounds")))
 
 (defun screencapture-mac--options-summary (plist)
+  "Get the options summary from PLIST."
   (plist-bind (flag description) plist
               (format "%2s %s." flag description)))
 
@@ -1847,13 +1678,13 @@ css-value to the hex color found."
    (format "%s \"%s\"" command filename)))
 
 (defun screencapture-mac--summary-list ()
-  "Summarized list of screencapture mac options"
+  "Summarized list of screencapture mac options."
   (mapcar
    'screencapture-mac--options-summary
    (screencapture-mac--options)))
 
 (defun screencapture-mac--windowid-helper ()
-  "Get the windowid from a completing-read list."
+  "Get the windowid from a `completing-read' list."
   (car (last
         (s-match "^\\([0-9]*\\) -"
           (completing-read "Select window: "
@@ -1863,21 +1694,17 @@ css-value to the hex color found."
                (macos-get-list-of-windowids)))))))
 
 (defun screencapture-mac-reset-default-commandline ()
-  "Reset the default commandline"
+  "Reset the default commandline."
   (interactive)
   (setq screencapture-mac-default-commandline nil))
 
 
 (defmacro ocodo/cmdalias (name command)
+  "Create an alias NAME of an interactive COMMAND."
   `(defun ,name ()
      ,(format "%s is an alias of %s." name command)
      (interactive)
      (call-interactively (function ,command))))
-
-(defmacro ocodo/cmdalias (name command)
-  `(defun ,name ()
-     (interactive)
-     (call-interactively ',command)))
 
 (ocodo/cmdalias ocodo/reload-fonts set-doom-lambda-line-fonts)
 
@@ -2069,7 +1896,8 @@ Comments stay with the code below."
          (ssh-agent--fix)))))
 
 (defun setup-ssh-agent ()
-  "Checks if macOS and a launchd ssh-agent is running, otherwise starts it and adds ssh keys from the macOS keychain"
+  "On macOS, check if launchd ssh-agent is running.
+Otherwise start it, adding ssh keys from the macOS keychain."
   (interactive)
   (when (eq system-type 'darwin) ;; check if macOS
     (let ((ssh-auth-sock (getenv "SSH_AUTH_SOCK"))
@@ -2099,7 +1927,6 @@ Comments stay with the code below."
           ;; add ssh keys from macOS keychain
           (shell-command "ssh-add -A"))))))
 
-
 (defun switch-to-message-buffer ()
   "Switch to the message buffer."
   (interactive)
@@ -2126,7 +1953,7 @@ Comments stay with the code below."
           (insert contents)))))
 
 (defun time-now ()
- "current time."
+ "Current time."
  (interactive)
  (message (format-time-string "%l:%M%P(%z) %Y-%m-%d")))
 

@@ -1,10 +1,15 @@
+;;; key-bindings --- Custom key bindings
 ;;; Commentary:
-;;  Customized key bindings for the global-key-map
+;;  Customized key bindings
 ;;; Code:
 
-;;; Zoom
+(require 'bind-key)
+(require 'ocodo-handy-functions)
+
 (set-face-attribute 'default nil :height 240)
 
+;;; Zoom
+;;;
 (defun ocodo/default-face-size-decrease ()
   "Decrease the default face size."
   (interactive)
@@ -33,6 +38,7 @@
 
 (bind-key "s-=" #'text-scale-increase)
 (bind-key "s--" #'text-scale-decrease)
+
 (bind-key "M-s-=" #'ocodo/default-face-size-increase)
 (bind-key "M-s--" #'ocodo/default-face-size-decrease)
 (bind-key "M-s-0" #'ocodo/default-face-size-reset)
@@ -219,3 +225,4 @@ _i_ only this line
 (bind-key "s-f" #'magit-pull-from-upstream magit-status-mode-map)
 
 (provide 'key-bindings)
+;;; key-bindings.el ends here
