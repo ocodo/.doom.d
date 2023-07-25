@@ -756,6 +756,22 @@ Clone if not already in workspace."
   (message
    (shell-command-to-string (format "git clone %s %s" project path))))
 
+(defun ocodo/get-filename-size ()
+  "Get the size of filename at the current line.
+Only works with lines which contain a filename."
+  (interactive)
+  (let* ((name (s-chomp (thing-at-point 'line)))
+         (size (f-size name)))
+     (message "%s"
+              (file-size-human-readable (f-size name)))))
+
+(defun ocodo/mac-open-filename ()
+  "Open the filename at the current line.
+Only works with lines which contain a filename."
+  (interactive)
+  (let* ((name (s-chomp (thing-at-point 'line))))
+    (message (shell-command-to-string (format "open \"%s\"" name)))))
+
 (defun ocodo/git-remote-url (&optional directory remote)
   "Return the url of the git REMOTE in DIRECTORY.
 Return nil if no remote or not a git repo.
