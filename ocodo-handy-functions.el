@@ -756,6 +756,21 @@ Clone if not already in workspace."
   (message
    (shell-command-to-string (format "git clone %s %s" project path))))
 
+(defun ocodo/bump-version-patch ()
+  "Search for version = and increment the patch number of the string
+
+Editor macro."
+  (interactive)
+  (goto-char 0)
+  (search-forward "version =")
+  (end-of-line)
+  (search-backward ".")
+  (insert " ")
+  (forward-char 1)
+  (increment-number-at-point)
+  (search-backward ".")
+  (delete-horizontal-space))
+
 (defun ocodo/get-filename-size ()
   "Get the size of filename at the current line.
 Only works with lines which contain a filename."

@@ -13,6 +13,12 @@
 
 (setq initial-major-mode 'lisp-interaction-mode)
 
+;; Doom annoyances solutions...:
+;; Whitespace
+(setq-default
+ whitespace-style
+ '(face tabs spaces trailing lines space-before-tab newline indentation empty space-after-tab space-mark tab-mark newline-mark missing-newline-at-eof))
+
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets. It is optional.
 (setq user-full-name "Jason M23"
