@@ -739,7 +739,7 @@ when matches are equidistant from the current point."
           (setq min (region-beginning) max (region-end))
         (setq min (point) max (point)))
       (shell-command-on-region min max
-                               (format "gh create gist --desc '%s' --filename '%s' %s"
+                               (format "gh gist create --desc '%s' --filename '%s' %s"
                                        (string-replace "'" "\\'" (read-string "Gist Description: " nil nil "TODO Description"))
                                        (read-string "Gist Filename: " (file-name-nondirectory (buffer-file-name)) nil "untitled")
                                        (when (y-or-n-p "Public Gist ?") "--public"))))))
