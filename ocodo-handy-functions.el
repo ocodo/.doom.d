@@ -730,6 +730,27 @@ when matches are equidistant from the current point."
   (setq ocodo-github-repos-cache nil)
   (ocodo-github-repos))
 
+(defun ocodo/gist-create ()
+  "Comments or uncomments the current line or all the lines in region."
+  (interactive)
+  (save-excursion
+    (let (min max)
+      (if (region-active-p)
+          (setq min (region-beginning) max (region-end))
+        (setq min (point) max (point)))
+      (shell-command-on-region min max
+                               (format "gh create gist --desc '%s' --filename '%s' %s"
+                                       (string-replace "'" "\\'" (read-string "Gist Description: " nil nil "TODO Description"))
+                                       (read-string "Gist Filename: " (file-name-nondirectory (buffer-file-name)) nil "untitled")
+                                       (when (y-or-n-p "Public Gist ?") "--public"))))))
+
+(defun ocodo/goals-create-github-issues (goals-markdown-file)
+  "Read GOALS-MARKDOWN-FILE and create issues from its top level tasks.
+
+Sub-tasks are added to the issue body."
+  (interactive "fSelect goals.md: ")
+  (shell-command "gh "))
+
 (defun ocodo-open-project (project)
   "Open a PROJECT in workspace or from github."
   (interactive (list (completing-read "Select a project: " (ocodo-project-list))))
