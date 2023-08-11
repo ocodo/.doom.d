@@ -737,7 +737,7 @@ when matches are equidistant from the current point."
     (let (min max)
       (if (region-active-p)
           (setq min (region-beginning) max (region-end))
-        (setq min (point) max (point)))
+        (setq min (point-min) max (point-max)))
       (shell-command-on-region min max
                                (format "gh gist create --desc '%s' --filename '%s' %s"
                                        (string-replace "'" "\\'" (read-string "Gist Description: " nil nil "TODO Description"))
