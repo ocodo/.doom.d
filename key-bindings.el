@@ -24,9 +24,9 @@
   "Adjust the default face size by AMOUNT."
   (let* ((current (face-attribute 'default :height))
          (size (+ amount current)))
-     (message "Resize default face to: %i (delta: %i, current: %i)"
-              size amount current)
-     (set-face-attribute 'default nil :height size)))
+    (message "Resize default face to: %i (delta: %i, current: %i)"
+             size amount current)
+    (set-face-attribute 'default nil :height size)))
 
 (defun ocodo/default-face-size-reset ()
   "Reset the default face size to 230."
@@ -66,6 +66,13 @@ This file:
             ("r" rename-this-buffer-and-file)
             ("d" delete-this-buffer-and-file)))
 
+(defun ocodo/kill-ring-save-buffer ()
+  "Copy the whole buffer to the kill ring."
+  (interactive)
+  (save-excursion
+    (mark-whole-buffer)
+    (kill-ring-save)))
+
 (bind-key "s-a"
           (defhydra avy-commands
             (:color blue :hint nil)
@@ -73,7 +80,8 @@ This file:
 Region             Avy              Flycheck
 [_a_]   Select all   [_m_] Move line    [_e_] Errors
 [_SPC_] Expand       [_j_] Goto line    [_n_] Next error
-                   [_g_] Goto char
+[_w_]   Copy all     [_g_] Goto char
+[_TAB_] Indent all
 "
             ("a" mark-whole-buffer)
             ("SPC" er/expand-region)
@@ -81,6 +89,8 @@ Region             Avy              Flycheck
             ("m" avy-move-line)
             ("g" avy-goto-char)
             ("e" consult-flycheck)
+            ("TAB" indent-buffer)
+            ("w" ocodo/kill-ring-save-buffer)
             ("n" flycheck-next-error)))
 
 (map!
