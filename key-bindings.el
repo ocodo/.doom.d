@@ -69,9 +69,7 @@ This file:
 (defun ocodo/kill-ring-save-buffer ()
   "Copy the whole buffer to the kill ring."
   (interactive)
-  (save-excursion
-    (mark-whole-buffer)
-    (kill-ring-save)))
+  (kill-ring-save (point-min) (point-max)))
 
 (bind-key "s-a"
           (defhydra avy-commands
