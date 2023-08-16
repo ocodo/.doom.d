@@ -165,6 +165,14 @@ _i_ only this line
 (bind-key "C-c s-e"        #'eval-and-replace)
 (bind-key "C-c l e i"      #'eval-print-last-sexp)
 
+(bind-key "C-c l l"        (defhydra eval-commands ()
+                             "Eval"
+                             ("RET" eval-and-replace "replace")
+                             ("l" eval-buffer "buffer")
+                             ("r" eval-region "region")
+                             (";" eval-defun "defun")
+                             ("k" eval-last-sexp "last-sexp")))
+
 (bind-key "C-c l h"        #'hl-line-mode)
 (bind-key "C-c l v"        #'vline-mode)
 
