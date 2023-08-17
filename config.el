@@ -72,14 +72,17 @@
 
 ;; Set doom font.
 (when (eq system-type 'darwin)
-  (setq doom-font
-        (font-spec
-         :family "PFDinMono-XThin"
-         :weight 'normal)
-        doom-variable-pitch-font
-        (font-spec
-         :family "Helvetica Neue"
-         :weight 'ultra-light))
+  (setq
+   doom-font
+   (font-spec
+    :family "PFDinMono-XThin"
+    :weight 'medium)
+
+   doom-variable-pitch-font
+   (font-spec
+    :family "Helvetica Neue"
+    :weight 'light))
+
   (doom/reload-font)
 
  (custom-set-faces
