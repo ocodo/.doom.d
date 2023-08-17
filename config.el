@@ -106,4 +106,5 @@
 
 (ssh-agent-env-fix)
 
+(ocodo/load-theme "creamsody")
 (ocodo/load-theme "creamsody-dark")
