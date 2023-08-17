@@ -32,8 +32,6 @@
   (setq fancy-splash-image "~/.doom.d/golden-yak.png")
   (add-hook! 'after-setting-font-hook (+doom-dashboard-reload 'force)))
 
-(setq doom-theme 'soothe)
-
 (setq doom-unreal-buffer-functions
       '(minibufferp))
 
@@ -107,3 +105,5 @@
 (set-doom-lambda-line-fonts)
 
 (ssh-agent-env-fix)
+
+(ocodo/load-theme "creamsody-dark")

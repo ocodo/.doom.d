@@ -1760,6 +1760,13 @@ css-value to the hex color found."
 
 (ocodo/cmdalias ocodo/reload-fonts set-doom-lambda-line-fonts)
 
+(defun ocodo/load-theme (&optional theme-name)
+  "Load a theme without confirmation or enabling."
+  (interactive)
+  (let ((theme-name (or theme-name (completing-read "Load Theme:" (custom-available-themes)))))
+    (load-theme  (intern  theme-name ) t)
+    (ocodo/reload-fonts)))
+
 (defun set-doom-lambda-line-fonts ()
   "Sort out font / unicode / fontset stuff."
   (interactive)
