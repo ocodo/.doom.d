@@ -107,6 +107,5 @@
 (ssh-agent-env-fix)
 
 (ocodo/load-theme "creamsody")
-(ocodo/load-theme "creamsody-dark")
 
 (ocodo/reload-keys)  ;;; Why does Doom fuck with everything... patience is fading
