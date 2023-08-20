@@ -36,6 +36,15 @@
 (unbind-key "s-=")
 (unbind-key "s--")
 
+(map!
+ ;; Unbind C-RET on global key map
+ "C-RET"      nil
+ [C-return]   nil
+ "C-S-RET"    nil
+ [C-S-return] nil
+ ;; unbind load theme
+ "C-H t" nil)
+
 (bind-key "s-=" #'text-scale-increase)
 (bind-key "s--" #'text-scale-decrease)
 
@@ -71,34 +80,34 @@ This file:
   (interactive)
   (kill-ring-save (point-min) (point-max)))
 
+(defun ocodo/yank-replace-buffer ()
+  "Yank replace the whole buffer."
+  (interactive)
+  (push-mark)
+  (push-mark (point-max) nil t)
+  (goto-char (point-min))
+  (yank))
+
+(defun ocodo/kill-buffer-text ()
+  "Kill the visible buffer text, and save to the kill ring."
+  (interactive)
+  (kill-region (point-min) (point-max)))
+
 (bind-key "s-a"
-          (defhydra avy-commands
+          (defhydra region-and-flycheck
             (:color blue :hint nil)
             "
-Region             Avy              Flycheck
-[_a_]   Select all   [_m_] Move line    [_e_] Errors
-[_SPC_] Expand       [_j_] Goto line    [_n_] Next error
-[_w_]   Copy all     [_g_] Goto char
-[_TAB_] Indent all
-"
+- Region -------------------------------- Flycheck ------------
+  [_a_] Select All [_<backspace>_] Delete All [_e_] Errors
+  [_w_] Copy All   [_TAB_] Indent All         [_n_] Next Error
+  [_y_] Yank All"
             ("a" mark-whole-buffer)
-            ("SPC" er/expand-region)
-            ("j" avy-goto-line)
-            ("m" avy-move-line)
-            ("g" avy-goto-char)
             ("e" consult-flycheck)
             ("TAB" indent-buffer)
+            ("<backspace>" ocodo/kill-buffer-text)
             ("w" ocodo/kill-ring-save-buffer)
+            ("y" ocodo/yank-replace-buffer)
             ("n" flycheck-next-error)))
-
-(map!
-;; Unbind C-RET on global key map
-   "C-RET"      nil
-   [C-return]   nil
-   "C-S-RET"    nil
-   [C-S-return] nil
-;; unbind load theme
-   "C-H t" nil)
 
 (bind-key "C-H t" #'load-theme)
 
@@ -170,8 +179,7 @@ _i_ only this line
                              ("RET" eval-and-replace "replace")
                              ("l" eval-buffer "buffer")
                              ("r" eval-region "region")
-                             (";" eval-defun "defun")
-                             ("k" eval-last-sexp "last-sexp")))
+                             (";" eval-defun "defun")))
 
 (bind-key "C-c l h"        #'hl-line-mode)
 (bind-key "C-c l v"        #'vline-mode)
@@ -234,9 +242,9 @@ _i_ only this line
 (bind-key "s-y"            #'yank-from-kill-ring)
 (bind-key "s-T"            #'treemacs)
 
-; --- mode/keymap specific ---
+                                        ; --- mode/keymap specific ---
 
-; --- Magit ---
+                                        ; --- Magit ---
 (bind-key "s-p" #'magit-push-current-to-upstream magit-status-mode-map)
 (bind-key "s-f" #'magit-pull-from-upstream magit-status-mode-map)
 
