@@ -93,6 +93,9 @@ This file:
   (interactive)
   (kill-region (point-min) (point-max)))
 
+(defvar ocodo/favorite-theme-times ()
+  "Recording of theme change times for the session")
+
 (defvar ocodo/favorite-themes
   '("creamsody" "creamsody-dark" "creamsody-darker"
     "darktooth" "darktooth-dark" "darktooth-darker"
@@ -101,27 +104,34 @@ This file:
 (defun ocodo/choose-favorite-theme ()
   "Choose from a list of favorite themes."
   (interactive)
-  (let ((chosen-theme
-         (completing-read "Choose theme:" ocodo/favorite-themes)))
-     (ocodo/load-theme chosen-theme)))
+  (let ((timestamp (return-time-now))
+        (chosen-theme (completing-read "Choose theme:" ocodo/favorite-themes)))
+   (add-to-list 'ocodo/favorite-theme-times (list :theme chosen-theme :time timestamp))
+   (ocodo/load-theme chosen-theme)))
+
+(defun ocodo/favorite-theme-times-save ()
+  "Write the favorite theme times to log."
+  (dolist (item ocodo/favorite-theme-times)
+    (plist-bind (time theme) item
+      (shell-command (format "echo '[%s] %s' >> ~/.emacs-favorite-themes.log" time theme)))))
+
+(add-hook 'kill-emacs-hook 'ocodo/favorite-theme-times-save)
 
 (bind-key "s-<f8>" #'ocodo/choose-favorite-theme)
 
-(bind-key "s-a"
-          (defhydra region-and-flycheck
-            (:color blue :hint nil)
-            "
+(bind-key "s-a" (defhydra region-and-flycheck (:color blue :hint nil)
+                  "
 - Region -------------------------------- Flycheck ------------
   [_a_] Select All [_<backspace>_] Delete All [_e_] Errors
   [_w_] Copy All   [_TAB_] Indent All         [_n_] Next Error
   [_y_] Yank All"
-            ("a" mark-whole-buffer)
-            ("e" consult-flycheck)
-            ("TAB" indent-buffer)
-            ("<backspace>" ocodo/kill-buffer-text)
-            ("w" ocodo/kill-ring-save-buffer)
-            ("y" ocodo/yank-replace-buffer)
-            ("n" flycheck-next-error)))
+                  ("a" mark-whole-buffer)
+                  ("e" consult-flycheck)
+                  ("TAB" indent-buffer)
+                  ("<backspace>" ocodo/kill-buffer-text)
+                  ("w" ocodo/kill-ring-save-buffer)
+                  ("y" ocodo/yank-replace-buffer)
+                  ("n" flycheck-next-error)))
 
 (bind-key "C-H t" #'load-theme)
 

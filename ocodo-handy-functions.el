@@ -963,14 +963,18 @@ If your're in the minibuffer it will use the other buffer file name."
 (defun insert-time-now ()
   "Insert current time."
   (interactive)
-  (insert (format-time-string "%l:%M%P(%z) %Y-%m-%d")))
+  (insert (return-time-now)))
+
+(defun return-time-now ()
+  "Return now as a format-time-string."
+  (format-time-string "%Y-%m-%dT%H:%M:%S%z"))
 
 (defun int-to-binary-string (int)
   "Convert an INT into it's binary representation in string format."
   (let ((res ""))
     (while (not (= int 0))
       (setq res (concat (if (= 1 (logand int 1)) "1" "0") res))
-      (setq int (lsh int -1)))
+      (setq int (ash int -1)))
     (if (string= res "")
         (setq res "0"))
     res))
