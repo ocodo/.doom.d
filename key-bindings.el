@@ -93,6 +93,20 @@ This file:
   (interactive)
   (kill-region (point-min) (point-max)))
 
+(defvar ocodo/favorite-themes
+  '("creamsody" "creamsody-dark" "creamsody-darker"
+    "darktooth" "darktooth-dark" "darktooth-darker"
+    "soothe" "orangey-bits" "cyanometric"))
+
+(defun ocodo/choose-favorite-theme ()
+  "Choose from a list of favorite themes."
+  (interactive)
+  (let ((chosen-theme
+         (completing-read "Choose theme:" ocodo/favorite-themes)))
+     (ocodo/load-theme chosen-theme)))
+
+(bind-key "s-<f8>" #'ocodo/choose-favorite-theme)
+
 (bind-key "s-a"
           (defhydra region-and-flycheck
             (:color blue :hint nil)
