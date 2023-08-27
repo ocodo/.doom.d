@@ -1150,6 +1150,13 @@ Internally uses the script `~/.doom.d/bin/emacs-markdown-preview-layout.osa'."
   (when (not markdown-soma-mode)
     (shell-command "~/.doom.d/bin/emacs-markdown-preview-layout.osa" nil nil)))
 
+(defun ocodo/maximize-mac-window-aka-frame-via-phoenix ()
+  "Maximize the frame using a keyboard shortcut on Phoenix.
+
+Internally uses the script `~/.doom.d/bin/phoenix-maximize-toggle.osa'."
+  (interactive)
+  (shell-command "~/.doom.d/bin/phoenix-maximize-toggle.osa" nil nil))
+
 (defun mc/cua-rectangle-to-multiple-cursors ()
   "Switch from cua rectangle to multiple cursors."
   (interactive)

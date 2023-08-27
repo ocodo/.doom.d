@@ -91,21 +91,18 @@
    '(mode-line-inactive ((t (:family "Helvetica Neue"
                              :weight ultra-light))))))
 
-(setq display-line-numbers-type nil)
-
-(setq org-directory "~/org/")
-
-;; turn paging back on in which-key
-(setq which-key-use-C-h-commands t)
-
-(edit-server-start)
-
-(add-hook 'sh-mode-hook #'ocodo-sh-indent-rules)
-
-(set-doom-lambda-line-fonts)
+(setq display-line-numbers-type nil
+      org-directory "~/org/"
+      ;; turn paging back on for which-key
+      which-key-use-C-h-commands t)
 
 (ssh-agent-env-fix)
-
+(edit-server-start)
+(add-hook 'sh-mode-hook #'ocodo-sh-indent-rules)
+(set-doom-lambda-line-fonts)
 (ocodo/load-theme "creamsody")
+(ocodo/reload-keys)
 
-(ocodo/reload-keys)  ;;; Why does Doom fuck with everything... patience is fading
+;; Because... Doom ain't perfect, unless you have unlimited time to track down it's ... failings.
+;; KludGY time delays to unkcuf the disylap
+(run-at-time "2 sec" nil (lambda () (ocodo/reload-fonts) (ocodo/maximize-mac-window-aka-frame-via-phoenix)))
