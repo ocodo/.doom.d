@@ -276,5 +276,20 @@ _i_ only this line
 (bind-key "s-p" #'magit-push-current-to-upstream magit-status-mode-map)
 (bind-key "s-f" #'magit-pull-from-upstream magit-status-mode-map)
 
+(defun ocodo/match-indent-above ()
+  "Indent to match line above, regardless of mode."
+  (interactive)
+  (let (col (current-column))
+   (save-excursion
+     (forward-line -1)
+     (beginning-of-line-text)
+     (setq col (current-column))
+     (forward-line 1)
+     (beginning-of-line)
+     (delete-horizontal-space))
+   (indent-to-column col)))
+
+(bind-key "s-\\" #'ocodo/match-indent-above)
+
 (provide 'key-bindings)
 ;;; key-bindings.el ends here
