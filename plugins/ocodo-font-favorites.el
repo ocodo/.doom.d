@@ -7,6 +7,7 @@
                                ("SauceCodePro Nerd ExtraLight" (:family "SauceCodePro Nerd Font" :weight light))
                                ("SauceCodePro Nerd Light"      (:family "SauceCodePro Nerd Font" :weight semi-light))
                                ("SauceCodePro Nerd Regular"    (:family "SauceCodePro Nerd Font" :weight normal))
+                               ("OcodoMono"                    (:family "OcodoMono" :weight medium))
                                ("Input Mono Regular"           (:family "Input Mono" :weight normal))
                                ("Input Mono Light"             (:family "Input Mono" :weight semi-light))
                                ("APL385 Unicode"               (:family "APL385 Unicode" :weight normal))
@@ -29,7 +30,7 @@
          (modeline-fonts (append default-mono-fonts variable-pitch-fonts))
 
          (selected-fonts (--map (assoc
-                                 (completing-read (format "Select [nil to skip]:" (car it)) (-map (lambda (that) (car that)) it))
+                                 (completing-read (format "Select %s [nil to skip]:" (car it)) (-map (lambda (that) (car that)) it))
                                  it)
                           (list default-mono-fonts
                                 variable-pitch-fonts
