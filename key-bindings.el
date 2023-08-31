@@ -6,33 +6,6 @@
 (require 'bind-key)
 (require 'ocodo-handy-functions)
 
-(set-face-attribute 'default nil :height 240)
-
-;;; Zoom
-;;;
-(defun ocodo/default-face-size-decrease ()
-  "Decrease the default face size."
-  (interactive)
-  (ocodo/default-face-size-adjust -10))
-
-(defun ocodo/default-face-size-increase ()
-  "Increase the default face size."
-  (interactive)
-  (ocodo/default-face-size-adjust 10))
-
-(defun ocodo/default-face-size-adjust (amount)
-  "Adjust the default face size by AMOUNT."
-  (let* ((current (face-attribute 'default :height))
-         (size (+ amount current)))
-    (message "Resize default face to: %i (delta: %i, current: %i)"
-             size amount current)
-    (set-face-attribute 'default nil :height size)))
-
-(defun ocodo/default-face-size-reset ()
-  "Reset the default face size to 230."
-  (interactive)
-  (set-face-attribute 'default nil :height 230))
-
 (unbind-key "s-=")
 (unbind-key "s--")
 
@@ -42,8 +15,12 @@
  [C-return]   nil
  "C-S-RET"    nil
  [C-S-return] nil
+ ;; unbind tabbing
+ "C-<tab>"     nil
  ;; unbind load theme
  "C-H t" nil)
+
+(bind-key "C-<tab>" #'ocodo/match-indent-above)
 
 (bind-key "s-=" #'text-scale-increase)
 (bind-key "s--" #'text-scale-decrease)
@@ -79,63 +56,23 @@ This file:
             ("r" rename-this-buffer-and-file)
             ("d" delete-this-buffer-and-file)))
 
-(defun ocodo/kill-ring-save-buffer ()
-  "Copy the whole buffer to the kill ring."
-  (interactive)
-  (kill-ring-save (point-min) (point-max)))
-
-(defun ocodo/yank-replace-buffer ()
-  "Yank replace the whole buffer."
-  (interactive)
-  (push-mark)
-  (push-mark (point-max) nil t)
-  (goto-char (point-min))
-  (yank))
-
-(defun ocodo/kill-buffer-text ()
-  "Kill the visible buffer text, and save to the kill ring."
-  (interactive)
-  (kill-region (point-min) (point-max)))
-
-(defvar ocodo/favorite-theme-times ()
-  "Recording of theme change times for the session")
-
-(defvar ocodo/favorite-themes
-  '("creamsody" "creamsody-dark" "creamsody-darker"
-    "darktooth" "darktooth-dark" "darktooth-darker"
-    "soothe" "orangey-bits" "cyanometric"))
-
-(defun ocodo/choose-favorite-theme ()
-  "Choose from a list of favorite themes."
-  (interactive)
-  (let ((timestamp (return-time-now))
-        (chosen-theme (completing-read "Choose theme:" ocodo/favorite-themes)))
-   (add-to-list 'ocodo/favorite-theme-times (list :theme chosen-theme :time timestamp))
-   (ocodo/load-theme chosen-theme)))
-
-(defun ocodo/favorite-theme-times-save ()
-  "Write the favorite theme times to log."
-  (dolist (item ocodo/favorite-theme-times)
-    (plist-bind (time theme) item
-      (shell-command (format "echo '[%s] %s' >> ~/.emacs-favorite-themes.log" time theme)))))
-
-(add-hook 'kill-emacs-hook 'ocodo/favorite-theme-times-save)
-
 (bind-key "s-<f8>" #'ocodo/choose-favorite-theme)
 
 (bind-key "s-a" (defhydra region-and-flycheck (:color blue :hint nil)
                   "
-- Region -------------------------------- Flycheck ------------
-  [_a_] Select All [_<backspace>_] Delete All [_e_] Errors
-  [_w_] Copy All   [_TAB_] Indent All         [_n_] Next Error
-  [_y_] Yank All"
+- Select/Region ------------------------------------------------------
+  [_a_] Select All [_<backspace>_] Delete All [_s_] Select sexp
+  [_w_] Copy All   [_<tab>_] Indent All
+  [_y_] Yank All   [_d_] Select defun"
                   ("a" mark-whole-buffer)
                   ("e" consult-flycheck)
-                  ("TAB" indent-buffer)
+                  ("<tab>" indent-buffer)
                   ("<backspace>" ocodo/kill-buffer-text)
                   ("w" ocodo/kill-ring-save-buffer)
+                  ("n" flycheck-next-error)
                   ("y" ocodo/yank-replace-buffer)
-                  ("n" flycheck-next-error)))
+                  ("s" mark-sexp)
+                  ("d" mark-defun)))
 
 (bind-key "C-H t" #'load-theme)
 
@@ -198,6 +135,7 @@ _i_ only this line
 
 (bind-key "s-&"            #'comint-run)
 (bind-key "s-|"            #'shell-command-on-region-replace)
+(bind-key "s-\\"            #'ocodo/shell-command-to-insert)
 
 (bind-key "C-c s-e"        #'eval-and-replace)
 (bind-key "C-c l e i"      #'eval-print-last-sexp)
@@ -222,7 +160,7 @@ _i_ only this line
 (bind-key "C-c t t s"      #'time-to-seconds-at-point-or-region)
 (bind-key "C-c t t t"      #'titleized-at-point-or-region)
 (bind-key "C-c t t u"      #'upper-camelcase-at-point-or-region)
-(bind-key "C-c t t TAB"    #'tabify)
+(bind-key "C-c t t <tab>"    #'tabify)
 
 (bind-key "C-x /"          #'align-regexp)
 
@@ -268,28 +206,11 @@ _i_ only this line
 (bind-key "C-c f w"        #'write-region)
 
 (bind-key "s-y"            #'yank-from-kill-ring)
-(bind-key "s-T"            #'treemacs)
 
-                                        ; --- mode/keymap specific ---
-
-                                        ; --- Magit ---
+;; --- mode/keymap specific ---
+;; --- Magit ---
 (bind-key "s-p" #'magit-push-current-to-upstream magit-status-mode-map)
 (bind-key "s-f" #'magit-pull-from-upstream magit-status-mode-map)
-
-(defun ocodo/match-indent-above ()
-  "Indent to match line above, regardless of mode."
-  (interactive)
-  (let (col (current-column))
-   (save-excursion
-     (forward-line -1)
-     (beginning-of-line-text)
-     (setq col (current-column))
-     (forward-line 1)
-     (beginning-of-line)
-     (delete-horizontal-space))
-   (indent-to-column col)))
-
-(bind-key "s-\\" #'ocodo/match-indent-above)
 
 (provide 'key-bindings)
 ;;; key-bindings.el ends here

@@ -1150,6 +1150,93 @@ Internally uses the script `~/.doom.d/bin/emacs-markdown-preview-layout.osa'."
   (when (not markdown-soma-mode)
     (shell-command "~/.doom.d/bin/emacs-markdown-preview-layout.osa" nil nil)))
 
+(defun ocodo/shell-command-to-insert (command)
+  "Execute shell COMMAND and insert the result."
+  (interactive (list (read-shell-command "Shell Command (output insert at point): ")))
+  (insert (shell-command-to-string command)))
+
+;;; Zoom
+;;;
+(defun ocodo/default-face-size-decrease ()
+  "Decrease the default face size."
+  (interactive)
+  (ocodo/default-face-size-adjust -10))
+
+(defun ocodo/default-face-size-increase ()
+  "Increase the default face size."
+  (interactive)
+  (ocodo/default-face-size-adjust 10))
+
+(defun ocodo/default-face-size-adjust (amount)
+  "Adjust the default face size by AMOUNT."
+  (let* ((current (face-attribute 'default :height))
+         (size (+ amount current)))
+    (message "Resize default face to: %i (delta: %i, current: %i)"
+             size amount current)
+    (set-face-attribute 'default nil :height size)))
+
+(defun ocodo/default-face-size-reset ()
+  "Reset the default face size to 230."
+  (interactive)
+  (set-face-attribute 'default nil :height 230))
+
+
+(defun ocodo/kill-ring-save-buffer ()
+  "Copy the whole buffer to the kill ring."
+  (interactive)
+  (kill-ring-save (point-min) (point-max)))
+
+(defun ocodo/yank-replace-buffer ()
+  "Yank replace the visible buffer.
+The existing buffer text is saved to the kill-ring."
+  (interactive)
+  (goto-char (point-min))
+  (yank)
+  (kill-region (point) (point-max))
+  (goto-char (point-min)))
+
+(defun ocodo/kill-buffer-text ()
+  "Kill the visible buffer text, and save to the kill ring."
+  (interactive)
+  (kill-region (point-min) (point-max)))
+
+(defvar ocodo/favorite-theme-times ()
+  "Recording of theme change times for the session")
+
+(defvar ocodo/favorite-themes
+  '("creamsody" "creamsody-dark" "creamsody-darker"
+    "darktooth" "darktooth-dark" "darktooth-darker"
+    "soothe" "orangey-bits" "cyanometric"))
+
+(defun ocodo/choose-favorite-theme ()
+  "Choose from a list of favorite themes."
+  (interactive)
+  (let ((timestamp (return-time-now))
+        (chosen-theme (completing-read "Choose theme:" ocodo/favorite-themes)))
+   (add-to-list 'ocodo/favorite-theme-times (list :theme chosen-theme :time timestamp))
+   (ocodo/load-theme chosen-theme)))
+
+(defun ocodo/favorite-theme-times-save ()
+  "Write the favorite theme times to log."
+  (dolist (item ocodo/favorite-theme-times)
+    (plist-bind (time theme) item
+      (shell-command (format "echo '[%s] %s' >> ~/.emacs-favorite-themes.log" time theme)))))
+
+(add-hook 'kill-emacs-hook 'ocodo/favorite-theme-times-save)
+
+(defun ocodo/match-indent-above ()
+  "Indent to match line above, regardless of mode."
+  (interactive)
+  (let (col (current-column))
+   (save-excursion
+     (forward-line -1)
+     (beginning-of-line-text)
+     (setq col (current-column))
+     (forward-line 1)
+     (beginning-of-line)
+     (delete-horizontal-space))
+   (indent-to-column col)))
+
 (defun ocodo/maximize-mac-window-aka-frame-via-phoenix ()
   "Maximize the frame using a keyboard shortcut on Phoenix.
 
