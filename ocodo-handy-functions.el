@@ -1150,6 +1150,34 @@ Internally uses the script `~/.doom.d/bin/emacs-markdown-preview-layout.osa'."
   (when (not markdown-soma-mode)
     (shell-command "~/.doom.d/bin/emacs-markdown-preview-layout.osa" nil nil)))
 
+(defun ocodo/gh-workflow-names ()
+  "List gh workflow names for current project.
+
+Project is defined by git repo."
+  (s-lines (shell-command-to-string "gh workflow list | cut -f1")))
+
+(defun ocodo/gh-run-list (&optional workflow-name)
+  "List workflow runs for the current project.
+
+Filter by WORKFLOW-NAME.
+
+Project is defined by git repo."
+
+  (interactive (list (completing-read "Filter by workflow name: " (ocodo/gh-workflow-names))))
+  (let* ((workflow-filter (if workflow-name (format " --workflow '%s' " workflow-name) ""))
+         (html-text
+          (shell-command-to-string
+           (format
+             "gh run list %s\
+--json status,workflowName,headBranch,event,startedAt,url \
+--template '| Status | Link | Started At | Event | Workflow  |
+|:-|:-|:-|:-|:-|:-|
+{{ range . }}| {{ .status }} | [{{.url}}]({{.url}}) | {{ .startedAt }} | {{ .event }} | {{ .workflowName }} |
+{{ end }}' | markdown | cat <<<'<head><title>GitHub Workflow Run List</title></head>'" workflow-filter)))
+         (html-file (make-temp-file "gh-run-list" nil ".html" html-text)))
+      (eww-open-file html-file)))
+
+
 (defun ocodo/shell-command-to-insert (command)
   "Execute shell COMMAND and insert the result."
   (interactive (list (read-shell-command "Shell Command (output insert at point): ")))
