@@ -1156,17 +1156,6 @@ Internally uses the script `~/.doom.d/bin/emacs-markdown-preview-layout.osa'."
 Project is defined by git repo."
   (s-lines (shell-command-to-string "gh workflow list | cut -f1")))
 
-;; (defun ocodo/gh-run-list-data (&optional workflow-name)
-;;   "Return workflow runs for the current project as a lisp data structure.
-
-;; Filter by WORKFLOW-NAME.
-
-;; Project is defined by git repo."
-;;   (let* ((workflow-filter (if workflow-name (format " --workflow '%s' " workflow-name) ""))
-;;          (command-string (ocodo/gh-run-list-json-shell-command-string workflow-filter))
-;;          (entries-json-string (shell-command-to-string command-string)))
-;;        (json-parse-string entries-lisp-string)))
-
 (defun ocodo/gh-run-list-json-shell-command-string (&optional workflow-filter)
   "Return a gh run list command to generate json.
 WORKFLOW-FILTER can be a --workflow filter or empty string."
