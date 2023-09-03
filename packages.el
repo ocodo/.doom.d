@@ -37,11 +37,12 @@
 (package! speed-type)
 (package! svg-clock)
 (package! swiper)
-(package! tblui)
 (package! vertico-posframe)
 (package! vline)
 (package! xr)
 
+(package! tblui
+  :recipe (:host github :repo "emacsfodder/tblui"))
 (package! hydra-posframe
   :recipe (:host github :repo "ladicle/hydra-posframe"))
 (package! markdown-soma
