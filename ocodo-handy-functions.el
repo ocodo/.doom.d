@@ -1156,27 +1156,64 @@ Internally uses the script `~/.doom.d/bin/emacs-markdown-preview-layout.osa'."
 Project is defined by git repo."
   (s-lines (shell-command-to-string "gh workflow list | cut -f1")))
 
-(defun ocodo/gh-run-list (&optional workflow-name)
-  "List workflow runs for the current project.
+;; (defun ocodo/gh-run-list-data (&optional workflow-name)
+;;   "Return workflow runs for the current project as a lisp data structure.
 
+;; Filter by WORKFLOW-NAME.
+
+;; Project is defined by git repo."
+;;   (let* ((workflow-filter (if workflow-name (format " --workflow '%s' " workflow-name) ""))
+;;          (command-string (ocodo/gh-run-list-json-shell-command-string workflow-filter))
+;;          (entries-json-string (shell-command-to-string command-string)))
+;;        (json-parse-string entries-lisp-string)))
+
+(defun ocodo/gh-run-list-json-shell-command-string (&optional workflow-filter)
+  "Return a gh run list command to generate json.
+WORKFLOW-FILTER can be a --workflow filter or empty string."
+  (format "gh run -R 'cutbox/cutbox' list %s --json number,status,workflowName,headBranch,event,startedAt,url" (or workflow-filter "")))
+
+(defun ocodo/gh-run-list-hash-to-tblui-vector-list (data)
+  "Convert DATA to a tblui ready vector list"
+  (let* ((result '())
+         (key-names '("status"
+                      "url"
+                      "event"
+                      "workflowName"
+                      "startedAt")))
+    (dotimes (i (length data))
+      (let* ((hash (aref data i))
+             (values (mapcar
+                      (lambda (key)
+                        (gethash key hash))
+                      key-names)))
+        (push (list i (apply 'vector values)) result)))
+    result))
+
+(tblui-define ocodo/gh-run-list
+              ocodo/gh-run-list-entries-provider
+              [("status" 10 nil)
+               ("url" 45 nil)
+               ("event" 8 nil)
+               ("workflowName" 16 nil)
+               ("startedAt" 6 nil)] ())
+
+(defun ocodo/gh-run-list-entries-provider (&optional workflow-name)
+  "List workflow runs for the current project as a tblui view.
 Filter by WORKFLOW-NAME.
 
-Project is defined by git repo."
+Project is defined by pwd/git repo."
+  (let* ((workflow-filter (if workflow-name
+                              (format " --workflow '%s' " workflow-name)
+                              "")))
+    (ocodo/gh-run-list-hash-to-tblui-vector-list
+     (json-parse-string
+      (shell-command-to-string
+       (ocodo/gh-run-list-json-shell-command-string))))))
 
-  (interactive (list (completing-read "Filter by workflow name: " (ocodo/gh-workflow-names))))
-  (let* ((workflow-filter (if workflow-name (format " --workflow '%s' " workflow-name) ""))
-         (html-text
-          (shell-command-to-string
-           (format
-             "gh run list %s\
---json status,workflowName,headBranch,event,startedAt,url \
---template '| Status | Link | Started At | Event | Workflow  |
-|:-|:-|:-|:-|:-|:-|
-{{ range . }}| {{ .status }} | [{{.url}}]({{.url}}) | {{ .startedAt }} | {{ .event }} | {{ .workflowName }} |
-{{ end }}' | markdown | cat <<<'<head><title>GitHub Workflow Run List</title></head>'" workflow-filter)))
-         (html-file (make-temp-file "gh-run-list" nil ".html" html-text)))
-      (eww-open-file html-file)))
-
+(defun ocodo/gh-run-list ()
+  "Show the current repo's gh workflow run list."
+  (interactive)
+  (ocodo/gh-run-list-goto-ui))
 
 (defun ocodo/shell-command-to-insert (command)
   "Execute shell COMMAND and insert the result."
