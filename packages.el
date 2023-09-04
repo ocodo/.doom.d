@@ -42,7 +42,7 @@
 (package! xr)
 
 (package! tblui
-  :recipe (:host github :repo "emacsfodder/tblui"))
+  :recipe (:host github :repo "emacsfodder/tblui.el"))
 (package! hydra-posframe
   :recipe (:host github :repo "ladicle/hydra-posframe"))
 (package! markdown-soma

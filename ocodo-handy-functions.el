@@ -1164,11 +1164,12 @@ WORKFLOW-FILTER can be a --workflow filter or empty string."
 (defun ocodo/gh-run-list-hash-to-tblui-vector-list (data)
   "Convert DATA to a tblui ready vector list"
   (let* ((result '())
-         (key-names '("status"
+         (key-names '("startedAt"
                       "url"
+                      "status"
                       "event"
-                      "workflowName"
-                      "startedAt")))
+                      "workflowName")))
+
     (dotimes (i (length data))
       (let* ((hash (aref data i))
              (values (mapcar
@@ -1178,31 +1179,41 @@ WORKFLOW-FILTER can be a --workflow filter or empty string."
         (push (list i (apply 'vector values)) result)))
     result))
 
-(tblui-define ocodo/gh-run-list
+(tblui-define ocodo/gh-run-list-tblui
+              "GitHub Workflow Runlist"
+              "Display workflow runs in a tabulated list."
               ocodo/gh-run-list-entries-provider
-              [("status" 10 nil)
-               ("url" 45 nil)
-               ("event" 8 nil)
-               ("workflowName" 16 nil)
-               ("startedAt" 6 nil)] ())
+              [("startedAt" 15 nil)
+               ("url" 1 nil)
+               ("status" 10 nil)
+               ("event" 10 nil)
+               ("workflowName" 15 nil)]
 
-(defun ocodo/gh-run-list-entries-provider (&optional workflow-name)
+              ((:key "w"
+                :name ocood/gh-run-list-browse
+                :funcs ((?W "Browse URL for current run" ocodo/gh-run-list-browse-row-url)))))
+
+(defun ocodo/gh-run-list-browse-row-url ()
+  "Open the url for the current row."
+  (interactive)
+  (shell-command-to-string
+   (format "open \"%s\""
+           (elt (tabulated-list-get-entry) 1))))
+
+(defun ocodo/gh-run-list-entries-provider ()
   "List workflow runs for the current project as a tblui view.
 Filter by WORKFLOW-NAME.
 
 Project is defined by pwd/git repo."
-  (let* ((workflow-filter (if workflow-name
-                              (format " --workflow '%s' " workflow-name)
-                              "")))
-    (ocodo/gh-run-list-hash-to-tblui-vector-list
-     (json-parse-string
-      (shell-command-to-string
-       (ocodo/gh-run-list-json-shell-command-string))))))
+  (ocodo/gh-run-list-hash-to-tblui-vector-list
+   (json-parse-string
+    (shell-command-to-string
+     (ocodo/gh-run-list-json-shell-command-string)))))
 
 (defun ocodo/gh-run-list ()
   "Show the current repo's gh workflow run list."
   (interactive)
-  (ocodo/gh-run-list-goto-ui))
+  (ocodo/gh-run-list-tblui-goto-ui))
 
 (defun ocodo/shell-command-to-insert (command)
   "Execute shell COMMAND and insert the result."
