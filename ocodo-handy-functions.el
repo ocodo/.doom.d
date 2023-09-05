@@ -1180,71 +1180,6 @@ Internally uses the script `~/.doom.d/bin/emacs-markdown-preview-layout.osa'."
   (when (not markdown-soma-mode)
     (shell-command "~/.doom.d/bin/emacs-markdown-preview-layout.osa" nil nil)))
 
-(defun ocodo/gh-workflow-names ()
-  "List gh workflow names for current project.
-
-Project is defined by git repo."
-  (s-lines (shell-command-to-string "gh workflow list | cut -f1")))
-
-(defun ocodo/gh-run-list-json-shell-command-string (&optional workflow-filter)
-  "Return a gh run list command to generate json.
-WORKFLOW-FILTER can be a --workflow filter or empty string."
-  (format "gh run -R 'cutbox/cutbox' list %s --json number,status,workflowName,headBranch,event,startedAt,url" (or workflow-filter "")))
-
-(defun ocodo/gh-run-list-hash-to-tblui-vector-list (data)
-  "Convert DATA to a tblui ready vector list"
-  (let* ((result '())
-         (key-names '("startedAt"
-                      "url"
-                      "status"
-                      "event"
-                      "workflowName")))
-
-    (dotimes (i (length data))
-      (let* ((hash (aref data i))
-             (values (mapcar
-                      (lambda (key)
-                        (gethash key hash))
-                      key-names)))
-        (push (list i (apply 'vector values)) result)))
-    result))
-
-(tblui-define ocodo/gh-run-list-tblui
-              "GitHub Workflow Runlist"
-              "Display workflow runs in a tabulated list."
-              ocodo/gh-run-list-entries-provider
-
-              [("startedAt" 15 nil)
-               ("url" 1 nil)
-               ("status" 10 nil)
-               ("event" 10 nil)
-               ("workflowName" 15 nil)]
-
-              ((:key "W"
-                :name ocood/gh-run-list-browse
-                :funcs ((?W "Browse URL for current run" ocodo/gh-run-list-browse-row-url)))))
-
-(defun ocodo/gh-run-list-browse-row-url (&optional &rest args)
-  "Open the url for the current row."
-  (interactive)
-  (message args)
-  (shell-command (format "open \"%s\"" (elt (tabulated-list-get-entry) 1))))
-
-(defun ocodo/gh-run-list-entries-provider ()
-  "List workflow runs for the current project as a tblui view.
-Filter by WORKFLOW-NAME.
-
-Project is defined by pwd/git repo."
-  (ocodo/gh-run-list-hash-to-tblui-vector-list
-   (json-parse-string
-    (shell-command-to-string
-     (ocodo/gh-run-list-json-shell-command-string)))))
-
-(defun ocodo/gh-run-list ()
-  "Show the current repo's gh workflow run list."
-  (interactive)
-  (ocodo/gh-run-list-tblui-goto-ui))
-
 (defun ocodo/shell-command-to-insert (command)
   "Execute shell COMMAND and insert the result."
   (interactive (list (read-shell-command "Shell Command (output insert at point): ")))
@@ -1274,7 +1209,6 @@ Project is defined by pwd/git repo."
   "Reset the default face size to 230."
   (interactive)
   (set-face-attribute 'default nil :height 230))
-
 
 (defun ocodo/kill-ring-save-buffer ()
   "Copy the whole buffer to the kill ring."
