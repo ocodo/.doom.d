@@ -730,6 +730,17 @@ when matches are equidistant from the current point."
   (setq ocodo-github-repos-cache nil)
   (ocodo-github-repos))
 
+(defun ocodo/resize-frame (width-pixels height-pixels top-x-pixel top-y-pixel)
+  "Resize current frame to WIDTH-PIXELS, HEIGHT-PIXELS, TOP-X-PIXEL & TOP-Y-PIXEL."
+  (interactive
+   (list
+    (read-number "Frame width (px): ")
+    (read-number "Frame height (px): ")
+    (read-number "Frame x: " 0)
+    (read-number "Frame y: " 0)))
+  (set-frame-size nil width-pixels height-pixels t)
+  (set-frame-position nil top-x-pixel top-y-pixel))
+
 (defun ocodo/gist-create ()
   "Comments or uncomments the current line or all the lines in region."
   (interactive)
