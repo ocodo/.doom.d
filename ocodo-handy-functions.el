@@ -734,12 +734,31 @@ when matches are equidistant from the current point."
   "Resize current frame to WIDTH-PIXELS, HEIGHT-PIXELS, TOP-X-PIXEL & TOP-Y-PIXEL."
   (interactive
    (list
-    (read-number "Frame width (px): ")
-    (read-number "Frame height (px): ")
+    (read-number "Frame width (px): " (display-pixel-width))
+    (read-number "Frame height (px): " (display-pixel-height))
     (read-number "Frame x: " 0)
     (read-number "Frame y: " 0)))
   (set-frame-size nil width-pixels height-pixels t)
   (set-frame-position nil top-x-pixel top-y-pixel))
+
+(defun ocodo/resize-frame-maximized ()
+  "Resize current frame to screen maximum size."
+  (interactive)
+  (let ((width (display-pixel-width))
+        (height (display-pixel-height))
+        (x 0)
+        (y 0))
+    (ocodo/resize-frame width height x y)))
+
+(defun ocodo/resize-frame-inset-maximized (px)
+  "Resize current frame to screen maximum size inset by PX."
+  (interactive "nInset px: ")
+  (let ((width (- (display-pixel-width) (* 2 px)))
+        (height (- (display-pixel-height) (* 2 px)))
+        (x (+ 0 px))
+        (y (+ 0 px)))
+
+    (ocodo/resize-frame width height x y)))
 
 (defun ocodo/gist-create ()
   "Comments or uncomments the current line or all the lines in region."
