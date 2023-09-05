@@ -1213,22 +1213,22 @@ WORKFLOW-FILTER can be a --workflow filter or empty string."
               "GitHub Workflow Runlist"
               "Display workflow runs in a tabulated list."
               ocodo/gh-run-list-entries-provider
+
               [("startedAt" 15 nil)
                ("url" 1 nil)
                ("status" 10 nil)
                ("event" 10 nil)
                ("workflowName" 15 nil)]
 
-              ((:key "w"
+              ((:key "W"
                 :name ocood/gh-run-list-browse
                 :funcs ((?W "Browse URL for current run" ocodo/gh-run-list-browse-row-url)))))
 
-(defun ocodo/gh-run-list-browse-row-url ()
+(defun ocodo/gh-run-list-browse-row-url (&optional &rest args)
   "Open the url for the current row."
   (interactive)
-  (shell-command-to-string
-   (format "open \"%s\""
-           (elt (tabulated-list-get-entry) 1))))
+  (message args)
+  (shell-command (format "open \"%s\"" (elt (tabulated-list-get-entry) 1))))
 
 (defun ocodo/gh-run-list-entries-provider ()
   "List workflow runs for the current project as a tblui view.
@@ -1289,6 +1289,11 @@ The existing buffer text is saved to the kill-ring."
   (yank)
   (kill-region (point) (point-max))
   (goto-char (point-min)))
+
+(defun ocodo/markdown-replace-image-with-img-tag ()
+  "Simple search replace."
+  (interactive)
+  (query-replace-regexp "!\\[\\](\\(.*?\\))" "<img src=\"\\1\" />"))
 
 (defun ocodo/kill-buffer-text ()
   "Kill the visible buffer text, and save to the kill ring."
