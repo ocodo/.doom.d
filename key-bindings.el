@@ -211,6 +211,11 @@ _i_ only this line
 ;; --- Magit ---
 (bind-key "s-p" #'magit-push-current-to-upstream magit-status-mode-map)
 (bind-key "s-f" #'magit-pull-from-upstream magit-status-mode-map)
+(bind-key "M-s-p" #'(lambda (arg)
+                      (interactive "P")
+                      (magit-pull-from-upstream arg)
+                      (magit-push-current-to-upstream arg))
+          magit-status-mode-map)
 
 (provide 'key-bindings)
 ;;; key-bindings.el ends here
