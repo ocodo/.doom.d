@@ -36,7 +36,7 @@
 (defun ocodo/gh-issue-list-json-shell-command-string ()
   "Return a gh issue list command to generate json."
   (format
-   "gh issue -R 'cutbox/cutbox' list -s all --json %s"
+   "gh issue list -s all --json %s"
    (ocodo/tblui-column-names-from-layout
     ocodo/gh-issue-list-tblui-tabulated-list-format t)))
 
@@ -90,7 +90,7 @@ Project is defined by git repo."
   "Return a gh run list command to generate json.
 WORKFLOW-FILTER can be a --workflow filter or empty string."
   (format
-   "gh run -R 'cutbox/cutbox' list %s --json %s"
+   "gh run list %s --json %s"
    (or workflow-filter "")
    (ocodo/tblui-column-names-from-layout
     ocodo/gh-run-list-tblui-tabulated-list-format t)))
