@@ -19,7 +19,7 @@
    ("title" 100 nil)
    ("state" 8 nil)
    ("updatedAt" 25 nil)
-   ("url" 50 nil)]
+   ("url" 60 nil)]
   ((:key "C" :name ocodo/gh-issue-create
     :funcs ((?C "Create a new issue" ocodo/gh-create-new-issue)))
    (:key "W" :name ocood/gh-issue-browse
@@ -73,7 +73,7 @@ Project is defined by pwd/git repo."
               "Display workflow runs in a tabulated list."
               ocodo/gh-run-list-entries-provider
   [("startedAt" 15 nil)
-   ("url" 1 nil)
+   ("url" 60 nil)
    ("status" 10 nil)
    ("event" 10 nil)
    ("workflowName" 15 nil)]
