@@ -74,7 +74,7 @@
    doom-font
    (font-spec
     :family "OcodoMono"
-    :weight 'medium)
+    :weight 'thin)
 
    doom-variable-pitch-font
    (font-spec
