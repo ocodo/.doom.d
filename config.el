@@ -93,6 +93,7 @@
 
 (setq display-line-numbers-type nil
       org-directory "~/org/"
+      kill-whole-line t
       ;; turn paging back on for which-key
       which-key-use-C-h-commands t)
 
