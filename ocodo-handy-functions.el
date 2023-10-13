@@ -47,6 +47,22 @@
 (require 'yasnippet)
 
 ;; Declare used global vars
+(defvar ocodo/markdown-faces
+  '((default 200)
+    (markdown-pre-face 200)
+    (markdown-language-keyword-face 200)
+    (markdown-code-face 200)
+    (markdown-table-face 200)
+    (markdown-header-face 300)
+    (markdown-header-face-1 300)
+    (markdown-header-face-2 280)
+    (markdown-header-face-3 260)
+    (markdown-header-face-4 250)
+    (markdown-header-face-5 230)
+    (markdown-header-face-6 210))
+  "List of markdown faces + default
+Used for text scaling in markdown.")
+
 (defvar recentf-list)
 (defvar smie-config)
 (defvar sh-styles-alist)
@@ -1209,6 +1225,34 @@ Internally uses the script `~/.doom.d/bin/emacs-markdown-preview-layout.osa'."
   "Reset the default face size to 230."
   (interactive)
   (set-face-attribute 'default nil :height 230))
+
+;; markdown text scaling/zooming
+
+(defun ocodo/markdown-faces-size-decrease ()
+  "Decrease the markdown face size."
+  (interactive)
+  (ocodo/markdown-faces-size-adjust -10))
+
+(defun ocodo/markdown-faces-size-increase ()
+  "Increase the markdown face size."
+  (interactive)
+  (ocodo/markdown-faces-size-adjust 10))
+
+(defun ocodo/markdown-faces-size-adjust (amount)
+  "Adjust the markdown face size by AMOUNT."
+  (dolist (markdown-face-info ocodo/markdown-faces)
+     (let* ((face (nth 0 markdown-face-info))
+            (current (face-attribute face :height))
+            (size (+ amount current)))
+       (set-face-attribute face nil :height size))))
+
+(defun ocodo/markdown-faces-size-reset ()
+  "Reset markdown faces to default size."
+  (interactive)
+  (dolist (markdown-face-info ocodo/markdown-faces)
+          (set-face-attribute
+           (nth 0  markdown-face-info) nil :height
+           (nth 1 markdown-face-info))))
 
 (defun ocodo/kill-ring-save-buffer ()
   "Copy the whole buffer to the kill ring."

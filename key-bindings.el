@@ -24,6 +24,7 @@
 
 (bind-key "s-=" #'text-scale-increase)
 (bind-key "s--" #'text-scale-decrease)
+(bind-key "s-)" #'text-scale-adjust)
 
 (bind-key "s-_" #'subword-mode)
 (bind-key "s-<help>" #'overwrite-mode)
@@ -32,7 +33,10 @@
 (bind-key "M-s-=" #'ocodo/default-face-size-increase)
 (bind-key "M-s--" #'ocodo/default-face-size-decrease)
 (bind-key "M-s-0" #'ocodo/default-face-size-reset)
-(bind-key "s-)" #'text-scale-adjust)
+
+(bind-key "M-s-=" #'ocodo/markdown-faces-size-increase 'markdown-mode-map)
+(bind-key "M-s--" #'ocodo/markdown-faces-size-decrease 'markdown-mode-map)
+(bind-key "M-s-0" #'ocodo/markdown-faces-size-reset 'markdown-mode-map)
 
 (bind-key "s-<mouse-1>" #'browse-url-at-mouse)
 
