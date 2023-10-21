@@ -864,6 +864,16 @@ Current dir and origin will be used by default."
         (remote (or remote "origin")))
     (s-chomp (shell-command-to-string (format "git %s remote get-url %s" directory remote)))))
 
+(defun ocodo/write-region ()
+  "If a region is marked, write it to a new file.
+ If not, write the whole buffer to a new file"
+  (interactive)
+  (if (region-active-p)
+      (call-interactively #'write-region)
+      (save-mark-and-excursion
+        (call-interactively #'mark-whole-buffer)
+        (call-interactively #'write-region))))
+
 (defun ocodo-find-local-repo (project)
   "Return the path of PROJECT with repo url.
 Look for name matches in workspace, Check git remote for a match."

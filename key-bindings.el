@@ -34,10 +34,6 @@
 (bind-key "M-s--" #'ocodo/default-face-size-decrease)
 (bind-key "M-s-0" #'ocodo/default-face-size-reset)
 
-(bind-key "M-s-=" #'ocodo/markdown-faces-size-increase 'markdown-mode-map)
-(bind-key "M-s--" #'ocodo/markdown-faces-size-decrease 'markdown-mode-map)
-(bind-key "M-s-0" #'ocodo/markdown-faces-size-reset 'markdown-mode-map)
-
 (bind-key "s-<mouse-1>" #'browse-url-at-mouse)
 
 (bind-key "M-s-o" #'ocodo-open-project)
@@ -66,11 +62,12 @@ This file:
                   "
 - Select/Region ------------------------------------------------------
   [_a_] Select All [_<backspace>_] Delete All [_s_] Select sexp
-  [_w_] Copy All   [_<tab>_] Indent All
+  [_w_] Copy All   [_<tab>_] Indent All       [_W_] Write to file
   [_y_] Yank All   [_d_] Select defun"
                   ("a" mark-whole-buffer)
                   ("e" consult-flycheck)
                   ("<tab>" indent-buffer)
+                  ("W" ocodo/write-region)
                   ("<backspace>" ocodo/kill-buffer-text)
                   ("w" ocodo/kill-ring-save-buffer)
                   ("n" flycheck-next-error)

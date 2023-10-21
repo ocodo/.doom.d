@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# contributor: Jason M23
+# name: OpenAPI requestBodyJSON
+# key: req
+# --
+requestBody:
+        content:
+          application/json:
+            schema:
+              $1
