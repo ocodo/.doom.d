@@ -1229,12 +1229,17 @@ Internally uses the script `~/.doom.d/bin/emacs-markdown-preview-layout.osa'."
          (size (+ amount current)))
     (message "Resize default face to: %i (delta: %i, current: %i)"
              size amount current)
-    (set-face-attribute 'default nil :height size)))
+    (set-face-attribute 'default nil :height size)
+    (set-face-attribute 'fixed-pitch nil :height size)
+    (set-face-attribute 'variable-pitch nil :height size)))
 
 (defun ocodo/default-face-size-reset ()
-  "Reset the default face size to 230."
+  "Reset the default face size to default."
   (interactive)
-  (set-face-attribute 'default nil :height 230))
+  (let ((default-font-size 230))
+    (set-face-attribute 'default nil :height default-font-size)
+    (set-face-attribute 'fixed-pitch nil :height default-font-size)
+    (set-face-attribute 'variable-pitch nil :height default-font-size)))
 
 ;; markdown text scaling/zooming
 
