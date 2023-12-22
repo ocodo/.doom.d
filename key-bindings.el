@@ -187,6 +187,7 @@ _i_ only this line
 (bind-key "s-4"            #'toggle-window-split)
 (bind-key "s-5"            #'balance-windows-area)
 (bind-key "s-6"            #'ace-swap-window)
+(bind-key "s-7"            #'clone-frame)
 (bind-key "s-^"            #'join-lines-in-sexp)
 (bind-key "s-`"            #'other-frame)
 (bind-key "s-w"            #'delete-frame)
