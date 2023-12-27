@@ -35,7 +35,7 @@
          vertico-posframe-size-function #'ocodo/vertico-posframe-get-size
          ;vertico-posframe-size-function #'vertico-posframe-get-size
          vertico-posframe-border-width 20
-         vertico-posframe-font "Avenir Next"
+         vertico-posframe-font "Helvetica"
          vertico-posframe-parameters '((left-fringe . 0) (right-fringe . 0))
          vertico-posframe-show-minibuffer-rules '(".*"))
 

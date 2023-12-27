@@ -4,8 +4,9 @@
 ;; sync' after modifying this file!
 
 ;; Load non-doom stuff
-(add-to-list 'load-path "~/.doom.d/")
-(add-to-list 'load-path "~/.doom.d/plugins/")
+(add-to-list 'load-path doom-user-dir)
+(add-to-list 'load-path (format "%s/plugins" doom-user-dir))
+
 (require 'ocodo-handy-functions)
 (require 'key-bindings)
 
@@ -29,7 +30,7 @@
 (add-hook 'doom-load-theme-hook #'set-fancy-splash)
 
 (defun set-fancy-splash ()
-  (setq fancy-splash-image "~/.doom.d/golden-yak.png")
+  (setq fancy-splash-image (format "%s/golden-yak.png" doom-user-dir))
   (add-hook! 'after-setting-font-hook (+doom-dashboard-reload 'force)))
 
 (setq doom-unreal-buffer-functions
@@ -37,14 +38,14 @@
 
 ;; load private plugins
 (dolist
-    (plugin (directory-files "~/.doom.d/plugins/" t ".*el$"))
+    (plugin (directory-files (format "%s/plugins/" doom-user-dir) t ".*el$"))
     "Loading local plugins..."
   (load-file plugin))
 
 ;; load use-package configs
 (dolist
     (config
-     (directory-files "~/.doom.d/use/" t ".*el$"))
+     (directory-files (format "%s/use/" doom-user-dir) t ".*el$"))
     "Loading local use configs..."
   (load-file config))
 
@@ -68,7 +69,7 @@
 
 (setq doom-modeline-height 0.9)
 
-;; Set doom font.
+;; Set doom font on Macos
 (when (eq system-type 'darwin)
   (setq
    doom-font
@@ -90,6 +91,26 @@
                            :weight ultra-light))))
    '(mode-line-inactive ((t (:family "Helvetica Neue"
                              :weight ultra-light))))))
+
+
+;; Set doom font on linux
+(when (eq system-type 'gnu/linux)
+  (setq
+   doom-font
+   (font-spec
+    :family "OcodoMono"
+    :weight 'thin)
+
+   doom-variable-pitch-font
+   (font-spec
+    :family "Helvetica"))
+
+  (doom/reload-font)
+
+ (custom-set-faces
+   '(mode-line ((t (:family "Helvetica"))))
+   '(mode-line-active ((t (:family "Helvetica"))))
+   '(mode-line-inactive ((t (:family "Helvetica"))))))
 
 (setq display-line-numbers-type nil
       org-directory "~/org/"

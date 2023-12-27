@@ -7,7 +7,7 @@
                                ("SauceCodePro Nerd ExtraLight" (:family "SauceCodePro Nerd Font" :weight light))
                                ("SauceCodePro Nerd Light"      (:family "SauceCodePro Nerd Font" :weight semi-light))
                                ("SauceCodePro Nerd Regular"    (:family "SauceCodePro Nerd Font" :weight normal))
-                               ("OcodoMono"                    (:family "OcodoMono" :weight medium))
+                               ("OcodoMono"                    (:family "OcodoMono" :weight bold))
                                ("Input Mono Regular"           (:family "Input Mono" :weight normal))
                                ("Input Mono Light"             (:family "Input Mono" :weight semi-light))
                                ("APL385 Unicode"               (:family "APL385 Unicode" :weight normal))
