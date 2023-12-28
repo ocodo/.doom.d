@@ -217,5 +217,8 @@ _i_ only this line
                       (async-shell-command "git pull --rebase --autostash && git push"))
           magit-status-mode-map)
 
+(bind-key "M-<left>" #'backward-word)
+(bind-key "M-<right>" #'forward-word)
+
 (provide 'key-bindings)
 ;;; key-bindings.el ends here
