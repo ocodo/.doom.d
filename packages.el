@@ -7,7 +7,6 @@
 
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror: (package! some-package)
 
-(package! ag)
 (package! anzu)
 (package! applescript-mode)
 (package! buttercup)
@@ -31,6 +30,8 @@
 (package! pass)
 (package! persistent-scratch)
 (package! rainbow-identifiers)
+(package! rg)
+(package! ripgrep)
 (package! sideline)
 (package! sideline-flycheck)
 (package! sideline-lsp)

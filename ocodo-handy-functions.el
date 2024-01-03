@@ -847,9 +847,14 @@ Only works with lines which contain a filename."
      (message "%s"
               (file-size-human-readable (f-size name)))))
 
+(defun ocodo/find-filename ()
+  "Open the filename at the current line in Emacs."
+  (interactive)
+  (let* ((name (s-chomp (thing-at-point 'line))))
+    (find-file name)))
+
 (defun ocodo/mac-open-filename ()
-  "Open the filename at the current line.
-Only works with lines which contain a filename."
+  "Open the filename at the current line with Macos open command."
   (interactive)
   (let* ((name (s-chomp (thing-at-point 'line))))
     (message (shell-command-to-string (format "open \"%s\"" name)))))

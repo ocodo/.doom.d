@@ -165,7 +165,7 @@ _i_ only this line
 
 (bind-key "C-x /"          #'align-regexp)
 
-(bind-key "C-x f"          #'ag)
+(bind-key "C-x f"          #'projectile-ripgrep)
 (bind-key "C-x x ."        #'er/expand-region)
 
 (bind-key "M-O"            #'+macos/open-in-default-program)
@@ -222,3 +222,4 @@ _i_ only this line
 
 (provide 'key-bindings)
 ;;; key-bindings.el ends here
+

@@ -3,25 +3,16 @@
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
 
-;; Load non-doom stuff
-(add-to-list 'load-path doom-user-dir)
-(add-to-list 'load-path (format "%s/plugins" doom-user-dir))
+(defun ocodo/mac-log-handle-font-selection (event)
+  (let* ((ae (mac-event-ae event))
+         (font-spec (cdr (mac-ae-parameter ae 'font-spec))))
+   (when font-spec (message "Font Selected: %S" font-spec))))
 
-(require 'ocodo-handy-functions)
-(require 'key-bindings)
+(advice-add
+ 'mac-handle-font-selection
+ :before
+ 'ocodo/mac-log-handle-font-selection)
 
-(display-time)
-
-(setq initial-major-mode 'lisp-interaction-mode)
-
-;; Doom annoyances solutions...:
-;; Whitespace
-(setq-default
- whitespace-style
- '(face tabs spaces trailing lines space-before-tab newline indentation empty space-after-tab space-mark tab-mark newline-mark missing-newline-at-eof))
-
-;; Some functionality uses this to identify you, e.g. GPG configuration, email
-;; clients, file templates and snippets. It is optional.
 (setq user-full-name "Jason M23"
       user-mail-address "jasonm23@gmail.com")
 
@@ -36,99 +27,112 @@
 (setq doom-unreal-buffer-functions
       '(minibufferp))
 
-;; load private plugins
-(dolist
-    (plugin (directory-files (format "%s/plugins/" doom-user-dir) t ".*el$"))
-    "Loading local plugins..."
-  (load-file plugin))
+(let* ((plugins-dir (format "%s/plugins" doom-user-dir))
+       (use-dir (format "%s/use" doom-user-dir)))
 
-;; load use-package configs
-(dolist
-    (config
-     (directory-files (format "%s/use/" doom-user-dir) t ".*el$"))
-    "Loading local use configs..."
-  (load-file config))
+  ;; Load non-doom stuff
+  (add-to-list 'load-path doom-user-dir)
+  (add-to-list 'load-path plugins-dir)
 
-;; Config that is too small to break out a use-package / file...
-;; Prettify symbols
-(global-prettify-symbols-mode t)
+  (require 'ocodo-handy-functions)
+  (require 'key-bindings)
 
-(advice-add
- 'mac-handle-font-selection
- :before
- 'ocodo/mac-log-handle-font-selection)
+  (display-time)
 
-;; (advice-remove
-;;  'mac-handle-font-selection
-;;  'ocodo/mac-log-handle-font-selection)
+  (setq initial-major-mode 'lisp-interaction-mode)
 
-(defun ocodo/mac-log-handle-font-selection (event)
-  (let* ((ae (mac-event-ae event))
-         (font-spec (cdr (mac-ae-parameter ae 'font-spec))))
-   (when font-spec (message "Font Selected: %S" font-spec))))
+  ;; Doom annoyances solutions...:
+  ;; Whitespace
+  (setq-default
+   whitespace-style
+   '(face tabs spaces trailing lines space-before-tab newline indentation empty space-after-tab space-mark tab-mark newline-mark missing-newline-at-eof))
 
-(setq doom-modeline-height 0.9)
+  ;; Some functionality uses this to identify you, e.g. GPG configuration, email
+  ;; clients, file templates and snippets. It is optional.
 
-;; Set doom font on Macos
-(when (eq system-type 'darwin)
-  (setq
-   doom-font
-   (font-spec
-    :family "OcodoMono"
-    :weight 'thin)
+  ;; load private plugins
+  (dolist
+      (plugin (directory-files plugins-dir t ".*el$"))
+      "Loading local plugins..."
+    (load-file plugin))
 
-   doom-variable-pitch-font
-   (font-spec
-    :family "Helvetica Neue"
-    :weight 'light))
+  ;; load use-package configs
+  (dolist
+      (config
+       (directory-files use-dir t ".*el$"))
+      "Loading local use configs..."
+    (load-file config))
 
-  (doom/reload-font)
+  ;; Config that is too small to break out a use-package / file...
+  ;; Prettify symbols
+  (global-prettify-symbols-mode t)
 
- (custom-set-faces
-   '(mode-line ((t (:family "Helvetica Neue"
-                    :weight ultra-light))))
-   '(mode-line-active ((t (:family "Helvetica Neue"
-                           :weight ultra-light))))
-   '(mode-line-inactive ((t (:family "Helvetica Neue"
-                             :weight ultra-light))))))
+  ;; (advice-remove
+  ;;  'mac-handle-font-selection
+  ;;  'ocodo/mac-log-handle-font-selection)
+
+  (setq doom-modeline-height 0.9)
+
+  ;; Set doom font on Macos
+  (when (eq system-type 'darwin)
+    (setq
+     doom-font
+     (font-spec
+      :family "OcodoMono"
+      :weight 'thin)
+
+     doom-variable-pitch-font
+     (font-spec
+      :family "Helvetica Neue"
+      :weight 'light))
+
+    (doom/reload-font)
+
+   (custom-set-faces
+     '(mode-line ((t (:family "Helvetica Neue"
+                      :weight ultra-light))))
+     '(mode-line-active ((t (:family "Helvetica Neue"
+                             :weight ultra-light))))
+     '(mode-line-inactive ((t (:family "Helvetica Neue"
+                               :weight ultra-light))))))
 
 
-;; Set doom font on linux
-(when (eq system-type 'gnu/linux)
-  (setq
-   doom-font
-   (font-spec
-    :family "OcodoMono"
-    :weight 'thin)
+  ;; Set doom font on linux
+  (when (eq system-type 'gnu/linux)
+    (setq
+     doom-font
+     (font-spec
+      :family "OcodoMono"
+      :weight 'thin)
 
-   doom-variable-pitch-font
-   (font-spec
-    :family "Helvetica"))
+     doom-variable-pitch-font
+     (font-spec
+      :family "Helvetica"))
 
-  (doom/reload-font)
+    (doom/reload-font)
 
- (custom-set-faces
-   '(mode-line ((t (:family "Helvetica"))))
-   '(mode-line-active ((t (:family "Helvetica"))))
-   '(mode-line-inactive ((t (:family "Helvetica"))))))
+   (custom-set-faces
+     '(mode-line ((t (:family "Helvetica"))))
+     '(mode-line-active ((t (:family "Helvetica"))))
+     '(mode-line-inactive ((t (:family "Helvetica"))))))
 
-(setq display-line-numbers-type nil
-      org-directory "~/org/"
-      kill-whole-line t
-      ;; turn paging back on for which-key
-      which-key-use-C-h-commands t)
+  (setq display-line-numbers-type nil
+        org-directory "~/org/"
+        kill-whole-line t
+        ;; turn paging back on for which-key
+        which-key-use-C-h-commands t)
 
-(ssh-agent-env-fix)
-(edit-server-start)
-(add-hook 'sh-mode-hook #'ocodo-sh-indent-rules)
-(set-doom-lambda-line-fonts)
-(ocodo/load-theme "creamsody")
-(ocodo/reload-keys)
+  (ssh-agent-env-fix)
+  (edit-server-start)
+  (add-hook 'sh-mode-hook #'ocodo-sh-indent-rules)
+  (set-doom-lambda-line-fonts)
+  (ocodo/load-theme "creamsody")
+  (ocodo/reload-keys)
 
-;; Because... Doom ain't perfect, unless you have unlimited time to track down it's ... failings.
-;; KludGY time delays to unkcuf the disylap
-(run-at-time "5 sec" nil (lambda ()
-                             (ocodo/reload-fonts)
-                             (set-default-font-height 240)
-                             (when (eq system-type 'darwin)
-                               (ocodo/resize-frame-inset-maximized 20))))
+  ;; Because... Doom ain't perfect, unless you have unlimited time to track down it's ... failings.
+  ;; KludGY time delays to unkcuf the disylap
+  (run-at-time "5 sec" nil (lambda ()
+                               (ocodo/reload-fonts)
+                               (set-default-font-height 240)
+                               (when (eq system-type 'darwin)
+                                 (ocodo/resize-frame-inset-maximized 20)))))
