@@ -871,7 +871,7 @@ Current dir and origin will be used by default."
 
 (defun ocodo/write-region ()
   "If a region is marked, write it to a new file.
- If not, write the whole buffer to a new file"
+If not, write the whole buffer to a new file"
   (interactive)
   (if (region-active-p)
       (call-interactively #'write-region)
