@@ -220,6 +220,9 @@ _i_ only this line
 (bind-key "M-<left>" #'backward-word)
 (bind-key "M-<right>" #'forward-word)
 
+(bind-key "<mouse-8>" 'previous-buffer)
+(bind-key "<mouse-9>" 'next-buffer)
+
 (provide 'key-bindings)
 ;;; key-bindings.el ends here
 
