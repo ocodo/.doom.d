@@ -47,7 +47,7 @@
 (require 'yasnippet)
 
 ;; Declare used global vars
-(defvar ocodo/markdown-faces
+(defvar ocodo/markdown-faces-large
   '((default 200)
     (markdown-pre-face 200)
     (markdown-language-keyword-face 200)
@@ -60,6 +60,31 @@
     (markdown-header-face-4 250)
     (markdown-header-face-5 230)
     (markdown-header-face-6 210))
+  "List of markdown faces + default
+Used for text scaling in markdown, TV/Large sizing.")
+
+(defvar ocodo/markdown-faces-desktop
+  '((default 150)
+    (markdown-pre-face 150)
+    (markdown-language-keyword-face 150)
+    (markdown-code-face 150)
+    (markdown-table-face 150)
+    (markdown-header-face 250)
+    (markdown-header-face-1 250)
+    (markdown-header-face-2 230)
+    (markdown-header-face-3 210)
+    (markdown-header-face-4 200)
+    (markdown-header-face-5 180)
+    (markdown-header-face-6 160))
+  "List of markdown faces + default
+Used for text scaling in markdown, desktop monitor sizing.")
+
+(defvar ocodo/markdown-faces
+  (if (eq system-type 'darwin)
+      ;; I only use Macs on large screens/TVs at the moment
+      ocodo/markdown-faces-large
+    ocodo/markdown-faces-desktop)
+
   "List of markdown faces + default
 Used for text scaling in markdown.")
 
@@ -1238,10 +1263,20 @@ Internally uses the script `~/.doom.d/bin/emacs-markdown-preview-layout.osa'."
     (set-face-attribute 'fixed-pitch nil :height size)
     (set-face-attribute 'variable-pitch nil :height size)))
 
+(defun ocodo/default-face-size-set (size)
+  "Set the default face SIZE."
+    (message "Resize default face to: %i" size)
+    (set-face-attribute 'default nil :height size)
+    (set-face-attribute 'fixed-pitch nil :height size)
+    (set-face-attribute 'variable-pitch nil :height size))
+
+(defvar ocodo/default-face-size 230
+  "Default size for fonts")
+
 (defun ocodo/default-face-size-reset ()
   "Reset the default face size to default."
   (interactive)
-  (let ((default-font-size 230))
+  (let ((default-font-size ocodo/default-face-size))
     (set-face-attribute 'default nil :height default-font-size)
     (set-face-attribute 'fixed-pitch nil :height default-font-size)
     (set-face-attribute 'variable-pitch nil :height default-font-size)))
@@ -1266,12 +1301,18 @@ Internally uses the script `~/.doom.d/bin/emacs-markdown-preview-layout.osa'."
             (size (+ amount current)))
        (set-face-attribute face nil :height size))))
 
+(defun ocodo/markdown-faces-size-set (size)
+  "Set the markdown face SIZE."
+  (dolist (markdown-face-info ocodo/markdown-faces)
+     (let ((face (nth 0 markdown-face-info)))
+       (set-face-attribute face nil :height size))))
+
 (defun ocodo/markdown-faces-size-reset ()
   "Reset markdown faces to default size."
   (interactive)
   (dolist (markdown-face-info ocodo/markdown-faces)
           (set-face-attribute
-           (nth 0  markdown-face-info) nil :height
+           (nth 0 markdown-face-info) nil :height
            (nth 1 markdown-face-info))))
 
 (defun ocodo/kill-ring-save-buffer ()

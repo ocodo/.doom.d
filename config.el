@@ -126,13 +126,17 @@
   (edit-server-start)
   (add-hook 'sh-mode-hook #'ocodo-sh-indent-rules)
   (set-doom-lambda-line-fonts)
-  (ocodo/load-theme "creamsody")
+  ;; (ocodo/load-theme "creamsody")
+  (ocodo/load-theme "creamsody-obsidian")
   (ocodo/reload-keys)
 
-  ;; Because... Doom ain't perfect, unless you have unlimited time to track down it's ... failings.
-  ;; KludGY time delays to unkcuf the disylap
-  (run-at-time "3 sec" nil (lambda ()
-                               (ocodo/reload-fonts)
-                               (set-default-font-height 200)
-                               (when (eq system-type 'darwin)
-                                 (ocodo/resize-frame-inset-maximized 20)))))
+    ;; Because... Doom ain't perfect, unless you have unlimited time to track down it's ... failings.
+    ;; KludGY time delays to unkcuf the disylap
+  (run-at-time
+   "3 sec"
+   nil
+   (lambda ()
+     (ocodo/reload-fonts)
+     (ocodo/markdown-faces-size-reset)
+     (when (eq system-type 'darwin)
+       (ocodo/resize-frame-inset-maximized 20)))))
