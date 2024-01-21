@@ -126,8 +126,11 @@
   (edit-server-start)
   (add-hook 'sh-mode-hook #'ocodo-sh-indent-rules)
   (set-doom-lambda-line-fonts)
-  ;; (ocodo/load-theme "creamsody")
+
+  ;; must load creamsody before loading variants
+  (ocodo/load-theme "creamsody")
   (ocodo/load-theme "creamsody-obsidian")
+
   (ocodo/reload-keys)
 
     ;; Because... Doom ain't perfect, unless you have unlimited time to track down it's ... failings.
