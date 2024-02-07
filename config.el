@@ -136,7 +136,7 @@
     ;; Because... Doom ain't perfect, unless you have unlimited time to track down it's ... failings.
     ;; KludGY time delays to unkcuf the disylap
   (run-at-time
-   "3 sec"
+   "1 sec"
    nil
    (lambda ()
      (ocodo/reload-fonts)
