@@ -129,7 +129,7 @@
 
   ;; must load creamsody before loading variants
   (ocodo/load-theme "creamsody")
-  (ocodo/load-theme "creamsody-obsidian")
+  (ocodo/load-theme "creamsody-darker")
 
   (ocodo/reload-keys)
 
