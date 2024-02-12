@@ -21,7 +21,7 @@
 (add-hook 'doom-load-theme-hook #'set-fancy-splash)
 
 (defun set-fancy-splash ()
-  (setq fancy-splash-image (format "%s/enso.png" doom-user-dir))
+  (setq fancy-splash-image (format "%s/tri-arrow-motif.png" doom-user-dir))
   (add-hook! 'after-setting-font-hook (+doom-dashboard-reload 'force)))
 
 (setq doom-unreal-buffer-functions
