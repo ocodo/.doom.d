@@ -103,18 +103,38 @@
      doom-font
      (font-spec
       :family "OcodoMono"
-      :weight 'thin)
+      :weight 'thin))
 
+    (setq
      doom-variable-pitch-font
      (font-spec
       :family "Helvetica"))
 
     (doom/reload-font)
-
-   (custom-set-faces
+    (custom-set-faces
      '(mode-line ((t (:family "Helvetica"))))
      '(mode-line-active ((t (:family "Helvetica"))))
      '(mode-line-inactive ((t (:family "Helvetica"))))))
+
+  ;; Set doom font on windows
+  (when (eq system-type 'windows-nt)
+    (setq
+     doom-font
+     (font-spec
+      :family "OcodoMono"
+      :weight 'thin))
+
+    (setq
+     doom-variable-pitch-font
+     (font-spec
+      :family "Trebuchet MS"))
+
+    (doom/reload-font)
+
+   (custom-set-faces
+     '(mode-line ((t (:family "Trebuchet MS"))))
+     '(mode-line-active ((t (:family "Trebuchet MS"))))
+     '(mode-line-inactive ((t (:family "Trebuchet MS"))))))
 
   (setq display-line-numbers-type nil
         org-directory "~/org/"
@@ -142,4 +162,5 @@
      (ocodo/reload-fonts)
      (ocodo/markdown-faces-size-reset)
      (when (eq system-type 'darwin)
+       ;; We assume a mac is attached to a TV at this site
        (ocodo/resize-frame-inset-maximized 20)))))

@@ -32,6 +32,7 @@
 (require 'find-func)
 (require 'kurecolor)
 (require 'kv)
+(require 'all-the-icons)
 (require 'lambda-line)
 (require 'lisp-mnt)
 (require 'magit)

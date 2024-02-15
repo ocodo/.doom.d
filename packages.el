@@ -8,6 +8,7 @@
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror: (package! some-package)
 
 (package! anzu)
+(package! all-the-icons)
 (package! applescript-mode)
 (package! buttercup)
 (package! edit-server)
