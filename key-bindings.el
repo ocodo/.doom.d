@@ -28,7 +28,8 @@
 
 (bind-key "s-_" #'subword-mode)
 (bind-key "s-<help>" #'overwrite-mode)
-(bind-key "s-p" #'projectile-find-file-dwim)
+(bind-key "s-p" #'find-file-at-point)
+(bind-key "M-s-p" #'ocodo/projectile-find-file-dwim)
 
 (bind-key "M-s-=" #'ocodo/default-face-size-increase)
 (bind-key "M-s--" #'ocodo/default-face-size-decrease)

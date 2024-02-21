@@ -39,6 +39,7 @@
 (require 'markdown-soma)
 (require 'multiple-cursors)
 (require 'pcre2el)
+(require 'projectile)
 (require 'rx)
 (require 'sh-script)
 (require 'straight)
@@ -1482,6 +1483,11 @@ Leave *scratch* and *Messages* alone too."
   (when (ocodo/straight-remove-packages packages no-confirm)
     (doom/reload)))
 
+(defun ocodo/projectile-find-file-dwim ()
+  "Wrap projectile-find-file-dwim, clear the useless cache first."
+  (projectile-invalidate-cache nil)
+  (projectile-find-file-dwim))
+
 (defun ocodo/preview-mjml ()
   "Compile the current MJML buffer to HTML and open it in the default browser."
   (interactive)
@@ -2249,12 +2255,12 @@ Otherwise start it, adding ssh keys from the macOS keychain."
           (goto-char (buffer-end 1))
           (insert contents)))))
 
-(defun time-now ()
+(defun ocodo/time-now ()
  "Current time."
  (interactive)
  (message (format-time-string "%l:%M%P(%z) %Y-%m-%d")))
 
-(defun time-to-seconds (time)
+(defun ocodo/time-to-seconds (time)
  "Convert TIME `hh:mm:ss' into seconds."
  (cl-destructuring-bind (hh mm ss)
      (mapcar 'string-to-number
