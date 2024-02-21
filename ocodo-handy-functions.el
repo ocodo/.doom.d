@@ -1485,6 +1485,7 @@ Leave *scratch* and *Messages* alone too."
 
 (defun ocodo/projectile-find-file-dwim ()
   "Wrap projectile-find-file-dwim, clear the useless cache first."
+  (interactive)
   (projectile-invalidate-cache nil)
   (projectile-find-file-dwim))
 
