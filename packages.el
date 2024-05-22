@@ -12,6 +12,7 @@
 (package! applescript-mode)
 (package! buttercup)
 (package! edit-server)
+(package! ellama)
 (package! embrace)
 (package! ert-expectations)
 (package! flymake-shellcheck)

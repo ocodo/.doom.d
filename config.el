@@ -73,68 +73,69 @@
 
   (setq doom-modeline-height 0.9)
 
-  ;; Set doom font on Macos
-  (when (eq system-type 'darwin)
-    (setq
-     doom-font
-     (font-spec
-      :family "OcodoMono"
-      :weight 'thin)
+  (when (display-graphic-p)
+   ;; Set doom font on Macos
+   (when (eq system-type 'darwin)
+     (setq
+      doom-font
+      (font-spec
+       :family "OcodoMono"
+       :weight 'thin)
 
-     doom-variable-pitch-font
-     (font-spec
-      :family "Helvetica Neue"
-      :weight 'light))
+      doom-variable-pitch-font
+      (font-spec
+       :family "Helvetica Neue"
+       :weight 'light))
 
-    (doom/reload-font)
+     (doom/reload-font)
 
-   (custom-set-faces
-     '(mode-line ((t (:family "Helvetica Neue"
-                      :weight ultra-light))))
-     '(mode-line-active ((t (:family "Helvetica Neue"
-                             :weight ultra-light))))
-     '(mode-line-inactive ((t (:family "Helvetica Neue"
-                               :weight ultra-light))))))
-
-
-  ;; Set doom font on linux
-  (when (eq system-type 'gnu/linux)
-    (setq
-     doom-font
-     (font-spec
-      :family "OcodoMono"
-      :weight 'thin))
-
-    (setq
-     doom-variable-pitch-font
-     (font-spec
-      :family "Helvetica"))
-
-    (doom/reload-font)
     (custom-set-faces
-     '(mode-line ((t (:family "Helvetica"))))
-     '(mode-line-active ((t (:family "Helvetica"))))
-     '(mode-line-inactive ((t (:family "Helvetica"))))))
+      '(mode-line ((t (:family "Helvetica Neue"
+                       :weight ultra-light))))
+      '(mode-line-active ((t (:family "Helvetica Neue"
+                              :weight ultra-light))))
+      '(mode-line-inactive ((t (:family "Helvetica Neue"
+                                :weight ultra-light))))))
 
-  ;; Set doom font on windows
-  (when (eq system-type 'windows-nt)
-    (setq
-     doom-font
-     (font-spec
-      :family "OcodoMono"
-      :weight 'thin))
 
-    (setq
-     doom-variable-pitch-font
-     (font-spec
-      :family "Trebuchet MS"))
+   ;; Set doom font on linux
+   (when (eq system-type 'gnu/linux)
+     (setq
+      doom-font
+      (font-spec
+       :family "OcodoMono"
+       :weight 'thin))
 
-    (doom/reload-font)
+     (setq
+      doom-variable-pitch-font
+      (font-spec
+       :family "Helvetica"))
 
-   (custom-set-faces
-     '(mode-line ((t (:family "Trebuchet MS"))))
-     '(mode-line-active ((t (:family "Trebuchet MS"))))
-     '(mode-line-inactive ((t (:family "Trebuchet MS"))))))
+     (doom/reload-font)
+     (custom-set-faces
+      '(mode-line ((t (:family "Helvetica"))))
+      '(mode-line-active ((t (:family "Helvetica"))))
+      '(mode-line-inactive ((t (:family "Helvetica"))))))
+
+   ;; Set doom font on windows
+   (when (eq system-type 'windows-nt)
+     (setq
+      doom-font
+      (font-spec
+       :family "OcodoMono"
+       :weight 'thin))
+
+     (setq
+      doom-variable-pitch-font
+      (font-spec
+       :family "Trebuchet MS"))
+
+     (doom/reload-font)
+
+    (custom-set-faces
+      '(mode-line ((t (:family "Trebuchet MS"))))
+      '(mode-line-active ((t (:family "Trebuchet MS"))))
+      '(mode-line-inactive ((t (:family "Trebuchet MS")))))))
 
   (setq display-line-numbers-type nil
         org-directory "~/org/"
@@ -152,15 +153,15 @@
   (ocodo/load-theme "creamsody-darker")
 
   (ocodo/reload-keys)
-
+  (when (display-graphic-p)
     ;; Because... Doom ain't perfect, unless you have unlimited time to track down it's ... failings.
     ;; KludGY time delays to unkcuf the disylap
-  (run-at-time
-   "1 sec"
-   nil
-   (lambda ()
-     (ocodo/reload-fonts)
-     (ocodo/markdown-faces-size-reset)
-     (when (eq system-type 'darwin)
-       ;; We assume a mac is attached to a TV at this site
-       (ocodo/resize-frame-inset-maximized 20)))))
+   (run-at-time
+    "1 sec"
+    nil
+    (lambda ()
+      (ocodo/reload-fonts)
+      (ocodo/markdown-faces-size-reset)
+      (when (eq system-type 'darwin)
+        ;; We assume a mac is attached to a TV at this site
+        (ocodo/resize-frame-inset-maximized 20))))))
