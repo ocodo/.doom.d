@@ -140,6 +140,10 @@ For example:
        ,expr
      ,@body))
 
+(defmacro when-gui (&rest body)
+    "Evaluate BODY only if Emacs has a GUI."
+      `(when (display-graphic-p) ,@body))
+
 (defun -sample (list)
   "Return a random element from the LIST."
   (nth (random (length list)) list))
@@ -376,7 +380,9 @@ For example:
 (defun decrease-default-font-height (m)
   "Adjust the default font :height by 10 (prefix arg M for multiples)."
   (interactive "p")
-  (increase-default-font-height -1))
+  (if (display-graphic-p)
+      (increase-default-font-height -1)
+    (message "GUI only")))
 
 (defun decrement-number-at-point ()
   "Decrement number at point like vim's Ctrl x."
@@ -973,9 +979,11 @@ If the user is not in a repo, Select from `ocodo-github-repos'."
 (defun increase-default-font-height (prefix)
   "Adjust the default font :height by 10, PREFIX (to set by multiples)."
   (interactive "p")
-  (let ((new-height (+ (* prefix 10) (face-attribute 'default :height))))
-    (set-face-attribute 'default nil :height new-height)
-    (message "Default font height set to %i" new-height)))
+  (if (display-graphic-p)
+      (let ((new-height (+ (* prefix 10) (face-attribute 'default :height))))
+        (set-face-attribute 'default nil :height new-height)
+        (message "Default font height set to %i" new-height))
+    (message "GUI only")))
 
 (defun increment-number-at-point ()
   "Increment number at point like vim's Ctrl a."
@@ -1278,10 +1286,11 @@ Internally uses the script `~/.doom.d/bin/emacs-markdown-preview-layout.osa'."
 (defun ocodo/default-face-size-reset ()
   "Reset the default face size to default."
   (interactive)
-  (let ((default-font-size ocodo/default-face-size))
-    (set-face-attribute 'default nil :height default-font-size)
-    (set-face-attribute 'fixed-pitch nil :height default-font-size)
-    (set-face-attribute 'variable-pitch nil :height default-font-size)))
+  (when (display-graphic-p)
+   (let ((default-font-size ocodo/default-face-size))
+     (set-face-attribute 'default nil :height default-font-size)
+     (set-face-attribute 'fixed-pitch nil :height default-font-size)
+     (set-face-attribute 'variable-pitch nil :height default-font-size))))
 
 ;; markdown text scaling/zooming
 
@@ -1297,25 +1306,28 @@ Internally uses the script `~/.doom.d/bin/emacs-markdown-preview-layout.osa'."
 
 (defun ocodo/markdown-faces-size-adjust (amount)
   "Adjust the markdown face size by AMOUNT."
-  (dolist (markdown-face-info ocodo/markdown-faces)
-     (let* ((face (nth 0 markdown-face-info))
-            (current (face-attribute face :height))
-            (size (+ amount current)))
-       (set-face-attribute face nil :height size))))
+  (when (display-graphic-p)
+    (dolist (markdown-face-info ocodo/markdown-faces)
+       (let* ((face (nth 0 markdown-face-info))
+              (current (face-attribute face :height))
+              (size (+ amount current)))
+         (set-face-attribute face nil :height size)))))
 
 (defun ocodo/markdown-faces-size-set (size)
   "Set the markdown face SIZE."
-  (dolist (markdown-face-info ocodo/markdown-faces)
-     (let ((face (nth 0 markdown-face-info)))
-       (set-face-attribute face nil :height size))))
+  (when (display-graphic-p)
+    (dolist (markdown-face-info ocodo/markdown-faces)
+       (let ((face (nth 0 markdown-face-info)))
+         (set-face-attribute face nil :height size)))))
 
 (defun ocodo/markdown-faces-size-reset ()
   "Reset markdown faces to default size."
   (interactive)
-  (dolist (markdown-face-info ocodo/markdown-faces)
-          (set-face-attribute
-           (nth 0 markdown-face-info) nil :height
-           (nth 1 markdown-face-info))))
+  (when (display-graphic-p)
+    (dolist (markdown-face-info ocodo/markdown-faces)
+            (set-face-attribute
+             (nth 0 markdown-face-info) nil :height
+             (nth 1 markdown-face-info)))))
 
 (defun ocodo/kill-ring-save-buffer ()
   "Copy the whole buffer to the kill ring."
@@ -2010,14 +2022,18 @@ css-value to the hex color found."
   (interactive)
   (let ((theme-name (or theme-name (completing-read "Load Theme:" (custom-available-themes)))))
     (load-theme  (intern  theme-name ) t)
-    (ocodo/reload-fonts)))
+    (when (display-graphic-p)
+      (ocodo/reload-fonts))))
 
 (defun set-doom-lambda-line-fonts ()
   "Sort out font / unicode / fontset stuff."
   (interactive)
-  (doom/increase-font-size 1)
-  (doom/decrease-font-size 1)
-  (lambda-line--clockface-update-fontset "ClockFaceRect"))
+  (when (display-graphic-p)
+    (doom/increase-font-size 1)
+    (doom/decrease-font-size 1)
+    (lambda-line--clockface-update-fontset "ClockFaceRect"))
+  (when (not (display-graphic-p))
+    (message "Only available in GUI")))
 
 (defun search-backward-wrapped-string (wrap_start wrap_end)
   "Search for a string backwards from the current point.
@@ -2056,12 +2072,13 @@ Use negative prefix P to go backward."
 (defun set-default-font-height (p)
   "Set the default font :height P (prefix arg) or enter in minibuffer."
   (interactive "P")
-  (unless p
-    (setq p (string-to-number (read-from-minibuffer
-                               (format "Set default font height (currently %s): "
-                                       (face-attribute 'default :height))))))
-  (set-face-attribute 'default nil :height  p)
-  (message "Default font height set to %s" p))
+  (when (display-graphic-p)
+    (unless p
+      (setq p (string-to-number (read-from-minibuffer
+                                 (format "Set default font height (currently %s): "
+                                         (face-attribute 'default :height))))))
+    (set-face-attribute 'default nil :height  p)
+    (message "Default font height set to %s" p)))
 
 (defun set-internal-border (n)
   "Set or reset the internal border width N of the selected frame."
