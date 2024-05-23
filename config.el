@@ -59,7 +59,7 @@
 
 ;; 8< GUI ---->
 
-(when (display-graphic-p)
+(when-gui
  (defun ocodo/mac-log-handle-font-selection (event)
    (let* ((ae (mac-event-ae event))
           (font-spec (cdr (mac-ae-parameter ae 'font-spec))))
@@ -81,7 +81,6 @@
   ;;  'mac-handle-font-selection
   ;;  'ocodo/mac-log-handle-font-selection)
 
-  (when (display-graphic-p)
    (setq doom-modeline-height 0.9)
    ;; Set doom font on Macos
    (when (eq system-type 'darwin)
@@ -144,9 +143,8 @@
     (custom-set-faces
       '(mode-line ((t (:family "Trebuchet MS"))))
       '(mode-line-active ((t (:family "Trebuchet MS"))))
-      '(mode-line-inactive ((t (:family "Trebuchet MS")))))))
+      '(mode-line-inactive ((t (:family "Trebuchet MS"))))))
 
-  (when (display-graphic-p)
     ;; Because... Doom ain't perfect, unless you have unlimited time to track down it's ... failings.
     ;; KludGY time delays to unkcuf the disylap
    (run-at-time
@@ -157,7 +155,7 @@
       (ocodo/markdown-faces-size-reset)
       (when (eq system-type 'darwin)
         ;; We assume a mac is attached to a TV at this site
-        (ocodo/resize-frame-inset-maximized 20)))))))
+        (ocodo/resize-frame-inset-maximized 20))))))
 
 ;; 8< --- GUI <<<
 ;;

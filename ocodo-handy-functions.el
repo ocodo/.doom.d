@@ -1286,7 +1286,7 @@ Internally uses the script `~/.doom.d/bin/emacs-markdown-preview-layout.osa'."
 (defun ocodo/default-face-size-reset ()
   "Reset the default face size to default."
   (interactive)
-  (when (display-graphic-p)
+  (when-gui
    (let ((default-font-size ocodo/default-face-size))
      (set-face-attribute 'default nil :height default-font-size)
      (set-face-attribute 'fixed-pitch nil :height default-font-size)
@@ -1306,7 +1306,7 @@ Internally uses the script `~/.doom.d/bin/emacs-markdown-preview-layout.osa'."
 
 (defun ocodo/markdown-faces-size-adjust (amount)
   "Adjust the markdown face size by AMOUNT."
-  (when (display-graphic-p)
+  (when-gui
     (dolist (markdown-face-info ocodo/markdown-faces)
        (let* ((face (nth 0 markdown-face-info))
               (current (face-attribute face :height))
@@ -1315,7 +1315,7 @@ Internally uses the script `~/.doom.d/bin/emacs-markdown-preview-layout.osa'."
 
 (defun ocodo/markdown-faces-size-set (size)
   "Set the markdown face SIZE."
-  (when (display-graphic-p)
+  (when-gui
     (dolist (markdown-face-info ocodo/markdown-faces)
        (let ((face (nth 0 markdown-face-info)))
          (set-face-attribute face nil :height size)))))
@@ -1323,7 +1323,7 @@ Internally uses the script `~/.doom.d/bin/emacs-markdown-preview-layout.osa'."
 (defun ocodo/markdown-faces-size-reset ()
   "Reset markdown faces to default size."
   (interactive)
-  (when (display-graphic-p)
+  (when-gui
     (dolist (markdown-face-info ocodo/markdown-faces)
             (set-face-attribute
              (nth 0 markdown-face-info) nil :height
@@ -2022,13 +2022,13 @@ css-value to the hex color found."
   (interactive)
   (let ((theme-name (or theme-name (completing-read "Load Theme:" (custom-available-themes)))))
     (load-theme  (intern  theme-name ) t)
-    (when (display-graphic-p)
+    (when-gui
       (ocodo/reload-fonts))))
 
 (defun set-doom-lambda-line-fonts ()
   "Sort out font / unicode / fontset stuff."
   (interactive)
-  (when (display-graphic-p)
+  (when-gui
     (doom/increase-font-size 1)
     (doom/decrease-font-size 1)
     (lambda-line--clockface-update-fontset "ClockFaceRect"))
@@ -2072,7 +2072,7 @@ Use negative prefix P to go backward."
 (defun set-default-font-height (p)
   "Set the default font :height P (prefix arg) or enter in minibuffer."
   (interactive "P")
-  (when (display-graphic-p)
+  (when-gui
     (unless p
       (setq p (string-to-number (read-from-minibuffer
                                  (format "Set default font height (currently %s): "
