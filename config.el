@@ -3,26 +3,28 @@
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
 
-(defun ocodo/mac-log-handle-font-selection (event)
-  (let* ((ae (mac-event-ae event))
-         (font-spec (cdr (mac-ae-parameter ae 'font-spec))))
-   (when font-spec (message "Font Selected: %S" font-spec))))
+(when (display-graphic-p)
+ (defun ocodo/mac-log-handle-font-selection (event)
+   (let* ((ae (mac-event-ae event))
+          (font-spec (cdr (mac-ae-parameter ae 'font-spec))))
+    (when font-spec (message "Font Selected: %S" font-spec))))
 
-(advice-add
- 'mac-handle-font-selection
- :before
- 'ocodo/mac-log-handle-font-selection)
+ (advice-add
+  'mac-handle-font-selection
+  :before
+  'ocodo/mac-log-handle-font-selection))
 
 (setq user-full-name "Jason M23"
       user-mail-address "jasonm23@gmail.com")
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-(add-hook 'doom-load-theme-hook #'set-fancy-splash)
+(when (display-graphic-p)
+ (add-hook 'doom-load-theme-hook #'set-fancy-splash)
 
-(defun set-fancy-splash ()
-  (setq fancy-splash-image (format "%s/tri-arrow-motif.png" doom-user-dir))
-  (add-hook! 'after-setting-font-hook (+doom-dashboard-reload 'force)))
+ (defun set-fancy-splash ()
+   (setq fancy-splash-image (format "%s/tri-arrow-motif.png" doom-user-dir))
+   (add-hook! 'after-setting-font-hook (+doom-dashboard-reload 'force))))
 
 (setq doom-unreal-buffer-functions
       '(minibufferp))
@@ -71,9 +73,8 @@
   ;;  'mac-handle-font-selection
   ;;  'ocodo/mac-log-handle-font-selection)
 
-  (setq doom-modeline-height 0.9)
-
   (when (display-graphic-p)
+   (setq doom-modeline-height 0.9)
    ;; Set doom font on Macos
    (when (eq system-type 'darwin)
      (setq
