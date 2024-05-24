@@ -2,6 +2,7 @@
 
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
+
 (setq user-full-name "Jason M23" user-mail-address "jasonm23@gmail.com")
 (defalias 'yes-or-no-p 'y-or-n-p)
 
@@ -10,43 +11,41 @@
 
 (let* ((plugins-dir (format "%s/plugins" doom-user-dir))
        (use-dir (format "%s/use" doom-user-dir)))
-
   ;; Load non-doom stuff
-  (add-to-list 'load-path doom-user-dir)
-  (add-to-list 'load-path plugins-dir)
+ (add-to-list 'load-path doom-user-dir)
+ (add-to-list 'load-path plugins-dir)
 
-  (require 'ocodo-handy-functions)
-  (require 'key-bindings)
+ (require 'ocodo-handy-functions)
+ (require 'key-bindings)
 
-  (display-time)
-
-  (setq initial-major-mode 'lisp-interaction-mode)
+ (display-time)
+ (setq initial-major-mode 'lisp-interaction-mode)
 
   ;; Doom annoyances solutions...:
   ;; Whitespace
-  (setq-default
-   whitespace-style
-   '(face tabs spaces trailing lines space-before-tab newline indentation empty space-after-tab space-mark tab-mark newline-mark missing-newline-at-eof))
+ (setq-default
+  whitespace-style
+  '(face tabs spaces trailing lines space-before-tab newline indentation empty space-after-tab space-mark tab-mark newline-mark missing-newline-at-eof))
 
   ;; Some functionality uses this to identify you, e.g. GPG configuration, email
   ;; clients, file templates and snippets. It is optional.
 
   ;; load private plugins
-  (dolist
-      (plugin (directory-files plugins-dir t ".*el$"))
-      "Loading local plugins..."
-    (load-file plugin))
+ (dolist
+     (plugin (directory-files plugins-dir t ".*el$"))
+     "Loading local plugins..."
+   (load-file plugin))
 
   ;; load use-package configs
-  (dolist
-      (config
-       (directory-files use-dir t ".*el$"))
-      "Loading local use configs..."
-    (load-file config))
+ (dolist
+     (config
+      (directory-files use-dir t ".*el$"))
+     "Loading local use configs..."
+   (load-file config))
 
   ;; Config that is too small to break out a use-package / file...
   ;; Prettify symbols
-  (global-prettify-symbols-mode t))
+ (global-prettify-symbols-mode t))
 
 (setq display-line-numbers-type nil
       org-directory "~/org/"
