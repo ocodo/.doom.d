@@ -169,8 +169,6 @@ _i_ only this line
 (bind-key "C-x f"          #'projectile-ripgrep)
 (bind-key "C-x x ."        #'er/expand-region)
 
-(bind-key "M-O"            #'+macos/open-in-default-program)
-
 (bind-key "M-`"            #'magit)
 
 (bind-key "M-o"            #'dired-osx-open-this-file dired-mode-map)
