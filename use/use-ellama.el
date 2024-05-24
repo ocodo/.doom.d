@@ -1,6 +1,6 @@
 (use-package ellama
   :init
-  (setopt ellama-keymap-prefix "C-c e")
+  (setopt ellama-keymap-prefix "C-c =")
   (require 'llm-ollama)
   (setopt ellama-provider
 	  (make-llm-ollama
