@@ -56,6 +56,11 @@
 (add-hook 'sh-mode-hook #'ocodo-sh-indent-rules)
 (set-doom-lambda-line-fonts)
 
+;; 8< Term --->
+
+(when (not (display-graphic-p))
+  (xterm-mouse-mode 1))
+
 ;; 8< GUI ---->
 
 (when-gui
