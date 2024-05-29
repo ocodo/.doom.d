@@ -122,6 +122,7 @@ _i_ only this line
 (bind-key "C-c f a p"      #'find-file-at-point)
 
 (bind-key "C-x x m"        #'xterm-mouse-mode)
+(bind-key "C-c l b"        #'lambda-line-mode)
 
 (bind-key "C-c k H"        #'+rgb/kurecolor-hydra/body)
 (bind-key "C-c k X"        #'kurecolor-xcode-color-literal-at-point-or-region-to-hex-rgba)
