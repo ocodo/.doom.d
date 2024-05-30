@@ -8,7 +8,6 @@
 
 (unbind-key "s-=")
 (unbind-key "s--")
-(unbind-key "M-<mouse-1>")
 
 (map!
  ;; Unbind C-RET on global key map
@@ -20,6 +19,8 @@
  "C-<tab>"     nil
  ;; unbind load theme
  "C-H t" nil)
+
+(bind-key "M-RET" #'toggle-frame-fullscreen)
 
 (bind-key "C-<tab>" #'ocodo/match-indent-above)
 
