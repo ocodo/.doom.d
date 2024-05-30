@@ -241,11 +241,6 @@ _i_ only this line
 
 ;; --- mode/keymap specific ---
 ;; --- Magit ---
-(defun ocodo/git-pull-and-push ()
-  "Do git pull --rebase --autostash && git push on the current directory."
-  (interactive)
-  (async-shell-command "git pull --rebase --autostash && git push"))
-
 (bind-key "s-p" #'magit-push-current-to-upstream magit-status-mode-map)
 (bind-key "M-s-p" #'ocodo/git-pull-and-push magit-status-mode-map)
 (bind-key "s-f" #'magit-pull-from-upstream magit-status-mode-map)

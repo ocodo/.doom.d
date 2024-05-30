@@ -892,6 +892,11 @@ Only works with lines which contain a filename."
   (let* ((name (s-chomp (thing-at-point 'line))))
     (message (shell-command-to-string (format "open \"%s\"" name)))))
 
+(defun ocodo/git-pull-and-push ()
+  "Do git pull --rebase --autostash && git push on the current directory."
+  (interactive)
+  (async-shell-command "git pull --rebase --autostash && git push"))
+
 (defun ocodo/git-remote-url (&optional directory remote)
   "Return the url of the git REMOTE in DIRECTORY.
 Return nil if no remote or not a git repo.
