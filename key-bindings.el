@@ -245,9 +245,9 @@ _i_ only this line
 (bind-key "M-s-p" #'ocodo/git-pull-and-push magit-status-mode-map)
 (bind-key "s-f" #'magit-pull-from-upstream magit-status-mode-map)
 
-(bind-key "C-c m p" #'magit-push-current-to-upstream magit-status-mode-map)
-(bind-key "C-c m P" #'ocodo/git-pull-and-push magit-status-mode-map)
-(bind-key "C-c m f" #'magit-pull-from-upstream magit-status-mode-map)
+(bind-key "C-c g p" #'magit-push-current-to-upstream magit-status-mode-map)
+(bind-key "C-c g P" #'ocodo/git-pull-and-push magit-status-mode-map)
+(bind-key "C-c g f" #'magit-pull-from-upstream magit-status-mode-map)
 
 (bind-key "M-<left>" #'backward-word)
 (bind-key "M-<right>" #'forward-word)
