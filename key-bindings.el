@@ -235,6 +235,7 @@ _i_ only this line
 (bind-key "s-o"            #'find-file)
 (bind-key "s-k"            #'kill-this-buffer)
 (bind-key "C-c k k"        #'kill-this-buffer)
+(bind-key "C-x k"          #'kill-this-buffer)
 (bind-key "C-c f w"        #'write-region)
 
 (bind-key "s-y"            #'yank-from-kill-ring)
