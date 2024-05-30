@@ -8,6 +8,7 @@
 
 (unbind-key "s-=")
 (unbind-key "s--")
+(unbind-key "M-<mouse-1>")
 
 (map!
  ;; Unbind C-RET on global key map
@@ -27,17 +28,30 @@
 (bind-key "s-)" #'text-scale-adjust)
 
 (bind-key "s-_" #'subword-mode)
+
 (bind-key "s-<help>" #'overwrite-mode)
+
 (bind-key "s-p" #'find-file-at-point)
+(bind-key "C-c f a p" #'find-file-at-point)
+
 (bind-key "M-s-p" #'ocodo/projectile-find-file-dwim)
+(bind-key "C-c p f" #'ocodo/projectile-find-file-dwim)
 
 (bind-key "M-s-=" #'ocodo/default-face-size-increase)
 (bind-key "M-s--" #'ocodo/default-face-size-decrease)
 (bind-key "M-s-0" #'ocodo/default-face-size-reset)
 
+(bind-key "C-c t =" #'ocodo/default-face-size-increase)
+(bind-key "C-c t -" #'ocodo/default-face-size-decrease)
+(bind-key "C-c t 0" #'ocodo/default-face-size-reset)
+
 (bind-key "s-<mouse-1>" #'browse-url-at-mouse)
+(bind-key "C-S-<mouse-1>" #'browse-url-at-mouse)
 
 (bind-key "M-s-o" #'ocodo-open-project)
+
+(bind-key "s-r" #'+make/run)
+(bind-key "s-R" #'+make/run-last)
 
 (bind-key "s-r" #'+make/run)
 (bind-key "s-R" #'+make/run-last)
@@ -119,7 +133,6 @@ _i_ only this line
 (bind-key "C-c ]"          #'embrace-commander)
 
 (bind-key "C-c f i"        #'insert-file)
-(bind-key "C-c f a p"      #'find-file-at-point)
 
 (bind-key "C-x x m"        #'xterm-mouse-mode)
 (bind-key "C-c l b"        #'lambda-line-mode)
@@ -197,29 +210,49 @@ _i_ only this line
 (bind-key "s-w"            #'delete-frame)
 
 (bind-key "s-/"            #'hippie-expand)
+
 (bind-key "s-<down>"       #'duplicate-current-line-or-region)
 (bind-key "s-<up>"         #'duplicate-current-line-or-region-up)
 
+(bind-key "s-<down>"       #'duplicate-current-line-or-region)
+(bind-key "s-<up>"         #'duplicate-current-line-or-region-up)
+
+(bind-key "M-S-<down>"     #'duplicate-current-line-or-region)
+(bind-key "M-S-<up>"       #'duplicate-current-line-or-region-up)
+
 (bind-key "s-<left>"       #'previous-buffer)
 (bind-key "s-<right>"      #'next-buffer)
+
 (bind-key "s-B"            #'ibuffer)
 (bind-key "s-b"            #'ivy-switch-buffer)
+
 (bind-key "s-U"            #'revert-buffer-instant)
+(bind-key "C-c f v"        #'revert-buffer-instant)
+
 (bind-key "s-s"            #'save-buffer)
 (bind-key "s-t"            #'projectile-find-file)
 (bind-key "s-o"            #'find-file)
 (bind-key "s-k"            #'kill-this-buffer)
+(bind-key "C-c k k"        #'kill-this-buffer)
 (bind-key "C-c f w"        #'write-region)
 
 (bind-key "s-y"            #'yank-from-kill-ring)
+(bind-key "C-c y"          #'yank-from-kill-ring)
 
 ;; --- mode/keymap specific ---
 ;; --- Magit ---
+(defun ocodo/git-pull-and-push ()
+  "Do git pull --rebase --autostash && git push on the current directory."
+  (interactive)
+  (async-shell-command "git pull --rebase --autostash && git push"))
+
 (bind-key "s-p" #'magit-push-current-to-upstream magit-status-mode-map)
+(bind-key "M-s-p" #'ocodo/git-pull-and-push magit-status-mode-map)
 (bind-key "s-f" #'magit-pull-from-upstream magit-status-mode-map)
-(bind-key "M-s-p" #'(lambda () (interactive)
-                      (async-shell-command "git pull --rebase --autostash && git push"))
-          magit-status-mode-map)
+
+(bind-key "C-c m p" #'magit-push-current-to-upstream magit-status-mode-map)
+(bind-key "C-c m P" #'ocodo/git-pull-and-push magit-status-mode-map)
+(bind-key "C-c m f" #'magit-pull-from-upstream magit-status-mode-map)
 
 (bind-key "M-<left>" #'backward-word)
 (bind-key "M-<right>" #'forward-word)
