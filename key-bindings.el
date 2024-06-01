@@ -228,7 +228,7 @@ _i_ only this line
 (bind-key "s-b"            #'ivy-switch-buffer)
 
 (bind-key "s-U"            #'revert-buffer-instant)
-(bind-key "C-c f v"        #'revert-buffer-instant)
+(bind-key "C-c u"          #'revert-buffer-instant)
 
 (bind-key "s-s"            #'save-buffer)
 (bind-key "s-t"            #'projectile-find-file)
