@@ -129,20 +129,20 @@
       '(mode-line-active ((t (:family "Helvetica"))))
       '(mode-line-inactive ((t (:family "Helvetica"))))))
 
-   ;; Set doom font on windows
+   ;; Set windows specifics
    (when (eq system-type 'windows-nt)
-     (setq
-      doom-font
-      (font-spec
-       :family "OcodoMono"
-       :weight 'thin))
+    (setq
+     doom-font
+     (font-spec
+      :family "OcodoMono"
+      :weight 'thin))
 
-     (setq
-      doom-variable-pitch-font
-      (font-spec
-       :family "Trebuchet MS"))
+    (setq
+     doom-variable-pitch-font
+     (font-spec
+      :family "Trebuchet MS"))
 
-     (doom/reload-font)
+    (doom/reload-font)
 
     (custom-set-faces
       '(mode-line ((t (:family "Trebuchet MS"))))
@@ -162,6 +162,17 @@
         (ocodo/resize-frame-inset-maximized 20))))))
 
 ;; 8< --- GUI <<<
+
+(when (string-match "-[Mm]icrosoft" operating-system-release)
+  ;; WSL: WSL1 has "-Microsoft", WSL2 has "-microsoft-standard"
+ (defun wsl-copy-clip (&rest _args)
+   "Copy current-kill to WSL clip.exe"
+   (setq mytemp (make-temp-file "winclip"))
+   (write-region (current-kill 0 t) nil mytemp)
+   (shell-command (concat "clip.exe < " mytemp))
+   (delete-file mytemp))
+
+ (advice-add 'kill-new :after #'wsl-copy-clip))
 ;;
 ;; must load creamsody before loading variants
 (ocodo/load-theme "creamsody")
