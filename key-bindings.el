@@ -9,6 +9,8 @@
 (unbind-key "s-=")
 (unbind-key "s--")
 
+(unbind-key "M-/" web-mode-map)
+
 (map!
  ;; Unbind C-RET on global key map
  "C-RET"      nil
