@@ -2,9 +2,9 @@
 
 (defun ocodo/local-ollama-server-p ()
   "Check for local Ollama LLM server."
-  (let ((netstat-result
-         (shell-command-to-string "netstat -a")))
-    (s-contains-p ":11434" netstat-result)))
+  (let ((ollama-result
+         (shell-command-to-string "curl localhost:11434")))
+    (s-contains-p "Ollama is running" ollama-result)))
 
 (let
     ((host
