@@ -5,11 +5,10 @@
 
 (require 'bind-key)
 (require 'ocodo-handy-functions)
+(require 'web-mode)
 
 (unbind-key "s-=")
 (unbind-key "s--")
-
-(unbind-key "M-/" web-mode-map)
 
 (map!
  ;; Unbind C-RET on global key map
@@ -28,6 +27,7 @@
 
 (bind-key "s-=" #'text-scale-increase)
 (bind-key "s--" #'text-scale-decrease)
+
 (bind-key "s-)" #'text-scale-adjust)
 
 (bind-key "s-_" #'subword-mode)
