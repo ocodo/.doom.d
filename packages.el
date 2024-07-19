@@ -18,11 +18,12 @@
 (package! flymake-shellcheck)
 (package! fontify-face)
 (package! free-keys)
+(package! git-gutter)
 (package! google-this)
 (package! goto-last-change)
 (package! helm-swoop)
-(package! hercules)
 (package! iedit)
+(package! hercules)
 (package! kv)
 (package! lorem-ipsum)
 (package! lsp-sourcekit)
@@ -52,6 +53,8 @@
   :recipe (:host github :repo "jasonm23/markdown-soma"))
 (package! text-transformers
   :recipe (:host github :repo "jasonm23/emacs-text-transformers"))
+(package! hydra
+  :recipe (:host github :repo "abo-abo/hydra"))
 
 ;; Themes
 
