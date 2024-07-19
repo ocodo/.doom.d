@@ -1251,6 +1251,13 @@ Internally uses the script `~/.doom.d/bin/emacs-markdown-preview-layout.osa'."
   (when (not markdown-soma-mode)
     (shell-command "~/.doom.d/bin/emacs-markdown-preview-layout.osa" nil nil)))
 
+(defun ocodo/sudo-shell-command (command)
+  "Execute sudo shell COMMAND."
+  (interactive "MShell command (root): ")
+  (with-temp-buffer
+    (cd "/sudo::/")
+    (async-shell-command command)))
+
 (defun ocodo/shell-command-to-insert (command)
   "Execute shell COMMAND and insert the result."
   (interactive (list (read-shell-command "Shell Command (output insert at point): ")))
