@@ -179,3 +179,5 @@
 (ocodo/load-theme "creamsody-darker")
 
 (ocodo/reload-keys)
+
+(define-key special-event-map [config-changed-event] 'ignore)
