@@ -48,6 +48,10 @@
 (require 'xr)
 (require 'yasnippet)
 
+(defalias 'doom-reload 'doom/reload)
+(defalias 'doom-increase-font-size 'doom/increase-font-size)
+(defalias 'doom-decrease-font-size 'doom/decrease-font-size)
+
 ;; Declare used global vars
 (defvar ocodo/markdown-faces-large
   '((default 200)
@@ -62,8 +66,8 @@
     (markdown-header-face-4 250)
     (markdown-header-face-5 230)
     (markdown-header-face-6 210))
-  "List of markdown faces + default
-Used for text scaling in markdown, TV/Large sizing.")
+  "List of default and markdown faces, For text scaling in markdown.
+Large monitor sizing.")
 
 (defvar ocodo/markdown-faces-desktop
   '((default 150)
@@ -78,8 +82,8 @@ Used for text scaling in markdown, TV/Large sizing.")
     (markdown-header-face-4 200)
     (markdown-header-face-5 180)
     (markdown-header-face-6 160))
-  "List of markdown faces + default
-Used for text scaling in markdown, desktop monitor sizing.")
+  "List of default and markdown faces, For text scaling in markdown.
+Desktop monitor sizing.")
 
 (defvar ocodo/markdown-faces
   (if (eq system-type 'darwin)
@@ -87,7 +91,7 @@ Used for text scaling in markdown, desktop monitor sizing.")
       ocodo/markdown-faces-large
     ocodo/markdown-faces-desktop)
 
-  "List of markdown faces + default
+  "List of markdown and default faces.
 Used for text scaling in markdown.")
 
 (defvar recentf-list)
@@ -130,7 +134,7 @@ For example:
 
 ```lisp
  (plist-bind (a c)                ;; <- arg names match key names.
-  '(:a \"foo\" :b 13 :c \"bar\") ;; <- plist
+  \='(:a \"foo\" :b 13 :c \"bar\") ;; <- plist
   (list a c))                    ;; <- Body
 
 ;; => (\"foo\" \"bar\")
@@ -157,7 +161,7 @@ Using `shell-command-to-string', we can make a replace-region
 command with `*-and-replace'
 
 ```lisp
- (*-and-replace shell-command-eval-and-replace #'shell-command-to-string)
+ (*-and-replace shell-command-eval-and-replace #\='shell-command-to-string)
 
 ;; =>
 ;; (shell-command-eval-and-replace)
@@ -195,11 +199,11 @@ operations on lists / trees.
 For example:
 
 ```lisp
- (defun-pcase pick-it (`(,_ ,_ (,_ ,it ,_)))
+ (defun-pcase pick-it (\=`(,_ ,_ (,_ ,it ,_)))
     \"Select it\"
    (format \"%s\" it))
 
- (my-pfun '(1 2 (1 \"this one\" 3)))
+ (my-pfun \='(1 2 (1 \"this one\" 3)))
 ;; => \"this one\"
 ```"
  (declare (doc-string 3) (indent 2))
@@ -256,7 +260,7 @@ For example:
  (defun round-number-at-point ()
   \"Round the number at point.\"
   (interactive)
-  (change-number-at-point #'round))
+  (change-number-at-point #\='round))
 
 ;; Or...
 
@@ -857,9 +861,7 @@ Clone if not already in workspace."
    (shell-command-to-string (format "git clone %s %s" project path))))
 
 (defun ocodo/bump-version-patch ()
-  "Search for version = and increment the patch number of the string
-
-Editor macro."
+  "Search for version and increment the patch number of the string editor macro."
   (interactive)
   (goto-char 0)
   (search-forward "version =")
@@ -976,7 +978,7 @@ If the user is not in a repo, Select from `ocodo-github-repos'."
    (let* ((text (buffer-substring begin end))
           (translated (google-en-to-thai text)))
     (message translated)))
-  
+
 (defun hex-to-decimal (num)
   "Convert hex NUM to decimal."
   (format "%i" (string-to-number num 16)))
@@ -1067,7 +1069,7 @@ If your're in the minibuffer it will use the other buffer file name."
   (insert (return-time-now)))
 
 (defun return-time-now ()
-  "Return now as a format-time-string."
+  "Return now as a `format-time-string' iso8601 UTC."
   (format-time-string "%Y-%m-%dT%H:%M:%S%z"))
 
 (defun int-to-binary-string (int)
@@ -1292,14 +1294,26 @@ Internally uses the script `~/.doom.d/bin/emacs-markdown-preview-layout.osa'."
     (set-face-attribute 'fixed-pitch nil :height size)
     (set-face-attribute 'variable-pitch nil :height size))
 
-(defvar ocodo/default-face-size 230
-  "Default size for fonts")
+(defvar ocodo/default-face-size 170
+  "Default size for fonts on regular screen.")
+
+(defvar ocodo/default-face-size-large 215
+  "Default size for fonts on large screen.")
 
 (defun ocodo/default-face-size-reset ()
   "Reset the default face size to default."
   (interactive)
   (when-gui
    (let ((default-font-size ocodo/default-face-size))
+     (set-face-attribute 'default nil :height default-font-size)
+     (set-face-attribute 'fixed-pitch nil :height default-font-size)
+     (set-face-attribute 'variable-pitch nil :height default-font-size))))
+
+(defun ocodo/default-face-size-large-screen ()
+  "Reset the default face size to default."
+  (interactive)
+  (when-gui
+   (let ((default-font-size ocodo/default-face-size-large))
      (set-face-attribute 'default nil :height default-font-size)
      (set-face-attribute 'fixed-pitch nil :height default-font-size)
      (set-face-attribute 'variable-pitch nil :height default-font-size))))
@@ -1348,7 +1362,7 @@ Internally uses the script `~/.doom.d/bin/emacs-markdown-preview-layout.osa'."
 
 (defun ocodo/yank-replace-buffer ()
   "Yank replace the visible buffer.
-The existing buffer text is saved to the kill-ring."
+The existing buffer text is saved to the `kill-ring'."
   (interactive)
   (goto-char (point-min))
   (yank)
@@ -1366,7 +1380,7 @@ The existing buffer text is saved to the kill-ring."
   (kill-region (point-min) (point-max)))
 
 (defvar ocodo/favorite-theme-times ()
-  "Recording of theme change times for the session")
+  "Recording of theme change times for the session.")
 
 (defvar ocodo/favorite-themes
   '("creamsody" "creamsody-dark" "creamsody-darker"
@@ -1505,7 +1519,7 @@ Leave *scratch* and *Messages* alone too."
   "Upgrade PACKAGES, (unattended NO-CONFIRM = t)."
   (interactive)
   (when (ocodo/straight-remove-packages packages no-confirm)
-    (doom/reload)))
+    (doom-reload)))
 
 (defun ocodo/projectile-find-file-dwim ()
   "Wrap projectile-find-file-dwim, clear the useless cache first."
@@ -2030,7 +2044,7 @@ css-value to the hex color found."
 (ocodo/cmdalias ocodo/reload-fonts set-doom-lambda-line-fonts)
 
 (defun ocodo/load-theme (&optional theme-name)
-  "Load a theme without confirmation or enabling."
+  "Load a THEME-NAME without confirmation or enabling."
   (interactive)
   (let ((theme-name (or theme-name (completing-read "Load Theme:" (custom-available-themes)))))
     (load-theme  (intern  theme-name ) t)
@@ -2041,8 +2055,8 @@ css-value to the hex color found."
   "Sort out font / unicode / fontset stuff."
   (interactive)
   (when-gui
-    (doom/increase-font-size 1)
-    (doom/decrease-font-size 1)
+    (doom-increase-font-size 1)
+    (doom-decrease-font-size 1)
     (lambda-line--clockface-update-fontset "ClockFaceRect"))
   (when (not (display-graphic-p))
     (message "Only available in GUI")))
@@ -2138,7 +2152,7 @@ Return an error if no buffer file."
   (insert "- - 8<")
   (cl-loop repeat 60 do (insert " -"))
   (beginning-of-line)
-  (comment-region (point-at-bol) (point-at-eol)))
+  (comment-region (line-beginning-position) (line-end-position)))
 
 (defun sort-sexps (beg end)
   "Sort sexps in region BEG / END.
@@ -2215,7 +2229,7 @@ Comments stay with the code below."
   (interactive)
   (if (= (string-to-number (shell-command-to-string "pgrep ssh-agent | wc -l")) 0)
     (message "No ssh-agents are running!")
-    
+
    (if (= (string-to-number (shell-command-to-string "pgrep ssh-agent | wc -l")) 1)
        (ssh-agent--fix)
      (let* ((ssh-agents (split-string
