@@ -9,6 +9,7 @@
 
 (unbind-key "s-=")
 (unbind-key "s--")
+(unbind-key "C-c t b")
 
 (map!
  ;; Unbind C-RET on global key map
@@ -20,6 +21,8 @@
  "C-<tab>"     nil
  ;; unbind load theme
  "C-H t" nil)
+
+(bind-key "C-c t 9" #'ocodo/default-face-size-large-screen)
 
 (bind-key "M-RET" #'toggle-frame-fullscreen)
 
@@ -261,4 +264,3 @@ _i_ only this line
 
 (provide 'key-bindings)
 ;;; key-bindings.el ends here
-
