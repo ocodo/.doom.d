@@ -31,6 +31,7 @@
 (package! mpdel)
 (package! nameless)
 (package! pass)
+(package! pcre2el)
 (package! persistent-scratch)
 (package! rainbow-identifiers)
 (package! rg)
