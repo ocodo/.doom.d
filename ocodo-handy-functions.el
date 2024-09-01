@@ -2199,80 +2199,15 @@ Comments stay with the code below."
                         (insert-before-markers real)
                         (delete-region (point) (marker-position end)))))))))
 
-(defun ssh-agent--set-env-sock (sock)
-  "Set the env var SSH_AUTH_SOCK to SOCK."
-  (setenv "SSH_AUTH_SOCK"
-          (shell-command-to-string
-           (format "echo '%s' | awk '{printf($8)}'" sock))))
+(defun ocodo/ssh-agent-connect ()
+  "Convention based ssh-agent connect.
 
-(defun ssh-agent--fix ()
-  "Fix the env to use the ssh-agent."
-  (let ((private-sock (shell-command-to-string "lsof -c ssh-agent | grep /private"))
-        (agent-sock (shell-command-to-string "lsof -c ssh-agent | grep /agent")))
-    (unless (string= private-sock "")
-      (ssh-agent--set-env-sock private-sock))
-    (unless (string= agent-sock "")
-      (ssh-agent--set-env-sock agent-sock))))
+Given an ssh-agent is running on $HOME/.ssh/sock connect to it.
 
-(defun ssh-agent--close (ssh-agent-info)
-  "Extract PID from SSH-AGENT-INFO and close the process."
-  (let ((pid (cadr (split-string ssh-agent-info " " t))))
-    (shell-command (format "kill %s" pid))))
-
-(defun ssh-agent--close-rejected-agents (selected-agent ssh-agents)
-  "Close SSH-AGENTS that are not SELECTED-AGENT."
-    (let ((redundant-agents (--remove (string= it selected-agent) ssh-agents)))
-      (--each redundant-agents (ssh-agent--close it))))
-
-(defun ssh-agent-env-fix ()
-  "Ensure $SSH_AUTH_SOCK is set correctly in the environment."
+Requires `pidof' to be available on $PATH."
   (interactive)
-  (if (= (string-to-number (shell-command-to-string "pgrep ssh-agent | wc -l")) 0)
-    (message "No ssh-agents are running!")
-
-   (if (= (string-to-number (shell-command-to-string "pgrep ssh-agent | wc -l")) 1)
-       (ssh-agent--fix)
-     (let* ((ssh-agents (split-string
-                         (shell-command-to-string
-                          "lsof -c ssh-agent | grep -E '/var/|/private' | awk '{print $1, $2, $8}'")
-                         "\n" t))
-            (selected-agent (completing-read
-                             "Select the ssh-agent (There are more than 1): "
-                             ssh-agents)))
-         (ssh-agent--close-rejected-agents selected-agent ssh-agents)
-         (ssh-agent--fix)))))
-
-(defun setup-ssh-agent ()
-  "On macOS, check if launchd ssh-agent is running.
-Otherwise start it, adding ssh keys from the macOS keychain."
-  (interactive)
-  (when (eq system-type 'darwin) ;; check if macOS
-    (let ((ssh-auth-sock (getenv "SSH_AUTH_SOCK"))
-          (ssh-agent-info (shell-command-to-string "launchctl getenv SSH_AUTH_SOCK")))
-      (if (and (string-prefix-p "/private/tmp/com.apple.launchd." ssh-auth-sock)
-               (string-prefix-p "/private/tmp/com.apple.launchd." ssh-agent-info))
-          ;; if launchd ssh-agent is running and ssh-auth-sock points to it
-          (progn
-            ;; terminate any other ssh-agents running
-            (dolist (pid (split-string (shell-command-to-string "pgrep ssh-agent") "\n" t))
-              (unless (string-prefix-p (concat "SSH_AUTH_SOCK=" ssh-auth-sock) (shell-command-to-string (concat "ps -o command= " pid)))
-                (shell-command (concat "kill " pid))))
-            ;; set SSH environment variables
-            (setenv "SSH_AUTH_SOCK" ssh-auth-sock)
-            (setenv "SSH_AGENT_PID" (substring ssh-auth-sock (length "/private/tmp/com.apple.launchd.")))
-            (setenv "SSH_ASKPASS" "git-gui--askpass")
-            (setenv "GIT_ASKPASS" "git-gui--askpass")
-            ;; add ssh keys from macOS keychain
-            (shell-command "ssh-add -A"))
-        ;; if launchd ssh-agent is not running
-        (progn
-          ;; start launchd ssh-agent
-          (shell-command "eval $(ssh-agent -s | tee /dev/stderr)")
-          ;; set SSH environment variables
-          (setenv "SSH_ASKPASS" "git-gui--askpass")
-          (setenv "GIT_ASKPASS" "git-gui--askpass")
-          ;; add ssh keys from macOS keychain
-          (shell-command "ssh-add -A"))))))
+  (setenv "SSH_AUTH_SOCK" (shell-command-to-string "printf \"$HOME/.ssh/sock\""))
+  (setenv "SSH_AGENT_PID" (shell-command-to-string "pidof ssh-agent")))
 
 (defun switch-to-message-buffer ()
   "Switch to the message buffer."
