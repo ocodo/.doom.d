@@ -104,6 +104,7 @@ This file:
 (bind-key "C-)"            #'increment-number-at-point)
 
 (bind-key "C-<return>"     #'cua-rectangle-mark-mode)
+(bind-key "C-c C-v"        #'cua-rectangle-mark-mode)
 (bind-key "C-?"            #'cua-rectangle-which-key-help)
 
 (bind-key "C-M-^"          #'join-line-from-below)
