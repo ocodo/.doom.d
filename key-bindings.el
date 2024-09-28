@@ -218,6 +218,7 @@ _i_ only this line
 (bind-key "s-`"            #'other-frame)
 (bind-key "s-w"            #'delete-frame)
 
+(bind-key "M-+"            #'hippie-expand)
 (bind-key "s-/"            #'hippie-expand)
 
 (bind-key "s-<down>"       #'duplicate-current-line-or-region)
