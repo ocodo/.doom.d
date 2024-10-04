@@ -19,12 +19,12 @@
     (setopt ellama-provider
       (make-llm-ollama
        :host host
-       :chat-model "superdrew100/llama3-abliterated:latest"
-       :embedding-model "superdrew100/llama3-abliterated:latest"))
+       :chat-model "mannix/llama3.1-8b-abliterated:latest"
+       :embedding-model "nomic-embed-text:latest"))
     ;; Naming new sessions with llm
     (setopt ellama-naming-provider
             (make-llm-ollama
              :host host
-             :chat-model "superdrew100/llama3-abliterated:latest"
-             :embedding-model "superdrew100/llama3-abliterated:latest"))
+             :chat-model "mannix/llama3.1-8b-abliterated:latest"
+             :embedding-model "mannix/llama3.1-8b-abliterated:latest"))
     (setopt ellama-naming-scheme 'ellama-generate-name-by-llm)))
