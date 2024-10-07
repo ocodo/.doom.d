@@ -64,6 +64,7 @@
 ;; 8< GUI ---->
 
 (when-gui
+
  (defun ocodo/mac-log-handle-font-selection (event)
    (let* ((ae (mac-event-ae event))
           (font-spec (cdr (mac-ae-parameter ae 'font-spec))))
@@ -74,92 +75,33 @@
   :before
   'ocodo/mac-log-handle-font-selection)
 
- (add-hook 'doom-load-theme-hook #'set-fancy-splash)
+ (add-hook! 'doom-load-theme-hook (ocodo/set-fancy-splash))
+ (add-hook! 'after-setting-font-hook (+doom-dashboard-reload 'force))
 
- (defun set-fancy-splash ()
-   (setq fancy-splash-image (format "%s/tri-arrow-motif.png" doom-user-dir))
-   (add-hook! 'after-setting-font-hook (+doom-dashboard-reload 'force))
+ (defun ocodo/set-fancy-splash ()
+   (setq doom-modeline-height 0.9
+         doom-font (font-spec
+                    :family "OcodoMono Nerd Font"
+                    :weight 'thin)
 
+         doom-variable-pitch-font (font-spec
+                                   :family "Helvetica Neue"
+                                   :weight 'light)
+         fancy-splash-image (format "%s/tri-arrow-motif.png" doom-user-dir))
 
-  ;; (advice-remove
-  ;;  'mac-handle-font-selection
-  ;;  'ocodo/mac-log-handle-font-selection)
+  (doom/reload-font)
 
-   (setq doom-modeline-height 0.9)
-   ;; Set doom font on Macos
-   (when (eq system-type 'darwin)
-     (setq
-      doom-font
-      (font-spec
-       :family "OcodoMono"
-       :weight 'thin)
+  (custom-set-faces
+    '(mode-line ((t (:family "Helvetica Neue" :weight ultra-light))))
+    '(mode-line-active ((t (:family "Helvetica Neue" :weight ultra-light))))
+    '(mode-line-inactive ((t (:family "Helvetica Neue" :weight ultra-light)))))
 
-      doom-variable-pitch-font
-      (font-spec
-       :family "Helvetica Neue"
-       :weight 'light))
-
-     (doom/reload-font)
-
-    (custom-set-faces
-      '(mode-line ((t (:family "Helvetica Neue"
-                       :weight ultra-light))))
-      '(mode-line-active ((t (:family "Helvetica Neue"
-                              :weight ultra-light))))
-      '(mode-line-inactive ((t (:family "Helvetica Neue"
-                                :weight ultra-light))))))
-
-
-   ;; Set doom font on linux
-   (when (eq system-type 'gnu/linux)
-     (setq
-      doom-font
-      (font-spec
-       :family "OcodoMono"
-       :weight 'thin))
-
-     (setq
-      doom-variable-pitch-font
-      (font-spec
-       :family "Helvetica"))
-
-     (doom/reload-font)
-     (custom-set-faces
-      '(mode-line ((t (:family "Helvetica"))))
-      '(mode-line-active ((t (:family "Helvetica"))))
-      '(mode-line-inactive ((t (:family "Helvetica"))))))
-
-   ;; Set windows specifics
-   (when (eq system-type 'windows-nt)
-    (setq
-     doom-font
-     (font-spec
-      :family "OcodoMono"
-      :weight 'thin))
-
-    (setq
-     doom-variable-pitch-font
-     (font-spec
-      :family "Trebuchet MS"))
-
-    (doom/reload-font)
-
-    (custom-set-faces
-      '(mode-line ((t (:family "Trebuchet MS"))))
-      '(mode-line-active ((t (:family "Trebuchet MS"))))
-      '(mode-line-inactive ((t (:family "Trebuchet MS"))))))
-
-    ;; Because... Doom ain't perfect, unless you have unlimited time to track down it's ... failings.
-    ;; KludGY time delays to unkcuf the disylap
-   (run-at-time
-    "1 sec"
-    nil
-    (lambda ()
-      (ocodo/reload-fonts)
-      (ocodo/markdown-faces-size-reset)
-      (when (eq system-type 'darwin)
-        ;; We assume a mac is attached to a TV at this site
-        (ocodo/resize-frame-inset-maximized 20))))))
+  (run-at-time
+   "1 sec"
+   nil
+   (lambda ()
+     (ocodo/reload-fonts)
+     (ocodo/markdown-faces-size-reset)))))
 
 ;; 8< --- GUI <<<
 

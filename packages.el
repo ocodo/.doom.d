@@ -34,6 +34,8 @@
 (package! pass)
 (package! pcre2el)
 (package! persistent-scratch)
+(package! persp-mode)
+(package! rainbow-mode)
 (package! rainbow-identifiers)
 (package! rg)
 (package! ripgrep)
