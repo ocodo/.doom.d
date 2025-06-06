@@ -11,6 +11,7 @@
 (package! all-the-icons)
 (package! applescript-mode)
 (package! buttercup)
+(package! crystal-mode)
 (package! edit-server)
 (package! ellama)
 (package! embrace)
