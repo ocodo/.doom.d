@@ -47,6 +47,7 @@
 (package! sideline)
 (package! sideline-flycheck)
 (package! sideline-lsp)
+(package! slime)
 (package! speed-type)
 (package! svg-clock)
 (package! swiper)
